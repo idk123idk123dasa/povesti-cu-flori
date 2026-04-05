@@ -1,0 +1,16 @@
+.bash_history
+.lesshst
+.viminfo
+.wget-hsts
+.cache/
+.local/
+.config/
+.ssh/
+.claude/
+.npm/
+.composer/
+logs/
+dumps/
+*.log
+node_modules/
+vendor/
