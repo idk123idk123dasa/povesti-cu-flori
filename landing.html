@@ -583,6 +583,40 @@ body{
   margin-top:12px;
 }
 
+.order-email-box{
+  margin-bottom:20px;
+}
+
+.order-email-box label{
+  display:block;
+  font-size:0.9rem;
+  color:var(--gri);
+  margin-bottom:8px;
+  font-style:italic;
+}
+
+.order-email-box input{
+  width:100%;
+  padding:14px 18px;
+  font-family:var(--font);
+  font-size:15px;
+  border:1.5px solid #ddd;
+  border-radius:4px;
+  background:#FDFBF7;
+  color:var(--maro);
+  outline:none;
+  transition:border-color 0.3s;
+}
+
+.order-email-box input:focus{
+  border-color:var(--auriu);
+}
+
+.order-email-box input::placeholder{
+  color:#bbb;
+  font-style:italic;
+}
+
 @media(max-width:480px){
   .episodes-grid{
     grid-template-columns:repeat(2, 1fr);
@@ -797,9 +831,6 @@ body{
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content reveal">
-    <div class="seal" id="seal">
-      <span class="seal-text">SCP</span>
-    </div>
     <h1>Povești de dragoste<br><span>livrate la ușa ta</span></h1>
     <p class="hero-sub">Abonează-te și primești în fiecare lună 2 scrisori de dragoste — o poveste care se dezvăluie treptat, direct în cutia ta poștală. Scrise pe hârtie. Sigilate cu ceară.</p>
     <p class="hero-tagline">Deschide plicul. Citește scrisoarea. Simte povestea.</p>
@@ -1007,6 +1038,11 @@ body{
       </div>
     </div>
 
+    <div class="order-email-box" id="orderEmailBox" style="display:none;">
+      <label>Adresa ta de email <small style="color:var(--gri-light);">(te anunțăm când se deschid comenzile)</small></label>
+      <input type="email" id="orderEmail" placeholder="adresa ta de email" required>
+    </div>
+
     <button class="order-btn" id="orderBtn" onclick="placeOrder()" style="display:none;">
       Comandă acum — 49 RON
     </button>
@@ -1056,16 +1092,24 @@ function selectEpisode(el) {
   document.getElementById('sumCollection').textContent = collectionText;
   document.getElementById('sumEpisodes').textContent = 'Episoadele ' + selectedEpisode;
   document.getElementById('orderSummary').style.display = 'block';
+  document.getElementById('orderEmailBox').style.display = 'block';
   document.getElementById('orderBtn').style.display = 'block';
   document.getElementById('orderNote').style.display = 'block';
 }
 
 function placeOrder() {
   if (!selectedEpisode) return;
+  const email = document.getElementById('orderEmail').value.trim();
+  if (!email) {
+    document.getElementById('orderEmail').focus();
+    document.getElementById('orderEmail').style.borderColor = 'var(--rosu)';
+    return;
+  }
   const collection = document.getElementById('collectionSelect').value;
   const order = {
     collection,
     episodes: selectedEpisode,
+    email,
     price: 49,
     currency: 'RON',
     timestamp: new Date().toISOString()
