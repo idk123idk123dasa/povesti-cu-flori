@@ -15,49 +15,28 @@
   --auriu:#C9A87C;
   --maro:#3D2B1F;
   --gri:#666666;
-  --gri-light:#999;
   --font:'Georgia','Times New Roman',serif;
 }
 
-html{scroll-behavior:smooth}
+html,body{
+  height:100%;
+  overflow:hidden;
+}
 
 body{
   font-family:var(--font);
   color:var(--maro);
   background:var(--crem);
-  line-height:1.7;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-
-/* === ANIMATIONS === */
-.reveal{
-  opacity:0;
-  transform:translateY(30px);
-  transition:opacity 0.8s ease, transform 0.8s ease;
-}
-.reveal.visible{
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* === HERO === */
-.hero{
-  min-height:100vh;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  text-align:center;
-  padding:60px 24px;
-  background:var(--crem);
   position:relative;
-  overflow:hidden;
 }
 
-.hero::before{
+body::before{
   content:'';
-  position:absolute;
+  position:fixed;
   inset:0;
   background-image:
     url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 L50 25 L50 45 L10 45 L10 25 Z' fill='none' stroke='%23C9A87C' stroke-width='0.5' opacity='0.12'/%3E%3Cpath d='M10 25 L30 38 L50 25' fill='none' stroke='%23C9A87C' stroke-width='0.5' opacity='0.12'/%3E%3C/svg%3E");
@@ -66,89 +45,53 @@ body{
   pointer-events:none;
 }
 
-.hero-content{
+.landing{
   position:relative;
   z-index:1;
-  max-width:700px;
-}
-
-/* Wax seal logo */
-.seal{
-  width:120px;
-  height:120px;
-  margin:0 auto 36px;
-  background:var(--rosu);
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:
-    0 4px 20px rgba(146,43,33,0.35),
-    inset 0 2px 4px rgba(255,255,255,0.15),
-    inset 0 -2px 6px rgba(0,0,0,0.2);
-  position:relative;
-}
-
-.seal::before{
-  content:'';
-  position:absolute;
-  inset:8px;
-  border:1.5px solid rgba(255,255,255,0.2);
-  border-radius:50%;
-}
-
-.seal-text{
-  color:#fff;
-  font-size:13px;
-  font-weight:bold;
-  letter-spacing:0.15em;
-  text-transform:uppercase;
   text-align:center;
-  line-height:1.2;
-}
-
-.seal img{
+  padding:24px;
+  max-width:580px;
   width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:50%;
+  animation:fadeUp 0.8s ease both;
 }
 
-.hero h1{
-  font-size:clamp(2rem, 5vw, 3.2rem);
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.landing h1{
+  font-size:clamp(1.8rem, 5vw, 2.8rem);
   font-weight:400;
   color:var(--maro);
   line-height:1.2;
-  margin-bottom:24px;
-  letter-spacing:-0.01em;
+  margin-bottom:20px;
 }
 
-.hero h1 span{
+.landing h1 span{
   color:var(--rosu);
 }
 
-.hero-sub{
-  font-size:clamp(1rem, 2.5vw, 1.15rem);
+.landing .sub{
+  font-size:clamp(0.9rem, 2.2vw, 1.05rem);
   color:var(--gri);
   line-height:1.8;
-  margin-bottom:28px;
-  max-width:560px;
-  margin-left:auto;
-  margin-right:auto;
+  margin-bottom:20px;
 }
 
-.hero-tagline{
+.landing .tagline{
   font-style:italic;
-  font-size:1.05rem;
+  font-size:1rem;
   color:var(--auriu);
   letter-spacing:0.03em;
+  margin-bottom:32px;
 }
 
-/* Decorative line */
+/* Ornament */
 .ornament{
   display:block;
-  margin:32px auto;
-  width:80px;
+  margin:0 auto 28px;
+  width:60px;
   height:1px;
   background:var(--auriu);
   border:none;
@@ -160,54 +103,37 @@ body{
   left:50%;
   top:50%;
   transform:translate(-50%,-50%);
-  font-size:10px;
+  font-size:9px;
   color:var(--auriu);
   background:var(--crem);
   padding:0 8px;
 }
 
-/* === EMAIL CAPTURE === */
-.email-section{
-  padding:80px 24px;
-  text-align:center;
-  background:#fff;
-}
-
-.email-inner{
-  max-width:520px;
-  margin:0 auto;
-}
-
-.email-section h2{
-  font-size:clamp(1.5rem, 3.5vw, 2rem);
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:12px;
-}
-
-.email-section .sub{
-  font-size:1rem;
+/* CTA label */
+.cta-label{
+  font-size:0.85rem;
   color:var(--gri);
-  margin-bottom:32px;
-  line-height:1.7;
+  font-style:italic;
+  margin-bottom:14px;
 }
 
+/* Email form */
 .email-form{
   display:flex;
   gap:0;
-  max-width:460px;
+  max-width:440px;
   margin:0 auto;
 }
 
 .email-form input{
   flex:1;
-  padding:16px 20px;
+  padding:15px 18px;
   font-family:var(--font);
   font-size:15px;
   border:1.5px solid #ddd;
   border-right:none;
   border-radius:4px 0 0 4px;
-  background:#FDFBF7;
+  background:#fff;
   color:var(--maro);
   outline:none;
   transition:border-color 0.3s;
@@ -223,9 +149,9 @@ body{
 }
 
 .email-form button{
-  padding:16px 28px;
+  padding:15px 24px;
   font-family:var(--font);
-  font-size:14px;
+  font-size:13px;
   font-weight:bold;
   background:var(--rosu);
   color:#fff;
@@ -243,570 +169,40 @@ body{
 
 .email-success{
   display:none;
-  padding:20px;
-  background:rgba(146,43,33,0.08);
+  padding:18px 24px;
+  background:rgba(146,43,33,0.06);
   border-radius:6px;
   color:var(--rosu);
   font-style:italic;
-  margin-top:16px;
+  font-size:0.95rem;
+  max-width:440px;
+  margin:0 auto;
 }
 
 .email-success.show{
   display:block;
 }
 
-/* === PREVIEW COLECȚII === */
-.preview-section{
-  padding:80px 24px;
-  background:var(--crem);
-}
-
-.preview-section h2{
-  text-align:center;
-  font-size:clamp(1.5rem, 3.5vw, 2rem);
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:48px;
-}
-
-.cards-grid{
-  max-width:900px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:32px;
-}
-
-.card{
-  background:#fff;
-  border-radius:8px;
-  padding:36px 32px;
-  box-shadow:0 2px 16px rgba(61,43,31,0.06);
-  border-top:3px solid var(--auriu);
-  transition:transform 0.3s, box-shadow 0.3s;
-}
-
-.card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 8px 32px rgba(61,43,31,0.1);
-}
-
-.card h3{
-  font-size:1.3rem;
-  font-weight:400;
-  color:var(--rosu);
-  margin-bottom:8px;
-}
-
-.card .card-sub{
-  font-size:0.85rem;
-  color:var(--auriu);
-  letter-spacing:0.06em;
-  margin-bottom:16px;
-}
-
-.card p{
-  font-size:0.95rem;
-  color:var(--gri);
-  line-height:1.7;
-  margin-bottom:16px;
-}
-
-.card .citat{
-  font-style:italic;
-  font-size:0.95rem;
-  color:var(--maro);
-  border-left:2px solid var(--auriu);
-  padding-left:16px;
-  margin-top:12px;
-}
-
-/* === CUM FUNCȚIONEAZĂ === */
-.steps-section{
-  padding:80px 24px;
-  background:#fff;
-}
-
-.steps-section h2{
-  text-align:center;
-  font-size:clamp(1.5rem, 3.5vw, 2rem);
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:48px;
-}
-
-.steps{
-  max-width:900px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:40px;
-  text-align:center;
-}
-
-.step-num{
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  border:2px solid var(--auriu);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 20px;
-  font-size:1.3rem;
-  color:var(--auriu);
-  font-weight:bold;
-}
-
-.step h3{
-  font-size:1.1rem;
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:10px;
-}
-
-.step p{
-  font-size:0.9rem;
-  color:var(--gri);
-  line-height:1.7;
-}
-
-/* === COMANDĂ / EPISOADE === */
-.order-section{
-  padding:80px 24px;
-  background:#fff;
-}
-
-.order-section h2{
-  text-align:center;
-  font-size:clamp(1.5rem, 3.5vw, 2rem);
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:12px;
-}
-
-.order-section .order-sub{
-  text-align:center;
-  color:var(--gri);
-  margin-bottom:48px;
-  font-size:0.95rem;
-}
-
-.order-inner{
-  max-width:700px;
-  margin:0 auto;
-}
-
-/* Collection selector */
-.collection-select{
-  margin-bottom:36px;
-}
-
-.collection-select label{
-  display:block;
-  font-size:0.9rem;
-  color:var(--gri);
-  margin-bottom:8px;
-  font-style:italic;
-}
-
-.collection-select select{
-  width:100%;
-  padding:14px 18px;
-  font-family:var(--font);
-  font-size:15px;
-  border:1.5px solid #ddd;
-  border-radius:4px;
-  background:#FDFBF7;
-  color:var(--maro);
-  cursor:pointer;
-  appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;
-  background-position:right 16px center;
-}
-
-.collection-select select:focus{
-  border-color:var(--auriu);
-  outline:none;
-}
-
-/* Episode grid */
-.episodes-label{
-  font-size:0.9rem;
-  color:var(--gri);
-  font-style:italic;
-  margin-bottom:12px;
-}
-
-.episodes-grid{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:12px;
-  margin-bottom:36px;
-}
-
-.episode-card{
-  border:1.5px solid #ddd;
-  border-radius:6px;
-  padding:16px 12px;
-  text-align:center;
-  cursor:pointer;
-  transition:all 0.25s;
-  background:#FDFBF7;
-  position:relative;
-}
-
-.episode-card:hover{
-  border-color:var(--auriu);
-  box-shadow:0 2px 12px rgba(201,168,124,0.15);
-}
-
-.episode-card.selected{
-  border-color:var(--rosu);
-  background:rgba(146,43,33,0.04);
-  box-shadow:0 2px 12px rgba(146,43,33,0.1);
-}
-
-.episode-card.selected::after{
-  content:'✓';
-  position:absolute;
-  top:6px;
-  right:8px;
-  font-size:14px;
-  color:var(--rosu);
-  font-weight:bold;
-}
-
-.episode-num{
-  font-size:0.75rem;
-  color:var(--auriu);
-  text-transform:uppercase;
-  letter-spacing:0.1em;
-  margin-bottom:4px;
-}
-
-.episode-title{
-  font-size:1.1rem;
-  color:var(--maro);
-  font-weight:400;
-  margin-bottom:4px;
-}
-
-.episode-desc{
-  font-size:0.8rem;
-  color:var(--gri);
-  line-height:1.5;
-}
-
-/* Order summary */
-.order-summary{
-  background:var(--crem);
-  border-radius:8px;
-  padding:28px;
-  margin-bottom:24px;
-}
-
-.order-summary h4{
-  font-size:1rem;
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:16px;
-}
-
-.summary-row{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 0;
-  font-size:0.9rem;
-  color:var(--gri);
-  border-bottom:1px solid rgba(0,0,0,0.04);
-}
-
-.summary-row:last-child{
-  border-bottom:none;
-}
-
-.summary-row .label{
-  color:var(--gri);
-}
-
-.summary-row .value{
-  color:var(--maro);
-  font-weight:bold;
-}
-
-.summary-total{
-  display:flex;
-  justify-content:space-between;
-  padding:14px 0 0;
-  margin-top:8px;
-  border-top:2px solid var(--auriu);
-  font-size:1.1rem;
-}
-
-.summary-total .label{
-  color:var(--maro);
-}
-
-.summary-total .value{
-  color:var(--rosu);
-  font-size:1.3rem;
-  font-weight:bold;
-}
-
-.order-btn{
-  display:block;
-  width:100%;
-  padding:16px;
-  font-family:var(--font);
-  font-size:15px;
-  font-weight:bold;
-  background:var(--rosu);
-  color:#fff;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  transition:background 0.3s;
-  letter-spacing:0.03em;
-}
-
-.order-btn:hover{
-  background:var(--rosu-hover);
-}
-
-.order-note{
-  text-align:center;
-  font-size:0.8rem;
-  color:var(--gri-light);
-  font-style:italic;
-  margin-top:12px;
-}
-
-.order-email-box{
-  margin-bottom:20px;
-}
-
-.order-email-box label{
-  display:block;
-  font-size:0.9rem;
-  color:var(--gri);
-  margin-bottom:8px;
-  font-style:italic;
-}
-
-.order-email-box input{
-  width:100%;
-  padding:14px 18px;
-  font-family:var(--font);
-  font-size:15px;
-  border:1.5px solid #ddd;
-  border-radius:4px;
-  background:#FDFBF7;
-  color:var(--maro);
-  outline:none;
-  transition:border-color 0.3s;
-}
-
-.order-email-box input:focus{
-  border-color:var(--auriu);
-}
-
-.order-email-box input::placeholder{
-  color:#bbb;
-  font-style:italic;
-}
-
-@media(max-width:480px){
-  .episodes-grid{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-
-/* === PREȚURI === */
-.pricing-section{
-  padding:80px 24px;
-  background:var(--crem);
-}
-
-.pricing-section h2{
-  text-align:center;
-  font-size:clamp(1.5rem, 3.5vw, 2rem);
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:12px;
-}
-
-.pricing-section .pricing-sub{
-  text-align:center;
-  color:var(--gri);
-  font-style:italic;
-  margin-bottom:48px;
-}
-
-.pricing-grid{
-  max-width:800px;
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:32px;
-}
-
-.price-card{
-  background:#fff;
-  border-radius:8px;
-  padding:40px 32px;
-  text-align:center;
-  box-shadow:0 2px 16px rgba(61,43,31,0.06);
-  position:relative;
-  overflow:hidden;
-}
-
-.price-card.featured{
-  border:2px solid var(--auriu);
-}
-
-.price-card.featured::before{
-  content:'POPULAR';
-  position:absolute;
-  top:16px;
-  right:-28px;
-  background:var(--auriu);
-  color:#fff;
-  font-size:10px;
-  font-weight:bold;
-  letter-spacing:0.1em;
-  padding:4px 32px;
-  transform:rotate(45deg);
-}
-
-.price-card h3{
-  font-size:1.2rem;
-  font-weight:400;
-  color:var(--maro);
-  margin-bottom:8px;
-}
-
-.price-amount{
-  font-size:2.4rem;
-  color:var(--rosu);
-  font-weight:400;
-  margin-bottom:4px;
-}
-
-.price-period{
-  font-size:0.85rem;
-  color:var(--gri);
-  margin-bottom:24px;
-}
-
-.price-features{
-  list-style:none;
-  text-align:left;
-  margin-bottom:28px;
-}
-
-.price-features li{
-  padding:8px 0;
-  font-size:0.9rem;
-  color:var(--gri);
-  border-bottom:1px solid rgba(0,0,0,0.04);
-  padding-left:24px;
-  position:relative;
-}
-
-.price-features li::before{
-  content:'✓';
-  position:absolute;
+/* Footer line */
+.footer-line{
+  position:fixed;
+  bottom:0;
   left:0;
-  color:var(--auriu);
-  font-weight:bold;
-}
-
-.price-btn{
-  display:inline-block;
-  padding:14px 36px;
-  font-family:var(--font);
-  font-size:14px;
-  font-weight:bold;
-  border-radius:4px;
-  cursor:default;
-  letter-spacing:0.04em;
-  transition:all 0.3s;
-  border:none;
-  opacity:0.7;
-}
-
-.price-btn.primary{
-  background:var(--rosu);
-  color:#fff;
-}
-
-.price-btn.outline{
-  background:transparent;
-  color:var(--rosu);
-  border:2px solid var(--rosu);
-}
-
-.price-soon{
-  font-size:0.8rem;
-  color:var(--gri-light);
-  font-style:italic;
-  margin-top:10px;
-}
-
-/* === FOOTER === */
-.landing-footer{
-  padding:48px 24px;
-  background:var(--maro);
-  color:rgba(255,255,255,0.7);
+  right:0;
   text-align:center;
+  padding:14px;
+  font-size:0.75rem;
+  color:rgba(61,43,31,0.35);
+  z-index:1;
 }
 
-.landing-footer .footer-brand{
-  font-size:1.3rem;
-  color:#fff;
-  margin-bottom:16px;
-  font-weight:400;
-}
-
-.footer-links{
-  display:flex;
-  justify-content:center;
-  gap:24px;
-  margin-bottom:20px;
-  flex-wrap:wrap;
-}
-
-.footer-links a{
+.footer-line a{
   color:var(--auriu);
   text-decoration:none;
-  font-size:0.9rem;
-  transition:color 0.2s;
 }
 
-.footer-links a:hover{
-  color:#fff;
-}
-
-.landing-footer .footer-copy{
-  font-size:0.8rem;
-  color:rgba(255,255,255,0.4);
-  margin-top:16px;
-}
-
-/* === RESPONSIVE === */
-@media(max-width:768px){
-  .cards-grid, .pricing-grid{
-    grid-template-columns:1fr;
-    max-width:450px;
-    margin:0 auto;
-  }
-  .steps{
-    grid-template-columns:1fr;
-    gap:32px;
-    max-width:350px;
-  }
+/* Responsive */
+@media(max-width:500px){
   .email-form{
     flex-direction:column;
     gap:10px;
@@ -819,355 +215,54 @@ body{
     border-radius:4px;
     width:100%;
   }
-  .hero{
-    min-height:auto;
-    padding:80px 24px 60px;
-  }
 }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-content reveal">
-    <h1>Povești de dragoste<br><span>livrate la ușa ta</span></h1>
-    <p class="hero-sub">Abonează-te și primești în fiecare lună 2 scrisori de dragoste — o poveste care se dezvăluie treptat, direct în cutia ta poștală. Scrise pe hârtie. Sigilate cu ceară.</p>
-    <p class="hero-tagline">Deschide plicul. Citește scrisoarea. Simte povestea.</p>
+<div class="landing">
+  <h1>Povești de dragoste<br><span>livrate la ușa ta</span></h1>
+  <p class="sub">Abonează-te și primești în fiecare lună 2 scrisori de dragoste — o poveste care se dezvăluie treptat, direct în cutia ta poștală. Scrise pe hârtie. Sigilate cu ceară.</p>
+  <p class="tagline">Deschide plicul. Citește scrisoarea. Simte povestea.</p>
+
+  <hr class="ornament">
+
+  <p class="cta-label">Fii primul care află când lansăm</p>
+  <form class="email-form" id="emailForm">
+    <input type="email" placeholder="adresa ta de email" required id="emailInput">
+    <button type="submit">Vreau să fiu primul</button>
+  </form>
+  <div class="email-success" id="emailSuccess">
+    ✉ Mulțumim! Te vom anunța primii când lansăm.
   </div>
-</section>
+</div>
 
-<hr class="ornament">
-
-<!-- EMAIL CAPTURE -->
-<section class="email-section">
-  <div class="email-inner reveal">
-    <h2>Fii primul care află când lansăm</h2>
-    <p class="sub">Înscrie-te și primești un fragment exclusiv din prima scrisoare + anunțul de lansare direct în inbox.</p>
-    <form class="email-form" id="emailForm">
-      <input type="email" placeholder="adresa ta de email" required id="emailInput">
-      <button type="submit">Vreau să fiu primul</button>
-    </form>
-    <div class="email-success" id="emailSuccess">
-      ✉ Mulțumim! Te vom anunța primii când lansăm. Verifică-ți inbox-ul pentru fragmentul exclusiv.
-    </div>
-  </div>
-</section>
-
-<!-- PREVIEW COLECȚII -->
-<section class="preview-section">
-  <h2 class="reveal">Primele două colecții</h2>
-  <div class="cards-grid">
-    <div class="card reveal">
-      <h3>Scrisori din Interbelic</h3>
-      <div class="card-sub">Alexandru &amp; Elena · București — Paris · 1935–1940</div>
-      <p>El — student la Medicină. Ea — pictoriță la Paris. S-au văzut o singură dată, la o expoziție de artă. A fost de ajuns. 24 de scrisori. O dragoste interzisă.</p>
-      <div class="citat">"Mâna mea tremură în timp ce scriu aceste cuvinte..."</div>
-    </div>
-    <div class="card reveal">
-      <h3>A Doua Șansă — Scrisori din Revoluție</h3>
-      <div class="card-sub">Mihai &amp; Ana · București — Timișoara · 1987–2021</div>
-      <p>S-au îndrăgostit pe ascuns sub privirea Securității și au fost despărțiți de noaptea Revoluției din '89. Timp de 30 de ani, și-au scris fără să știe dacă celălalt mai citește.</p>
-      <div class="citat">"Te caut în fiecare mulțime. În fiecare zi de decembrie..."</div>
-    </div>
-  </div>
-</section>
-
-<!-- CUM FUNCȚIONEAZĂ -->
-<section class="steps-section">
-  <h2 class="reveal">Cum funcționează</h2>
-  <div class="steps">
-    <div class="step reveal">
-      <div class="step-num">1</div>
-      <h3>Alegi colecția</h3>
-      <p>Fiecare colecție e o poveste completă în 24 de scrisori.</p>
-    </div>
-    <div class="step reveal">
-      <div class="step-num">2</div>
-      <h3>Primești 2 scrisori pe lună</h3>
-      <p>Într-un plic sigilat cu ceară, cu un element surpriză.</p>
-    </div>
-    <div class="step reveal">
-      <div class="step-num">3</div>
-      <h3>Trăiești povestea</h3>
-      <p>12 luni, o dragoste care te surprinde la fiecare episod.</p>
-    </div>
-  </div>
-</section>
-
-<!-- PREȚURI -->
-<section class="pricing-section">
-  <h2 class="reveal">Alege experiența ta</h2>
-  <p class="pricing-sub reveal">Lansare în curând — prețuri speciale de pre-lansare</p>
-  <div class="pricing-grid">
-    <div class="price-card reveal">
-      <h3>Abonament lunar</h3>
-      <div class="price-amount">49 <small style="font-size:0.5em">RON</small></div>
-      <div class="price-period">pe lună · anulezi oricând</div>
-      <ul class="price-features">
-        <li>2 scrisori pe lună</li>
-        <li>Plic sigilat cu ceară</li>
-        <li>Element surpriză în fiecare plic</li>
-        <li>Audio bonus — vocea personajelor</li>
-        <li>Livrare gratuită</li>
-        <li>Anulezi oricând</li>
-      </ul>
-      <span class="price-btn outline">În curând</span>
-      <div class="price-soon">Disponibil la lansare</div>
-    </div>
-    <div class="price-card featured reveal">
-      <h3>Pachet cadou</h3>
-      <div class="price-amount">499 <small style="font-size:0.5em">RON</small></div>
-      <div class="price-period">plată unică · 12 luni de scrisori</div>
-      <ul class="price-features">
-        <li>Tot ce include abonamentul pe 12 luni</li>
-        <li>Prima livrare în cutie cadou premium</li>
-        <li>Scrisoare personalizată inclusă</li>
-        <li>Audio bonus — vocea personajelor</li>
-        <li>Livrare gratuită</li>
-        <li>Cadoul perfect</li>
-      </ul>
-      <span class="price-btn primary">În curând</span>
-      <div class="price-soon">Disponibil la lansare</div>
-    </div>
-  </div>
-</section>
-
-<!-- COMANDĂ -->
-<section class="order-section" id="comanda">
-  <h2 class="reveal">Comandă episoadele tale</h2>
-  <p class="order-sub reveal">Alege colecția și episoadele pe care vrei să le primești luna aceasta.</p>
-
-  <div class="order-inner reveal">
-    <!-- Collection selector -->
-    <div class="collection-select">
-      <label>Alege colecția:</label>
-      <select id="collectionSelect">
-        <option value="interbelic">Scrisori din Interbelic — Alexandru & Elena</option>
-        <option value="revolutie">A Doua Șansă — Scrisori din Revoluție — Mihai & Ana</option>
-      </select>
-    </div>
-
-    <!-- Episodes -->
-    <p class="episodes-label">Alege episoadele pentru luna aceasta:</p>
-    <div class="episodes-grid" id="episodesGrid">
-      <div class="episode-card" data-episodes="1-2" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">1 – 2</div>
-        <div class="episode-desc">Începutul poveștii</div>
-      </div>
-      <div class="episode-card" data-episodes="3-4" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">3 – 4</div>
-        <div class="episode-desc">Prima întâlnire</div>
-      </div>
-      <div class="episode-card" data-episodes="5-6" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">5 – 6</div>
-        <div class="episode-desc">Sentimente ascunse</div>
-      </div>
-      <div class="episode-card" data-episodes="7-8" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">7 – 8</div>
-        <div class="episode-desc">Destinul intervine</div>
-      </div>
-      <div class="episode-card" data-episodes="9-10" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">9 – 10</div>
-        <div class="episode-desc">Despărțirea</div>
-      </div>
-      <div class="episode-card" data-episodes="11-12" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">11 – 12</div>
-        <div class="episode-desc">Scrisori pierdute</div>
-      </div>
-      <div class="episode-card" data-episodes="13-14" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">13 – 14</div>
-        <div class="episode-desc">Speranța revine</div>
-      </div>
-      <div class="episode-card" data-episodes="15-16" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">15 – 16</div>
-        <div class="episode-desc">Secretul dezvăluit</div>
-      </div>
-      <div class="episode-card" data-episodes="17-18" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">17 – 18</div>
-        <div class="episode-desc">Războiul interior</div>
-      </div>
-      <div class="episode-card" data-episodes="19-20" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">19 – 20</div>
-        <div class="episode-desc">Reîntâlnirea</div>
-      </div>
-      <div class="episode-card" data-episodes="21-22" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">21 – 22</div>
-        <div class="episode-desc">Ultima încercare</div>
-      </div>
-      <div class="episode-card" data-episodes="23-24" onclick="selectEpisode(this)">
-        <div class="episode-num">Episoadele</div>
-        <div class="episode-title">23 – 24</div>
-        <div class="episode-desc">Finalul poveștii</div>
-      </div>
-    </div>
-
-    <!-- Order summary -->
-    <div class="order-summary" id="orderSummary" style="display:none;">
-      <h4>Rezumat comandă</h4>
-      <div class="summary-row">
-        <span class="label">Colecție:</span>
-        <span class="value" id="sumCollection">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Episoade:</span>
-        <span class="value" id="sumEpisodes">—</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Conține:</span>
-        <span class="value">2 scrisori + element surpriză</span>
-      </div>
-      <div class="summary-row">
-        <span class="label">Livrare:</span>
-        <span class="value">Gratuită</span>
-      </div>
-      <div class="summary-total">
-        <span class="label">Total:</span>
-        <span class="value">49 RON</span>
-      </div>
-    </div>
-
-    <div class="order-email-box" id="orderEmailBox" style="display:none;">
-      <label>Adresa ta de email <small style="color:var(--gri-light);">(te anunțăm când se deschid comenzile)</small></label>
-      <input type="email" id="orderEmail" placeholder="adresa ta de email" required>
-    </div>
-
-    <button class="order-btn" id="orderBtn" onclick="placeOrder()" style="display:none;">
-      Comandă acum — 49 RON
-    </button>
-    <p class="order-note" id="orderNote" style="display:none;">
-      Plic sigilat cu ceară · Livrare gratuită · Element surpriză inclus
-    </p>
-  </div>
-</section>
-
-<hr class="ornament" style="margin:0 auto;background:rgba(201,168,124,0.3);">
-
-<!-- FOOTER -->
-<footer class="landing-footer">
-  <div class="footer-brand">Scrisori cu Povești</div>
-  <div class="footer-links">
-    <a href="mailto:contact@scrisoricupovesti.ro">contact@scrisoricupovesti.ro</a>
-    <a href="https://instagram.com/scrisoricupovesti" target="_blank">Instagram</a>
-    <a href="https://tiktok.com/@scrisoricupovesti" target="_blank">TikTok</a>
-  </div>
-  <div class="footer-copy">© 2026 Scrisori cu Povești. Toate drepturile rezervate.</div>
-</footer>
+<div class="footer-line">
+  © 2026 Scrisori cu Povești · <a href="mailto:contact@scrisoricupovesti.ro">contact@scrisoricupovesti.ro</a>
+</div>
 
 <script>
-// === Scroll reveal animations ===
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// === Episode selection ===
-let selectedEpisode = null;
-
-function selectEpisode(el) {
-  document.querySelectorAll('.episode-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedEpisode = el.dataset.episodes;
-
-  // Show summary
-  const collectionEl = document.getElementById('collectionSelect');
-  const collectionText = collectionEl.options[collectionEl.selectedIndex].text.split('—')[0].trim();
-
-  document.getElementById('sumCollection').textContent = collectionText;
-  document.getElementById('sumEpisodes').textContent = 'Episoadele ' + selectedEpisode;
-  document.getElementById('orderSummary').style.display = 'block';
-  document.getElementById('orderEmailBox').style.display = 'block';
-  document.getElementById('orderBtn').style.display = 'block';
-  document.getElementById('orderNote').style.display = 'block';
-}
-
-function placeOrder() {
-  if (!selectedEpisode) return;
-  const email = document.getElementById('orderEmail').value.trim();
-  if (!email) {
-    document.getElementById('orderEmail').focus();
-    document.getElementById('orderEmail').style.borderColor = 'var(--rosu)';
-    return;
-  }
-  const collection = document.getElementById('collectionSelect').value;
-  const order = {
-    collection,
-    episodes: selectedEpisode,
-    email,
-    price: 49,
-    currency: 'RON',
-    timestamp: new Date().toISOString()
-  };
-
-  // Save to localStorage
-  const orders = JSON.parse(localStorage.getItem('scp_orders') || '[]');
-  orders.push(order);
-  localStorage.setItem('scp_orders', JSON.stringify(orders));
-
-  // Show confirmation
-  const btn = document.getElementById('orderBtn');
-  btn.textContent = '✓ Comandă înregistrată!';
-  btn.style.background = '#2d6a4f';
-  btn.style.cursor = 'default';
-  btn.onclick = null;
-
-  document.getElementById('orderNote').textContent = 'Vei fi contactat cu detaliile de livrare. Mulțumim!';
-}
-
-// Update summary when collection changes
-document.getElementById('collectionSelect').addEventListener('change', function() {
-  if (selectedEpisode) {
-    const text = this.options[this.selectedIndex].text.split('—')[0].trim();
-    document.getElementById('sumCollection').textContent = text;
-  }
-});
-
-// === Email form ===
 document.getElementById('emailForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const email = document.getElementById('emailInput').value.trim();
   if (!email) return;
 
-  try {
-    // Save to localStorage as simple DB
-    const stored = JSON.parse(localStorage.getItem('scp_emails') || '[]');
-    if (!stored.includes(email)) {
-      stored.push(email);
-      localStorage.setItem('scp_emails', JSON.stringify(stored));
-    }
-
-    // Also try to save to a JSON endpoint (if backend exists)
-    try {
-      await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, timestamp: new Date().toISOString() })
-      });
-    } catch(err) {
-      // Static site - just use localStorage
-    }
-
-    this.style.display = 'none';
-    document.getElementById('emailSuccess').classList.add('show');
-  } catch(err) {
-    alert('A apărut o eroare. Te rugăm să încerci din nou.');
+  const stored = JSON.parse(localStorage.getItem('scp_emails') || '[]');
+  if (!stored.includes(email)) {
+    stored.push(email);
+    localStorage.setItem('scp_emails', JSON.stringify(stored));
   }
+
+  try {
+    await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, timestamp: new Date().toISOString() })
+    });
+  } catch(err) {}
+
+  this.style.display = 'none';
+  document.getElementById('emailSuccess').classList.add('show');
 });
 </script>
 
