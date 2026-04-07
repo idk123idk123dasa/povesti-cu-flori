@@ -1,0 +1,21 @@
+{
+    "slug": "orchid-mae",
+    "title": "Orchid Mae",
+    "subtitle": "Aventură arheologică",
+    "era": "Arheologie",
+    "description": "O aventură captivantă care combină misterul arheologiei cu o poveste de dragoste. Orchid Mae pornește într-o călătorie extraordinară de descoperire.",
+    "price": "$120\/an",
+    "priceNote": "Abonament anual, 24 de scrisori",
+    "image": "",
+    "gallery": [],
+    "features": [
+        "24 de scrisori ilustrate manual",
+        "Livrate de două ori pe lună",
+        "Cărți poștale incluse",
+        "Surprize pe parcurs"
+    ],
+    "seo": {
+        "title": "Orchid Mae - Aventură arheologică | Scrisori cu Povești",
+        "description": "O aventură captivantă care combină misterul arheologiei cu o poveste de dragoste. Orchid Mae pornește într-o călătorie extraordinară de descoperire."
+    }
+}

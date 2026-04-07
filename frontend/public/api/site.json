@@ -1,0 +1,103 @@
+{
+    "siteName": "Scrisori cu Povești",
+    "siteUrl": "https:\/\/scrisori.fitgo.ro",
+    "language": "ro",
+    "navigation": {
+        "main": [
+            {
+                "label": "Povești",
+                "path": "\/povesti",
+                "children": [
+                    {
+                        "label": "Camellia Grace",
+                        "path": "\/povesti\/camellia-grace"
+                    },
+                    {
+                        "label": "Adelaide Magnolia",
+                        "path": "\/povesti\/adelaide-magnolia"
+                    },
+                    {
+                        "label": "Audrey Rose",
+                        "path": "\/povesti\/audrey-rose"
+                    },
+                    {
+                        "label": "Orchid Mae",
+                        "path": "\/povesti\/orchid-mae"
+                    },
+                    {
+                        "label": "Lily Clara",
+                        "path": "\/povesti\/lily-clara"
+                    },
+                    {
+                        "label": "Norah Aven",
+                        "path": "\/povesti\/norah-aven"
+                    }
+                ]
+            },
+            {
+                "label": "Cum funcționează",
+                "path": "\/pagini\/cum-functioneaza"
+            },
+            {
+                "label": "Recenzii",
+                "path": "\/pagini\/recenzii"
+            },
+            {
+                "label": "Cadouri",
+                "path": "\/pagini\/cadouri"
+            },
+            {
+                "label": "Despre Autor",
+                "path": "\/pagini\/despre-autor"
+            },
+            {
+                "label": "Contact",
+                "path": "\/pagini\/contact"
+            }
+        ],
+        "footer": [
+            {
+                "label": "Politica de confidențialitate",
+                "path": "\/politici\/confidentialitate"
+            },
+            {
+                "label": "Politica de returnare",
+                "path": "\/politici\/returnare"
+            },
+            {
+                "label": "Politica de expediere",
+                "path": "\/politici\/expediere"
+            },
+            {
+                "label": "Termeni și condiții",
+                "path": "\/politici\/termeni"
+            },
+            {
+                "label": "Întrebări frecvente",
+                "path": "\/pagini\/faq"
+            },
+            {
+                "label": "Contact",
+                "path": "\/pagini\/contact"
+            }
+        ]
+    },
+    "trustBadges": [
+        {
+            "icon": "shield",
+            "title": "Livrare protejată"
+        },
+        {
+            "icon": "refresh",
+            "title": "Garanție de returnare în 30 de zile"
+        },
+        {
+            "icon": "mail",
+            "title": "Peste 3 milioane de scrisori expediate"
+        },
+        {
+            "icon": "check",
+            "title": "Fără risc, anulează oricând"
+        }
+    ]
+}

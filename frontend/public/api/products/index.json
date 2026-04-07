@@ -1,0 +1,72 @@
+[
+    {
+        "slug": "camellia-grace",
+        "title": "Camellia Grace",
+        "subtitle": "Romantic din Epoca de Aur",
+        "price": "$12\/lună",
+        "image": ""
+    },
+    {
+        "slug": "audrey-rose",
+        "title": "Audrey Rose",
+        "subtitle": "Romantic din Al Doilea Război Mondial",
+        "price": "$13\/lună",
+        "image": "https:\/\/theflowerletters.com\/cdn\/shop\/products\/AR-Envelopes_56631fe6-6fbf-461d-ad8b-7ef51c4aae2a_{width}x.jpg?v=1762527006"
+    },
+    {
+        "slug": "audrey-rose-prepaid",
+        "title": "Audrey Rose - Preplătit",
+        "subtitle": "Romantic din Al Doilea Război Mondial",
+        "price": "$120",
+        "image": ""
+    },
+    {
+        "slug": "adelaide-magnolia",
+        "title": "Adelaide Magnolia",
+        "subtitle": "Romantic din epoca Regenței",
+        "price": "$120\/an",
+        "image": ""
+    },
+    {
+        "slug": "orchid-mae",
+        "title": "Orchid Mae",
+        "subtitle": "Aventură arheologică",
+        "price": "$120\/an",
+        "image": ""
+    },
+    {
+        "slug": "lily-clara",
+        "title": "Lily Clara",
+        "subtitle": "Aventură western",
+        "price": "$120\/an",
+        "image": ""
+    },
+    {
+        "slug": "norah-aven",
+        "title": "Norah Aven - Partea 1",
+        "subtitle": "Aventură fantasy",
+        "price": "$120\/an",
+        "image": ""
+    },
+    {
+        "slug": "norah-aven-2",
+        "title": "Norah Aven - Partea 2",
+        "subtitle": "Aventură fantasy",
+        "price": "$120\/an",
+        "image": "https:\/\/theflowerletters.com\/cdn\/shop\/products\/3_c2db420e-3ec2-4ba9-89c5-b55a22c1b572_1024x1024.png?v=1762530040"
+    },
+    {
+        "slug": "norah-aven-3",
+        "title": "Norah Aven - Partea 3",
+        "subtitle": "Aventură fantasy",
+        "price": "$120",
+        "image": "https:\/\/ucarecdn.com\/aadffe8c-9581-4fc3-9444-8f366e6168f5\/Capa_1-3.svg"
+    },
+    {
+        "slug": "norah-aven-complete",
+        "title": "Norah Aven - Seturi Complete",
+        "subtitle": "Aventură fantasy",
+        "price": "$300",
+        "image": ""
+    }
+]
