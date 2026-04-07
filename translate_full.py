@@ -6,7 +6,8 @@ import re
 import glob
 from bs4 import BeautifulSoup, NavigableString, Comment
 
-BASE_DIR = '/var/develop/scrisoricupovesti/theflowerletters-original/theflowerletters.com'
+import sys
+BASE_DIR = sys.argv[1] if len(sys.argv) > 1 else '/var/develop/scrisoricupovesti/theflowerletters-original/theflowerletters.com'
 
 # === MASSIVE EN->RO TRANSLATION DICTIONARY ===
 # Ordered: longer phrases first for priority matching
@@ -278,6 +279,64 @@ TRANSLATIONS = {
     "The Adelaide Magnolia Floral Print": "Ilustrația florală Adelaide Magnolia",
     "The Audrey Rose Floral Print": "Ilustrația florală Audrey Rose",
     "The Lily Clara Floral Print": "Ilustrația florală Lily Clara",
+
+    # === GET STARTED / ORDER PAGES ===
+    "Use left/right arrows to navigate the slideshow or swipe left/right if using a mobile device": "Folosește săgețile stânga/dreapta pentru a naviga sau glisează pe dispozitivul mobil",
+    "Choose Your Plan →": "Alege planul tău →",
+    "Choose Your Plan": "Alege planul tău",
+    "Already ordered? Download your gift card:": "Ai comandat deja? Descarcă cardul cadou:",
+    "Your Selections": "Selecțiile tale",
+    "Stories Told Through 24 Letters Sent Twice a Month for 12 Months. The Perfect Gift For Mom!": "Povești spuse prin 24 de scrisori trimise de două ori pe lună, timp de 12 luni. Cadoul perfect pentru mama!",
+    "More Than Just Letters": "Mai mult decât simple scrisori",
+    "Every envelope is filled with surprises — telegrams, newspaper clippings, maps, and more to help enrich the story.": "Fiecare plic e plin cu surprize — telegrame, decupaje din ziare, hărți și multe altele pentru a îmbogăți povestea.",
+    "How do I give this as a gift?": "Cum ofer asta cadou?",
+    "What will I receive?": "Ce voi primi?",
+    "When will my letters arrive?": "Când vor ajunge scrisorile mele?",
+    "When will the first letter arrive?": "Când va ajunge prima scrisoare?",
+    "Preview Your Envelope →": "Previzualizează plicul tău →",
+    "Enter your recipient's details and preview their personalized envelope.": "Introdu detaliile destinatarului și previzualizează plicul personalizat.",
+    "We will ship on the day you select.": "Vom expedia în ziua pe care o selectezi.",
+    "Your personalized envelope": "Plicul tău personalizat",
+    "Select how you'd like to pay for the 12-month story experience.": "Selectează cum dorești să plătești pentru experiența de 12 luni.",
+    "Have a discount code? You can apply it at checkout.": "Ai un cod de reducere? Îl poți aplica la finalizare.",
+    "Download your free gift card →": "Descarcă cardul cadou gratuit →",
+    "Expertly crafted and written story experiences": "Experiențe de poveste scrise și create cu măiestrie",
+    "Can I change the shipping address after ordering?": "Pot schimba adresa de livrare după comandă?",
+    "and we'll update it before the next mailing.": "și o vom actualiza înainte de următoarea expediere.",
+    "This is a physical product that will be shipped to you": "Acesta este un produs fizic care va fi expediat către tine",
+    "— real history behind every letter": "— istorie reală în spatele fiecărei scrisori",
+    "— perfect for presenting as a gift": "— perfect pentru a fi oferit cadou",
+    "— Not happy after the first two letters? Full refund, no questions asked.": "— Nu ești mulțumit după primele două scrisori? Rambursare completă, fără întrebări.",
+    "Learn the Words, People, and Expressions:": "Descoperă cuvintele, persoanele și expresiile:",
+    "Back to The Colecția Lily Clara - Învățare extinsă": "Înapoi la Colecția Lily Clara - Învățare extinsă",
+    "Back to The Colecția Adelaide Magnolia - Învățare extinsă": "Înapoi la Colecția Adelaide Magnolia - Învățare extinsă",
+    "Back to The Colecția Audrey Rose - Învățare extinsă": "Înapoi la Colecția Audrey Rose - Învățare extinsă",
+    "Back to The Orchid Mae Collection - Învățare extinsă": "Înapoi la Colecția Orchid Mae - Învățare extinsă",
+
+    # Testimonials on product pages
+    "I have so enjoyed these letters!": "Mi-au plăcut enorm aceste scrisori!",
+    "Got the Flower Letters for my Mom for Mother's Day. She loved them so much that my husband and I read them too!": "Am luat Scrisorile cu Flori pentru mama de Ziua Mamei. I-au plăcut atât de mult încât soțul meu și cu mine le-am citit și noi!",
+    "This is a wonderful story. It is worth every penny. Everyone is different and so enjoyable.": "Aceasta este o poveste minunată. Merită fiecare bănuț. Fiecare e diferită și atât de plăcută.",
+
+    # Shipping/delivery
+    "Your first letter ships via USPS Ground Advantage and typically arrives within 2–5 business days.": "Prima ta scrisoare se expediază prin USPS și ajunge de obicei în 2-5 zile lucrătoare.",
+    "Letters are mailed twice each month.": "Scrisorile sunt expediate de două ori pe lună.",
+    "Your first letter ships with USPS tracking. All remaining letters are mailed via regular mail twice each month.": "Prima scrisoare se expediază cu urmărire USPS. Restul scrisorilor sunt trimise prin poștă normală de două ori pe lună.",
+    "Giving this as a gift?": "Oferi asta cadou?",
+    "Your subscription includes free": "Abonamentul tău include gratuit",
+    "— historical context and insights for every letter in your story, free with every subscription.": "— context istoric și informații pentru fiecare scrisoare din povestea ta, gratuit cu fiecare abonament.",
+    "If you do not receive your products within these time frames, please contact support@theflowerletters.com with the follo": "Dacă nu primiți produsele în aceste intervale de timp, contactați support@theflowerletters.com cu următoarele",
+    "-Story collection and missing letter number or product": "-Colecția de povești și numărul scrisorii lipsă sau produsul",
+    "We offer a 30-day money-back guarantee.": "Oferim garanție de returnare a banilor în 30 de zile.",
+
+    # Common UI remaining
+    "Simply enter your recipient's name and shipping address at checkout": "Pur și simplu introdu numele și adresa destinatarului la finalizare",
+    "the letters will be mailed directly to them": "scrisorile vor fi trimise direct către ei",
+    "to present in person, or email digitally to let them know their story is on the way.": "pentru a le prezenta personal, sau trimite digital prin email pentru a le spune că povestea lor e pe drum.",
+    "international orders are sent as a complete set of letters delivered all at once": "comenzile internaționale sunt trimise ca un set complet de scrisori livrate dintr-o dată",
+    "The first letter will be addressed": "Prima scrisoare va fi adresată",
+    "and the remainder will be personalized to your recipient.": "iar restul vor fi personalizate pentru destinatarul tău.",
+    "Welcome": "Bine ai venit",
 
     # Misc
     "Summary": "Rezumat",
