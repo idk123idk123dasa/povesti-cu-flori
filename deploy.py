@@ -7,11 +7,11 @@ import hashlib
 import requests
 import mimetypes
 
-API_TOKEN = "cfat_4OSxAL03Al1oRDawc7gYF57bzOxtsumjfysP7AjEc203ec23"
+API_TOKEN = "cfut_hS7zk6YBjKJMtqURxqgCvMCg3FAZRYykmIzVPf9314a59615"
 ACCOUNT_ID = "641cf08cdd9060470052c8887e987a60"
 PROJECT_NAME = "scrisori"
 BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/pages/projects/{PROJECT_NAME}"
-SITE_DIR = "/var/develop/scrisoricupovesti/theflowerletters.com"
+SITE_DIR = "/var/develop/scrisoricupovesti/theflowerletters-original/theflowerletters.com"
 
 HEADERS = {
     "Authorization": f"Bearer {API_TOKEN}",

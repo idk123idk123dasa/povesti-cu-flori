@@ -17,4 +17,8 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx wrangler@latest pages deploy theflowerletters-original/theflowerletters.com --project-name=scrisori --branch=main
+        run: |
+          # Site-ul static e prea mare pentru GitHub (237MB).
+          # Deploy-ul se face local via git hook post-commit + deploy.py
+          # Acest workflow e placeholder pentru viitoare build-uri.
+          echo "Deploy via git hook local (deploy.py). Site: scrisoricupovesti.ro/site/"
