@@ -298,6 +298,49 @@ body{
 }
 .guarantee svg{color:#B8913A;flex-shrink:0}
 
+/* Episode selector */
+.ep-section{
+  margin-top:8px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:8px;
+  padding:10px;
+  display:none;
+}
+.ep-section.visible{display:block;}
+.ep-title{
+  font-size:0.6rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:rgba(255,255,255,0.6);
+  font-weight:600;
+  margin-bottom:7px;
+  text-align:center;
+}
+.ep-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
+.ep-btn{
+  background:rgba(255,255,255,0.07);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:6px;
+  padding:6px 4px;
+  text-align:center;
+  cursor:pointer;
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.78rem;
+  font-weight:600;
+  color:rgba(255,255,255,0.75);
+  transition:all 0.15s;
+  line-height:1.2;
+}
+.ep-btn:hover{background:rgba(212,176,96,0.15);border-color:rgba(212,176,96,0.5);color:#fff;}
+.ep-btn.sel{background:rgba(212,176,96,0.2);border-color:#D4B060;color:#D4B060;}
+.ep-btn .ep-sub{font-size:0.52rem;color:rgba(255,255,255,0.45);font-family:'EB Garamond',serif;font-weight:400;display:block;margin-top:1px;}
+.ep-btn.sel .ep-sub{color:rgba(212,176,96,0.7);}
+
 /* Responsive */
 @media(max-width:700px){
   .page-wrap{flex-direction:column;align-items:center;}
@@ -421,6 +464,12 @@ body{
         </div>
         <div class="plan-price">499 lei<span>/an</span></div>
       </div>
+
+      <!-- EPISODE SELECTOR (lunar only) -->
+      <div class="ep-section visible" id="epSection">
+        <div class="ep-title">Începe de la episodul</div>
+        <div class="ep-grid" id="epGrid"></div>
+      </div>
     </div>
   </div>
 
@@ -470,6 +519,7 @@ body{
   var storyId  = new URLSearchParams(window.location.search).get('story');
   var story    = stories[storyId] || null;
   var selPlan  = 'lunar';
+  var selEp    = 1; // starting episode (1, 3, 5, ... 23)
 
   if(story){
     document.getElementById('storyImg').src  = story.img;
@@ -480,11 +530,33 @@ body{
     document.title = 'Continuă cu ' + story.title + ' – Scrisori cu Povești';
   }
 
+  /* Build episode grid */
+  (function(){
+    var grid = document.getElementById('epGrid');
+    for(var i = 1; i <= 23; i += 2){
+      var btn = document.createElement('div');
+      btn.className = 'ep-btn' + (i === 1 ? ' sel' : '');
+      btn.setAttribute('data-ep', i);
+      var epEnd = i + 1;
+      btn.innerHTML = i + '–' + epEnd + '<span class="ep-sub">scrisori</span>';
+      btn.onclick = (function(ep){ return function(){ pickEp(ep); }; })(i);
+      grid.appendChild(btn);
+    }
+  })();
+
+  function pickEp(ep){
+    selEp = ep;
+    document.querySelectorAll('.ep-btn').forEach(function(b){
+      b.classList.toggle('sel', parseInt(b.getAttribute('data-ep')) === ep);
+    });
+  }
+
   /* Plan selection */
   window.selectPlan = function(plan){
     selPlan = plan;
     document.getElementById('plan-lunar').classList.toggle('selected', plan==='lunar');
     document.getElementById('plan-anual').classList.toggle('selected', plan==='anual');
+    document.getElementById('epSection').classList.toggle('visible', plan==='lunar');
   };
 
   /* Live envelope update */
@@ -549,7 +621,8 @@ body{
       city, county,
       postal: document.getElementById('postal').value.trim(),
       storyId,
-      plan: selPlan
+      plan: selPlan,
+      startEpisode: selPlan === 'lunar' ? selEp : null
     }));
 
     window.location.href = '/pages/get-started?story=' + (storyId||'') + '&plan=' + selPlan;
