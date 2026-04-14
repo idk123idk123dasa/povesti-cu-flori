@@ -1489,10 +1489,24 @@ window.go=function(step){
   if(step===2&&selStory)window.location.href='/pages/continua?story='+selStory.id;
 };
 
-renderTiles();
+function initStory(){
+  renderTiles();
+  var urlStory=new URLSearchParams(window.location.search).get('story')||'camellia-grace';
+  var m=S.find(function(s){return s.id===urlStory;});
+  if(m)window._pickStory(m.id);
+}
 
-var urlStory=new URLSearchParams(window.location.search).get('story');
-if(urlStory){var m=S.find(function(s){return s.id===urlStory;});if(m)window._pickStory(m.id);}
+initStory();
+
+var _obs=new MutationObserver(function(){
+  var el=document.getElementById('tiles');
+  if(el&&el.children.length===0)initStory();
+});
+var _tilesParent=document.getElementById('tiles');
+if(_tilesParent){
+  _obs.observe(_tilesParent.parentElement,{childList:true,subtree:true});
+  setTimeout(function(){_obs.disconnect();},8000);
+}
 })();
 </script>
 <style id="nav-fix">
