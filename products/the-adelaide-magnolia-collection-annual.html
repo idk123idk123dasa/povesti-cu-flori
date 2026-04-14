@@ -1445,7 +1445,7 @@ function renderTiles(){
   el.innerHTML=S.map(function(s){
     var badge=s.badge?'<div class="tile-badge">'+s.badge+'</div>':'';
     var isSel=selStory&&selStory.id===s.id;
-    return '<div class="tile'+(isSel?' sel':'')+'" onclick="window._pickStory(''+s.id+'')" style="cursor:pointer">'+badge+'<div class="tile-img"><img src="'+s.tileImg+'" alt="'+s.title+'" loading="lazy"></div><div class="tile-name">'+s.title.replace('The ','').replace(' Letters','').replace(' Chronicles','')+'</div><div class="tile-era">'+s.tag+'</div></div>';
+    return '<div class="tile'+(isSel?' sel':'')+'" onclick="window._pickStory(\''+s.id+'\')" style="cursor:pointer">'+badge+'<div class="tile-img"><img src="'+s.tileImg+'" alt="'+s.title+'" loading="lazy"></div><div class="tile-name">'+s.title.replace('The ','').replace(' Letters','').replace(' Chronicles','')+'</div><div class="tile-era">'+s.tag+'</div></div>';
   }).join('');
 }
 
