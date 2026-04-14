@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Începe acum – Scrisori cu Povești</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Pinyon+Script&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'EB Garamond',serif;-webkit-font-smoothing:antialiased;}
+body{
+  background-color:#7D1E2A;
+  background-image:url('https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Red-FloralBG-Square-2.jpg?v=1774999232');
+  background-size:400px;background-repeat:repeat;
+  padding:32px 16px 60px;
+}
+
+/* Progress bar */
+.pbar{position:fixed;top:0;left:0;width:100%;height:4px;background:rgba(0,0,0,0.2);z-index:1000;}
+.pfill{height:100%;background:linear-gradient(90deg,#D4B060,#E8CC80);}
+
+/* Layout */
+.page-wrap{
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:16px;
+  max-width:900px;
+  margin:0 auto;
+}
+
+/* Main form card */
+.main-card{
+  flex:1;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.25);
+  overflow:hidden;
+  min-width:0;
+}
+
+/* Story panel */
+.story-panel{
+  width:190px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.story-panel img{
+  width:100%;
+  border-radius:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  display:block;
+}
+.story-panel .story-name{
+  margin-top:10px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.9rem;
+  font-weight:600;
+  color:#fff;
+  text-align:center;
+  line-height:1.3;
+  text-shadow:0 1px 3px rgba(0,0,0,0.4);
+}
+.story-panel .story-tag{
+  margin-top:4px;
+  font-size:0.7rem;
+  color:rgba(255,255,255,0.75);
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:16px;
+}
+
+/* ═══════════════════════════════
+   PLAN SELECTION
+═══════════════════════════════ */
+.plan-section{
+  background:rgba(255,255,255,0.07);
+  border-radius:10px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.15);
+}
+.plan-title{
+  font-size:0.65rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:rgba(255,255,255,0.7);
+  font-weight:600;
+  margin-bottom:8px;
+  text-align:center;
+}
+.plan-card{
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.15);
+  border-radius:8px;
+  padding:10px 10px 10px 8px;
+  margin-bottom:7px;
+  cursor:pointer;
+  transition:all 0.18s ease;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.plan-card:last-child{margin-bottom:0}
+.plan-card:hover{background:rgba(255,255,255,0.14);border-color:rgba(212,176,96,0.5);}
+.plan-card.selected{
+  background:rgba(212,176,96,0.15);
+  border-color:#D4B060;
+}
+.plan-radio{
+  width:15px;height:15px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,0.4);
+  flex-shrink:0;
+  position:relative;
+  transition:border-color 0.18s;
+}
+.plan-card.selected .plan-radio{
+  border-color:#D4B060;
+}
+.plan-card.selected .plan-radio::after{
+  content:'';
+  position:absolute;
+  inset:3px;
+  border-radius:50%;
+  background:#D4B060;
+}
+.plan-info{flex:1;min-width:0;}
+.plan-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.85rem;
+  font-weight:600;
+  color:#fff;
+  line-height:1.2;
+}
+.plan-desc{
+  font-size:0.62rem;
+  color:rgba(255,255,255,0.6);
+  line-height:1.3;
+  margin-top:1px;
+}
+.plan-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;
+  font-weight:700;
+  color:#D4B060;
+  text-align:right;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.plan-price span{
+  font-size:0.62rem;
+  font-weight:400;
+  color:rgba(212,176,96,0.75);
+  display:block;
+  text-align:right;
+}
+.plan-badge{
+  display:inline-block;
+  background:#D4B060;
+  color:#fff;
+  font-size:0.52rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.07em;
+  padding:1px 5px;
+  border-radius:3px;
+  margin-left:4px;
+  vertical-align:middle;
+}
+
+/* ═══════════════════════════════
+   ENVELOPE (PNG-based)
+═══════════════════════════════ */
+.envelope-wrap{
+  background:#f4ede3;
+  padding:20px 24px 16px;
+  border-bottom:1px solid #e8ddd3;
+}
+.envelope-img-wrap{
+  position:relative;
+  width:100%;
+  line-height:0;
+  border-radius:4px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.13);
+}
+.envelope-img{
+  width:100%;
+  display:block;
+  border-radius:4px;
+}
+
+/* Text overlaid on the envelope PNG */
+.env-name{
+  position:absolute;
+  top:51%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Pinyon Script','Dancing Script',cursive;
+  font-size:clamp(18px,4.5vw,32px);
+  color:#2C2418;
+  white-space:nowrap;
+  pointer-events:none;
+  line-height:1;
+  text-align:center;
+}
+.env-name.empty{
+  font-family:'EB Garamond',serif;
+  font-style:italic;
+  font-size:clamp(11px,2vw,14px);
+  color:#aaa;
+  top:55%;
+}
+.env-addr{
+  position:absolute;
+  top:63%;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'EB Garamond',serif;
+  font-size:clamp(10px,1.8vw,14px);
+  color:#2C2418;
+  line-height:1.5;
+  text-align:center;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.env-addr.empty{
+  color:#aaa;
+  font-style:italic;
+  font-size:clamp(10px,1.8vw,13px);
+}
+
+/* ═══════════════════════════════
+   FORM BODY
+═══════════════════════════════ */
+.form-body{
+  padding:22px 24px 26px;
+}
+
+.section-heading{
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:#B8913A;
+  font-weight:600;
+  margin-bottom:10px;
+  margin-top:18px;
+  padding-bottom:5px;
+  border-bottom:1px solid #ece7df;
+}
+.section-heading:first-child{margin-top:0}
+
+.field-row{display:flex;gap:10px;margin-bottom:10px;}
+.field{display:flex;flex-direction:column;flex:1;margin-bottom:10px;}
+.field:last-child{margin-bottom:0}
+.field label{font-size:0.75rem;color:#666;margin-bottom:3px;font-weight:500;}
+.field input,.field select{
+  font-family:'EB Garamond',serif;
+  font-size:0.97rem;
+  border:1.5px solid #d8d0c8;
+  border-radius:6px;
+  padding:9px 11px;
+  color:#1a1a1a;
+  background:#fff;
+  width:100%;outline:none;
+  transition:border-color 0.15s;
+}
+.field input:focus,.field select:focus{border-color:#B8913A;}
+.field input::placeholder{color:#bbb;}
+.field select{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;
+  padding-right:28px;
+}
+
+.btn-submit{
+  display:block;width:100%;margin-top:20px;
+  padding:14px 24px;
+  background:linear-gradient(135deg,#7D1E2A 0%,#A0263A 100%);
+  color:#fff;font-family:'EB Garamond',serif;
+  font-size:1.1rem;font-weight:600;
+  border:none;border-radius:8px;cursor:pointer;
+  letter-spacing:0.04em;transition:opacity 0.2s;
+  box-shadow:0 3px 12px rgba(125,30,42,0.35);
+}
+.btn-submit:hover{opacity:0.88}
+
+.guarantee{
+  margin-top:10px;text-align:center;font-size:0.77rem;color:#aaa;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.guarantee svg{color:#B8913A;flex-shrink:0}
+
+/* Responsive */
+@media(max-width:700px){
+  .page-wrap{flex-direction:column;align-items:center;}
+  .story-panel{width:100%;flex-direction:row;align-items:center;gap:14px;order:-1;}
+  .story-panel img{width:70px;flex-shrink:0;border-radius:8px;}
+  .story-panel .story-name,.story-panel .story-tag{text-align:left;margin-top:0;margin-bottom:0;}
+  .story-panel .story-tag{margin-bottom:0;}
+  .story-panel>div:first-of-type{display:flex;flex-direction:column;}
+  .plan-section{flex:1;}
+  .envelope-wrap{padding:14px 14px 12px;}
+  .form-body{padding:16px 16px 20px;}
+  .field-row{flex-direction:column;gap:0;}
+}
+@media(max-width:700px){
+  .story-panel{flex-wrap:wrap;}
+  .plan-section{width:100%;margin-top:12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="pbar"><div class="pfill" style="width:66%"></div></div>
+
+<div class="page-wrap">
+
+  <!-- MAIN CARD -->
+  <div class="main-card">
+
+    <!-- ENVELOPE PNG -->
+    <div class="envelope-wrap">
+      <div class="envelope-img-wrap">
+        <img id="envImg" src="" alt="plic" class="envelope-img"/>
+        <div class="env-name empty" id="envName">Numele destinatarului</div>
+        <div class="env-addr empty" id="envAddr">Strada, numărul · Orașul</div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-body">
+      <div class="section-heading">Destinatar</div>
+      <div class="field-row">
+        <div class="field">
+          <label for="firstName">Prenume</label>
+          <input type="text" id="firstName" placeholder="ex. Maria" autocomplete="given-name"/>
+        </div>
+        <div class="field">
+          <label for="lastName">Nume</label>
+          <input type="text" id="lastName" placeholder="ex. Ionescu" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <div class="section-heading">Adresă de livrare</div>
+      <div class="field">
+        <label for="address">Strada și numărul</label>
+        <input type="text" id="address" placeholder="ex. Str. Florilor nr. 12" autocomplete="street-address"/>
+      </div>
+      <div class="field">
+        <label for="address2">Bloc, scară, apart. <span style="color:#bbb;font-weight:400">(opțional)</span></label>
+        <input type="text" id="address2" placeholder="ex. Bl. A2, Sc. 1, Ap. 5"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="city">Oraș</label>
+          <input type="text" id="city" placeholder="ex. Cluj-Napoca" autocomplete="address-level2"/>
+        </div>
+        <div class="field" style="max-width:160px">
+          <label for="county">Județ</label>
+          <select id="county">
+            <option value="">Selectează</option>
+            <option>Alba</option><option>Arad</option><option>Argeș</option><option>Bacău</option>
+            <option>Bihor</option><option>Bistrița-Năsăud</option><option>Botoșani</option><option>Brăila</option>
+            <option>Brașov</option><option>București</option><option>Buzău</option><option>Călărași</option>
+            <option>Caraș-Severin</option><option>Cluj</option><option>Constanța</option><option>Covasna</option>
+            <option>Dâmbovița</option><option>Dolj</option><option>Galați</option><option>Giurgiu</option>
+            <option>Gorj</option><option>Harghita</option><option>Hunedoara</option><option>Ialomița</option>
+            <option>Iași</option><option>Ilfov</option><option>Maramureș</option><option>Mehedinți</option>
+            <option>Mureș</option><option>Neamț</option><option>Olt</option><option>Prahova</option>
+            <option>Sălaj</option><option>Satu Mare</option><option>Sibiu</option><option>Suceava</option>
+            <option>Teleorman</option><option>Timiș</option><option>Tulcea</option><option>Vâlcea</option>
+            <option>Vaslui</option><option>Vrancea</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:100px">
+          <label for="postal">Cod poștal</label>
+          <input type="text" id="postal" placeholder="000000" maxlength="6" autocomplete="postal-code"/>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="continua()">Continuă acum →</button>
+      <p class="guarantee">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        30 de zile garanție de returnare a banilor
+      </p>
+    </div>
+  </div>
+
+  <!-- STORY PANEL + PLANS -->
+  <div class="story-panel">
+    <img id="storyImg" src="" alt=""/>
+    <div class="story-name" id="storyName"></div>
+    <div class="story-tag" id="storyTag"></div>
+
+    <!-- PLAN SELECTION -->
+    <div class="plan-section">
+      <div class="plan-title">Alege planul</div>
+
+      <div class="plan-card selected" id="plan-lunar" onclick="selectPlan('lunar')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Lunar</div>
+          <div class="plan-desc">O scrisoare pe lună</div>
+        </div>
+        <div class="plan-price">65 lei<span>/lună</span></div>
+      </div>
+
+      <div class="plan-card" id="plan-anual" onclick="selectPlan('anual')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Anual <span class="plan-badge">-38%</span></div>
+          <div class="plan-desc">12 scrisori · Economisești 300 lei</div>
+        </div>
+        <div class="plan-price">480 lei<span>/an</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var stories = {
+    'camellia-grace':    {
+      title:'Camellia Grace',
+      tag:'Era Aurită',
+      img:'/assets/3_5d12303b-4845-4b2d-b891-39fedff3798b.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Kindly_Delivery_Into_the_Care_of_-2.png?v=1774892928'
+    },
+    'audrey-rose':       {
+      title:'Audrey Rose',
+      tag:'Al Doilea Război Mondial',
+      img:'/assets/ARProductPage-1.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Audrey_ae839634-176a-428f-8bd8-20f0c3bb98ba.png?v=1774749077'
+    },
+    'adelaide-magnolia': {
+      title:'Adelaide Magnolia',
+      tag:'Romantism Regency',
+      img:'/assets/AM.png',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Adelade.png?v=1774749077'
+    },
+    'lily-clara':        {
+      title:'Lily Clara',
+      tag:'Aventură Western',
+      img:'/assets/LCProductPage-1_d4b31969-d125-4f93-aa34-0cfe2dd0b0cc.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Lily.png?v=1774749077'
+    },
+    'orchid-mae':        {
+      title:'Orchid Mae',
+      tag:'Aventură Amazoniană',
+      img:'/assets/OMProductPage-1.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Orchid.png?v=1774749077'
+    },
+    'norah-aven':        {
+      title:'Norah Aven',
+      tag:'Aventură Fantastică',
+      img:'/assets/NAProductPage-1.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Norah_ebe11c07-c84b-4eba-b920-2411baf132c6.png?v=1774749076'
+    }
+  };
+
+  var storyId  = new URLSearchParams(window.location.search).get('story');
+  var story    = stories[storyId] || null;
+  var selPlan  = 'lunar';
+
+  if(story){
+    document.getElementById('storyImg').src  = story.img;
+    document.getElementById('storyImg').alt  = story.title;
+    document.getElementById('storyName').textContent = story.title + ' Letters';
+    document.getElementById('storyTag').textContent  = story.tag;
+    document.getElementById('envImg').src = story.env;
+    document.title = 'Continuă cu ' + story.title + ' – Scrisori cu Povești';
+  }
+
+  /* Plan selection */
+  window.selectPlan = function(plan){
+    selPlan = plan;
+    document.getElementById('plan-lunar').classList.toggle('selected', plan==='lunar');
+    document.getElementById('plan-anual').classList.toggle('selected', plan==='anual');
+  };
+
+  /* Live envelope update */
+  function updateEnvelope(){
+    var fn = document.getElementById('firstName').value.trim();
+    var ln = document.getElementById('lastName').value.trim();
+    var ad = document.getElementById('address').value.trim();
+    var a2 = document.getElementById('address2').value.trim();
+    var ct = document.getElementById('city').value.trim();
+    var co = document.getElementById('county').value;
+
+    var nameEl = document.getElementById('envName');
+    var addrEl = document.getElementById('envAddr');
+
+    if(fn || ln){
+      nameEl.textContent = [fn, ln].filter(Boolean).join(' ');
+      nameEl.classList.remove('empty');
+    } else {
+      nameEl.textContent = 'Numele destinatarului';
+      nameEl.classList.add('empty');
+    }
+
+    var addrParts = [];
+    if(ad) addrParts.push(a2 ? ad + ', ' + a2 : ad);
+    if(ct || co) addrParts.push([ct, co].filter(Boolean).join(', '));
+
+    if(addrParts.length){
+      addrEl.innerHTML = addrParts.join('<br>');
+      addrEl.classList.remove('empty');
+    } else {
+      addrEl.textContent = 'Strada, numărul · Orașul';
+      addrEl.classList.add('empty');
+    }
+  }
+
+  ['firstName','lastName','address','address2','city','county'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', updateEnvelope);
+    document.getElementById(id).addEventListener('change', updateEnvelope);
+  });
+
+  /* Submit */
+  window.continua = function(){
+    var firstName = document.getElementById('firstName').value.trim();
+    var lastName  = document.getElementById('lastName').value.trim();
+    var address   = document.getElementById('address').value.trim();
+    var city      = document.getElementById('city').value.trim();
+    var county    = document.getElementById('county').value;
+
+    if(!firstName || !lastName){
+      alert('Te rugăm să completezi prenumele și numele destinatarului.');
+      return;
+    }
+    if(!address || !city || !county){
+      alert('Te rugăm să completezi adresa, orașul și județul.');
+      return;
+    }
+
+    sessionStorage.setItem('recipient', JSON.stringify({
+      firstName, lastName,
+      address: address,
+      address2: document.getElementById('address2').value.trim(),
+      city, county,
+      postal: document.getElementById('postal').value.trim(),
+      storyId,
+      plan: selPlan
+    }));
+
+    window.location.href = '/pages/get-started?story=' + (storyId||'') + '&plan=' + selPlan;
+  };
+})();
+</script>
+
+</body>
+</html>
