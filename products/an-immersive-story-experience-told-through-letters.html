@@ -1475,6 +1475,7 @@ window._pickStory=function(id){
     s1btn.textContent='Continuă cu '+sh+' \u2192';
     s1btn.onclick=function(){window.location.href='/pages/continua?story='+selStory.id;};
   }
+  if(typeof startReviewCarousel==='function')startReviewCarousel(id);
 };
 
 window.togDesc=function(){
@@ -1488,6 +1489,54 @@ window.togDesc=function(){
 window.go=function(step){
   if(step===2&&selStory)window.location.href='/pages/continua?story='+selStory.id;
 };
+
+const storyReviews={
+'camellia-grace':[
+{t:'"Am luat scrisorile pentru mama. Urmărește Gilded Age, Bridgerton, Downton Abbey. Le adoră și le așteaptă cu nerăbdare. Spune că se simte atât de \'high society\'."',n:'Cristina B., Cumpărător Verificat'},
+{t:'"Ce prezentare glorioasă! Detaliile, dragostea și arta care au intrat în acest proiect sunt uimitoare. Atâtea lucruri drăguțe și detalii frumoase care mă poartă în conacele din Newport."',n:'Ioana O., Cumpărător Verificat'},
+{t:'"Acesta a fost un cadou pentru mama. Este a 3-a poveste a ei. Îi plac poveștile și le păstrează cu grijă. Alții din comunitatea ei obișnuiesc să citească împreună cu ea. Acest cadou este cu adevărat special."',n:'Suzana R., Cumpărător Verificat'},
+{t:'"Îmi amintește de vremuri apuse, când oamenii obișnuiau să-și scrie scrisori de mână. Aștept cu nerăbdare fiecare livrare."',n:'Carla B., Cumpărător Verificat'},
+{t:'"Prima scrisoare primită, și este atât de minunată! Îmi place că paginile sunt discret numerotate, astfel încât să știu ordinea corectă mai târziu."',n:'Petra A., Cumpărător Verificat'}
+],
+'audrey-rose':[
+{t:'"Am cumpărat scrisorile Audrey Rose ca cadou de Ziua Mamei. Este entuziasmată să verifice cutia poștală și mereu îmi povestește ce se întâmplă în poveste."',n:'Melisa H., Cumpărător Verificat'},
+{t:'"Mă sună de fiecare dată când știe că scrisorile au fost trimise și din nou când le primește. Îmi place atât de mult să o văd cât de entuziasmată este!"',n:'Camelia M., Cumpărător Verificat'},
+{t:'"Am dăruit scrisorile Audrey Rose bunicii mele de 93 de ani de ziua ei. I-a plăcut enorm să primească scrisorile și le așteaptă cu nerăbdare."',n:'Alina N., Cumpărător Verificat'},
+{t:'"Am luat asta pentru fiica mea ca cadou de ziua ei. O adoră! Se trezește așteptând cu nerăbdare fiecare scrisoare. Îmi bucură cu adevărat inima."',n:'Sonia Y., Cumpărător Verificat'},
+{t:'"Când soacra mea a primit scrisorile, a fost copleșită de bucurie. Ne-am bucurat cu toții primind scrisorile și le așteptăm cu nerăbdare."',n:'Gabriela B., Cumpărător Verificat'}
+],
+'adelaide-magnolia':[
+{t:'"I-am dăruit asta mamei de Ziua Mamei, și îi place atât de mult! Este mereu entuziasmată când primește un plic și nu poate să aștepte să vadă ce este înăuntru!"',n:'Mihaela M., Cumpărător Verificat'},
+{t:'"Am cumpărat povestea din Anglia Regency pentru mama mea de 91 de ani. Îi place să primească parțile poveștii în fiecare lună. Un cadou minunat de așteptat."',n:'Iulia S., Cumpărător Verificat'},
+{t:'"Îi place să aștepte cu nerăbdare momentul când verifică cutia poștală și vede frumoasa scrisoare acolo, așteptând-o să se așeze liniștită și să citească."',n:'Cecilia R., Cumpărător Verificat'},
+{t:'"Am cumpărat Scrisorile cu Povești pentru mama de Ziua Mamei. Le adoră absolut! Mă bucur să o văd entuziasmată de fiecare dată când sosește o scrisoare nouă."',n:'Denisa B., Cumpărător Verificat'},
+{t:'"Povestea este minunată, dar cu adevărat îmi place arta florală. Plănuiesc să împart scrisorile cu persoana care mi le-a dăruit — este prea frumoasă pentru a nu o împărtăși!"',n:'Iulia K., Cumpărător Verificat'}
+],
+'lily-clara':[
+{t:'"ÎMI PLACE ATÂT DE MULT SĂ PRIMESC ACESTE SCRISORI!!! Ce concept uimitor — să primești scrisori în fiecare lună timp de un an! Nora mea mi-a dăruit asta de Crăciun. Cel mai bun cadou pe care l-am primit vreodată!"',n:'Irina N., Cumpărător Verificat'},
+{t:'"Este unul dintre cele mai frumoase cadouri pe care le-am primit. Am iubit mereu Vestul Sălbatic și am visat la aventuri. Am savurat absolut fiecare scrisoare."',n:'Ioana R., Cumpărător Verificat'},
+{t:'"Adoră absolut scrisorile și se entuziasmează atât de mult când primește una nouă prin poștă. Și-a decorat propria cutie de lemn ca să le păstreze!"',n:'Ligia R., Cumpărător Verificat'},
+{t:'"O numește cadoul care nu se termină niciodată. Este entuziasmată să verifice cutia poștală și să urmărească povestea uimitoare!"',n:'Alina H., Cumpărător Verificat'},
+{t:'"Îmi place absolut. Aștept cu nerăbdare să primesc următoarea scrisoare și îmi găsesc un loc liniștit să o savurez. Toate suplimentele din interior sunt atât de distractive și de o calitate extraordinară."',n:'Ștefania J., Cumpărător Verificat'}
+],
+'orchid-mae':[
+{t:'"Are deja șase scrisori și le savurează din plin. Așteaptă cu nerăbdare fiecare una! Îi plac toate suplimentele."',n:'Melisa F., Cumpărător Verificat'},
+{t:'"Îmi place anticiparea pe care o aduce acest proces — să merg la cutia poștală, să găsesc o scrisoare frumoasă. Îmi place să citesc, să mă las prinsă și să savurez fiecare pagină."',n:'Camelia S., Cumpărător Verificat'},
+{t:'"Eram atât de entuziasmată. Abia aștept să primesc scrisorile Orchid Mae. Aștept cu nerăbdare să sosească în fiecare lună și să devin parte din poveste."',n:'Ioana L., Cumpărător Verificat'},
+{t:'"Îmi plac atât de mult aceste scrisori, încât am comandat un Pachet Cadou pentru 2 dintre prietenele mele! Detaliile sunt minunate, iar scriitura mă atrage complet."',n:'Corina M., Cumpărător Verificat'},
+{t:'"Wow, nu aș fi putut anticipa cât de mult îi vor PLĂCEA scrisorile."',n:'Rebeca L., Cumpărător Verificat'}
+],
+'norah-aven':[
+{t:'"Aștept cu atâta nerăbdare fiecare scrisoare! Îmi place povestea până acum și mă bucur de mister. Acest cadou din partea fiicei mele este cu adevărat de neuitat!"',n:'Cătălina L., Cumpărător Verificat'},
+{t:'"Era atât de entuziasmată să primească cutia! Ce cadou minunat — îi place să citească și este o pasionată de povești."',n:'Ștefania D., Cumpărător Verificat'},
+{t:'"Sunt absolut îndrăgostită de Colecția Norah Aven! Scrisă frumos, incredibil de captivantă și interactivă. Aceasta este geniu la cel mai înalt nivel."',n:'Simona L., Cumpărător Verificat'},
+{t:'"Fiicei mele de 13 ani îi place enorm. Este foarte entuziasmată pentru următoarea scrisoare!"',n:'Gabriela S., Cumpărător Verificat'},
+{t:'"Bunica noastră adoră absolut să primească scrisorile prin poștă!! Împarte scrisorile cu toată familia — stranepoților le îndrăgesc la fel de mult."',n:'Irina M., Cumpărător Verificat'}
+]};
+let srIdx=0,srTimer=null;
+function showStoryReview(storyId,idx){var reviews=storyReviews[storyId];if(!reviews)return;var r=reviews[idx];var box=document.getElementById('storyReviewBox');if(!box)return;document.getElementById('srText').innerHTML=r.t;document.getElementById('srNume').textContent='— '+r.n;var dots=document.getElementById('srDots');dots.innerHTML=reviews.map(function(_,i){return'<div onclick="jumpReview(\''+storyId+'\','+i+')" style="width:8px!important;height:8px!important;border-radius:50%!important;background:'+(i===idx?'#B8913A':'#ddd')+'!important;cursor:pointer!important;display:inline-block!important"></div>'}).join('');}
+function jumpReview(storyId,idx){srIdx=idx;clearInterval(srTimer);showStoryReview(storyId,idx);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
+function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);var box=document.getElementById('storyReviewBox');if(box){box.style.display='block';}showStoryReview(storyId,0);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
 
 function initStory(){
   renderTiles();
