@@ -203,7 +203,7 @@ body{
   left:50%;
   transform:translate(-50%,-50%);
   font-family:'Pinyon Script','Dancing Script',cursive;
-  font-size:clamp(18px,4.5vw,32px);
+  font-size:clamp(22px,5.5vw,38px);
   color:#2C2418;
   white-space:nowrap;
   pointer-events:none;
@@ -213,7 +213,7 @@ body{
 .env-name.empty{
   font-family:'EB Garamond',serif;
   font-style:italic;
-  font-size:clamp(11px,2vw,14px);
+  font-size:clamp(13px,2.2vw,16px);
   color:#aaa;
   top:55%;
 }
@@ -223,7 +223,7 @@ body{
   left:50%;
   transform:translateX(-50%);
   font-family:'EB Garamond',serif;
-  font-size:clamp(10px,1.8vw,14px);
+  font-size:clamp(12px,2.1vw,16px);
   color:#2C2418;
   line-height:1.5;
   text-align:center;
@@ -279,6 +279,88 @@ body{
   background-repeat:no-repeat;background-position:right 11px center;
   padding-right:28px;
 }
+
+/* Custom city dropdown */
+.city-wrap{position:relative;}
+.city-trigger{
+  font-family:'EB Garamond',serif;
+  font-size:0.97rem;
+  border:1.5px solid #d8d0c8;
+  border-radius:6px;
+  padding:9px 36px 9px 11px;
+  color:#1a1a1a;
+  background:#fff;
+  width:100%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  transition:border-color 0.15s;
+  user-select:none;
+  min-height:40px;
+}
+.city-trigger:hover{border-color:#c8bfb5;}
+.city-trigger.open{border-color:#B8913A;border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.city-trigger .city-ph{color:#bbb;}
+.city-trigger .city-arrow{
+  position:absolute;right:11px;top:50%;transform:translateY(-50%);
+  pointer-events:none;
+  transition:transform 0.18s;
+}
+.city-trigger.open .city-arrow{transform:translateY(-50%) rotate(180deg);}
+.city-dropdown{
+  position:absolute;
+  top:100%;left:0;right:0;
+  background:#fff;
+  border:1.5px solid #B8913A;
+  border-top:none;
+  border-bottom-left-radius:8px;
+  border-bottom-right-radius:8px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.13);
+  z-index:200;
+  display:none;
+  overflow:hidden;
+}
+.city-dropdown.open{display:block;}
+.city-search-wrap{
+  padding:8px 10px;
+  border-bottom:1px solid #ece7df;
+  background:#faf9f7;
+}
+.city-search-wrap input{
+  width:100%;
+  border:1.5px solid #d8d0c8;
+  border-radius:5px;
+  padding:6px 10px;
+  font-family:'EB Garamond',serif;
+  font-size:0.93rem;
+  outline:none;
+  background:#fff;
+  color:#1a1a1a;
+  transition:border-color 0.15s;
+}
+.city-search-wrap input:focus{border-color:#B8913A;}
+.city-search-wrap input::placeholder{color:#bbb;}
+.city-list{
+  max-height:210px;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.city-list::-webkit-scrollbar{width:5px;}
+.city-list::-webkit-scrollbar-thumb{background:#d8d0c8;border-radius:3px;}
+.city-opt{
+  padding:9px 13px;
+  cursor:pointer;
+  font-family:'EB Garamond',serif;
+  font-size:0.95rem;
+  color:#333;
+  transition:background 0.1s;
+  border-bottom:1px solid #f5f2ee;
+}
+.city-opt:last-child{border-bottom:none;}
+.city-opt:hover{background:#faf6f0;}
+.city-opt.sel{background:#f5ede0;color:#7D1E2A;font-weight:600;}
+.city-empty{padding:12px 13px;font-size:0.88rem;color:#aaa;text-align:center;font-style:italic;}
 
 .btn-submit{
   display:block;width:100%;margin-top:20px;
@@ -403,8 +485,20 @@ body{
       </div>
       <div class="field-row">
         <div class="field">
-          <label for="city">Oraș</label>
-          <input type="text" id="city" placeholder="ex. Cluj-Napoca" autocomplete="address-level2"/>
+          <label>Oraș</label>
+          <div class="city-wrap" id="cityWrap">
+            <div class="city-trigger" id="cityTrigger" onclick="toggleCityDrop()">
+              <span id="cityDisplay" class="city-ph">Selectează orașul</span>
+              <svg class="city-arrow" width="11" height="7" viewBox="0 0 11 7" fill="none"><path d="M1 1l4.5 5L10 1" stroke="#999" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </div>
+            <div class="city-dropdown" id="cityDrop">
+              <div class="city-search-wrap">
+                <input type="text" id="citySearch" placeholder="Caută orașul..." oninput="filterCities(this.value)" autocomplete="off"/>
+              </div>
+              <div class="city-list" id="cityList"></div>
+            </div>
+            <input type="hidden" id="city"/>
+          </div>
         </div>
         <div class="field" style="max-width:160px">
           <label for="county">Județ</label>
@@ -592,9 +686,74 @@ body{
     }
   }
 
-  ['firstName','lastName','address','address2','city','county'].forEach(function(id){
+  ['firstName','lastName','address','address2','county'].forEach(function(id){
     document.getElementById(id).addEventListener('input', updateEnvelope);
     document.getElementById(id).addEventListener('change', updateEnvelope);
+  });
+
+  /* City dropdown */
+  var cities = [
+    'Alba Iulia','Alexandria','Arad','Bacău','Baia Mare','Bistrița','Botoșani','Brăila','Brașov',
+    'București','Buzău','Câmpina','Câmpulung','Câmpulung Moldovenesc','Caracal','Caransebeș',
+    'Cluj-Napoca','Constanța','Craiova','Curtea de Argeș','Dej','Deva','Dorohoi',
+    'Drobeta-Turnu Severin','Fălticeni','Fetești','Focșani','Galați','Giurgiu','Hunedoara',
+    'Huși','Iași','Lugoj','Mangalia','Mediaș','Miercurea Ciuc','Motru','Năvodari',
+    'Odorheiu Secuiesc','Onești','Oradea','Orșova','Pantelimon','Petroșani','Piatra Neamț',
+    'Pitești','Ploiești','Râmnicu Sărat','Râmnicu Vâlcea','Reghin','Reșița','Roman',
+    'Roșiorii de Vede','Satu Mare','Sfântu Gheorghe','Sibiu','Sighișoara','Sinaia',
+    'Slobozia','Suceava','Târgoviște','Târgu Jiu','Târgu Mureș','Târgu Secuiesc',
+    'Timișoara','Tulcea','Turda','Turnu Măgurele','Urziceni','Vaslui','Voluntari',
+    'Vulcan','Zalău','Zărnești','Zimnicea'
+  ];
+  var selCity = '';
+
+  function buildCityList(filter){
+    var list = document.getElementById('cityList');
+    var term = (filter||'').toLowerCase().trim();
+    var filtered = term ? cities.filter(function(c){ return c.toLowerCase().indexOf(term) !== -1; }) : cities;
+    if(!filtered.length){
+      list.innerHTML = '<div class="city-empty">Niciun rezultat</div>';
+      return;
+    }
+    list.innerHTML = filtered.map(function(c){
+      return '<div class="city-opt'+(c===selCity?' sel':'')+'" onclick="pickCity(\''+c.replace(/'/g,"\\'")+'\')">' + c + '</div>';
+    }).join('');
+  }
+
+  window.filterCities = function(val){ buildCityList(val); };
+
+  window.toggleCityDrop = function(){
+    var drop = document.getElementById('cityDrop');
+    var trigger = document.getElementById('cityTrigger');
+    var isOpen = drop.classList.contains('open');
+    if(isOpen){
+      drop.classList.remove('open');
+      trigger.classList.remove('open');
+    } else {
+      drop.classList.add('open');
+      trigger.classList.add('open');
+      document.getElementById('citySearch').value = '';
+      buildCityList('');
+      setTimeout(function(){ document.getElementById('citySearch').focus(); }, 50);
+    }
+  };
+
+  window.pickCity = function(city){
+    selCity = city;
+    document.getElementById('city').value = city;
+    document.getElementById('cityDisplay').textContent = city;
+    document.getElementById('cityDisplay').classList.remove('city-ph');
+    document.getElementById('cityDrop').classList.remove('open');
+    document.getElementById('cityTrigger').classList.remove('open');
+    updateEnvelope();
+  };
+
+  /* Close dropdown on outside click */
+  document.addEventListener('click', function(e){
+    if(!document.getElementById('cityWrap').contains(e.target)){
+      document.getElementById('cityDrop').classList.remove('open');
+      document.getElementById('cityTrigger').classList.remove('open');
+    }
   });
 
   /* Submit */
@@ -625,7 +784,7 @@ body{
       startEpisode: selPlan === 'lunar' ? selEp : null
     }));
 
-    window.location.href = '/pages/get-started?story=' + (storyId||'') + '&plan=' + selPlan;
+    window.location.href = '/pages/plata?story=' + (storyId||'') + '&plan=' + selPlan + (selPlan==='lunar'?'&ep='+selEp:'');
   };
 })();
 </script>
