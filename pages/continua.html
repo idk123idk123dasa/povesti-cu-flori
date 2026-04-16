@@ -381,6 +381,27 @@ body{
 }
 .guarantee svg{color:#B8913A;flex-shrink:0}
 
+/* Toast notification */
+.toast{
+  position:fixed;
+  bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#2c1a1a;
+  color:#fff;
+  padding:13px 22px;
+  border-radius:8px;
+  font-size:0.93rem;
+  box-shadow:0 6px 24px rgba(0,0,0,0.35);
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.22s,transform 0.22s;
+  max-width:90vw;
+  border-left:4px solid #C0392B;
+  display:flex;align-items:center;gap:9px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
 /* Episode selector */
 .ep-section{
   margin-top:8px;
@@ -446,6 +467,10 @@ body{
 <body>
 
 <div class="pbar"><div class="pfill" style="width:66%"></div></div>
+<div class="toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="toastMsg"></span>
+</div>
 
 <div class="page-wrap">
 
@@ -766,11 +791,11 @@ body{
     var county    = document.getElementById('county').value;
 
     if(!firstName || !lastName){
-      alert('Te rugăm să completezi prenumele și numele destinatarului.');
+      showToast('Te rugăm să completezi prenumele și numele destinatarului.');
       return;
     }
     if(!address || !city || !county){
-      alert('Te rugăm să completezi adresa, orașul și județul.');
+      showToast('Te rugăm să completezi adresa, orașul și județul.');
       return;
     }
 
@@ -787,6 +812,15 @@ body{
 
     window.location.href = '/pages/plata?story=' + (storyId||'') + '&plan=' + selPlan + (selPlan==='lunar'?'&ep='+selEp:'');
   };
+
+  var _toastTimer = null;
+  function showToast(msg){
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3500);
+  }
 })();
 </script>
 
