@@ -1535,7 +1535,7 @@ const storyReviews={
 ]};
 let srIdx=0,srTimer=null;
 function showStoryReview(storyId,idx){var reviews=storyReviews[storyId];if(!reviews)return;var r=reviews[idx];var box=document.getElementById('storyReviewBox');if(!box)return;document.getElementById('srText').innerHTML=r.t;document.getElementById('srNume').textContent='— '+r.n;var dots=document.getElementById('srDots');dots.innerHTML=reviews.map(function(_,i){return'<div onclick="jumpReview(\''+storyId+'\','+i+')" style="width:8px!important;height:8px!important;border-radius:50%!important;background:'+(i===idx?'#B8913A':'#ddd')+'!important;cursor:pointer!important;display:inline-block!important"></div>'}).join('');}
-function jumpReview(storyId,idx){srIdx=idx;clearInterval(srTimer);showStoryReview(storyId,idx);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
+window.jumpReview=function(storyId,idx){srIdx=idx;clearInterval(srTimer);showStoryReview(storyId,idx);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
 function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);var box=document.getElementById('storyReviewBox');if(box){box.style.display='block';}showStoryReview(storyId,0);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
 
 function initStory(){
