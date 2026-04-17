@@ -1675,6 +1675,37 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
   });
 })();
 </script>
+
+<script>
+(function() {
+  function fixHeroBg() {
+    var wrap = document.getElementById('m-1742317278902');
+    if (!wrap) return;
+    var imgUrl = 'url("/assets/SummerPhotoWebsite-3.jpg")';
+    wrap.style.setProperty('background-image', imgUrl, 'important');
+    wrap.style.setProperty('background-size', 'cover', 'important');
+    wrap.style.setProperty('background-position', 'center center', 'important');
+    wrap.style.setProperty('background-repeat', 'no-repeat', 'important');
+    wrap.style.setProperty('min-height', '480px', 'important');
+    // Clear GemPage's hero-bg element
+    var bg = wrap.querySelector('.gf_hero-bg');
+    if (bg) {
+      bg.style.setProperty('background-image', 'none', 'important');
+      bg.style.setProperty('background', 'transparent', 'important');
+    }
+    var module = wrap.querySelector('.module');
+    if (module) {
+      module.style.setProperty('background', 'transparent', 'important');
+    }
+  }
+  // Run immediately and also after page load (after GemPage JS)
+  document.addEventListener('DOMContentLoaded', fixHeroBg);
+  window.addEventListener('load', fixHeroBg);
+  // Also run after a short delay to catch late GemPage initialization
+  setTimeout(fixHeroBg, 500);
+  setTimeout(fixHeroBg, 1500);
+})();
+</script>
 </body>
 </html>
 <style>
