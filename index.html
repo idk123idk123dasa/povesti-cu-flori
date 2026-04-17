@@ -1183,7 +1183,18 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   }
 </script>
 <style>
-  @media screen and (max-width: 767px) {
+  /* Hero banner background fallback (GemCommerce JS not running on static site) */
+    #m-1742317278902 .module {
+      background-image: url('/assets/SummerPhotoWebsite-3.jpg') !important;
+      background-size: cover !important;
+      background-position: center center !important;
+      background-repeat: no-repeat !important;
+    }
+    #e-1774477192363 {
+      display: none !important;
+    }
+
+    @media screen and (max-width: 767px) {
     body .site-header__logo a.site-header__logo-image img {
       max-width: 70px !important;
       width: 70px !important;
@@ -1200,15 +1211,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
       padding: 0 20px !important;
     }
 
-    /* Hero banner background fallback (GemCommerce JS not running on static site) */
-    #m-1742317278902 .module {
-      background-image: url('/assets/SummerPhotoWebsite-3.jpg') !important;
-      background-size: cover !important;
-      background-position: center center !important;
-      background-repeat: no-repeat !important;
-    }
-
-    /* Hide broken mobile hero img - background already shows via CSS above */
+    /* Hide broken mobile hero img */
     #e-1774477192363 {
       display: none !important;
     }
