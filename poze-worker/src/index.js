@@ -241,7 +241,33 @@ function showErr(msg){
 </body>
 </html>`;
 
+async function deleteOldImages(env) {
+  const oneDayMs = 24 * 60 * 60 * 1000;
+  const cutoff = Date.now() - oneDayMs;
+  let cursor = undefined;
+  let deleted = 0;
+
+  do {
+    const result = await env.POZE.list({ cursor, limit: 1000 });
+    for (const key of result.keys) {
+      const ts = parseInt(key.name.split('-')[0], 10);
+      if (!isNaN(ts) && ts < cutoff) {
+        await env.POZE.delete(key.name);
+        deleted++;
+      }
+    }
+    cursor = result.list_complete ? undefined : result.cursor;
+  } while (cursor);
+
+  return deleted;
+}
+
 export default {
+  async scheduled(event, env) {
+    const deleted = await deleteOldImages(env);
+    console.log(`Cron: deleted ${deleted} images older than 24h`);
+  },
+
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
