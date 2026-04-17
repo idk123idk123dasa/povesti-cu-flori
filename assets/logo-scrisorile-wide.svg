@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 156" width="700" height="156">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&amp;display=swap');
+    </style>
+  </defs>
+  <rect width="700" height="156" fill="transparent"/>
+  <text
+    x="350"
+    y="108"
+    text-anchor="middle"
+    font-family="'Palatino Linotype', 'Book Antiqua', Palatino, 'Times New Roman', Georgia, serif"
+    font-size="66"
+    font-style="italic"
+    font-weight="bold"
+    fill="#1a1a1a"
+    letter-spacing="1"
+  >Scrisori Cu Povesti</text>
+</svg>
