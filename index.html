@@ -1236,6 +1236,34 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
       max-width: 70px !important;
       width: 70px !important;
     }
+
+    /* Footer links: left-align on mobile */
+    #e-1704406375276 .elm,
+    #e-1704406375276 .elm p,
+    #e-1704406375276 .elm a {
+      text-align: left !important;
+    }
+
+    /* First video: show full instead of cropped center */
+    #m-1774477041624 .module.video-background {
+      height: auto !important;
+      min-height: 200px !important;
+    }
+    #m-1774477041624 video,
+    #m-1774477041624 iframe {
+      object-fit: contain !important;
+      width: 100% !important;
+      height: auto !important;
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      transform: none !important;
+    }
+    #m-1774477041624 .gf_video-bg-inner,
+    #m-1774477041624 .gf_player {
+      position: relative !important;
+      height: auto !important;
+    }
   }
 </style>
 <script type="application/json">
