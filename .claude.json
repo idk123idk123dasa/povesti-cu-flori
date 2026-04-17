@@ -30,10 +30,10 @@
     "permissions": 63,
     "rename-conversation": 72,
     "custom-commands": 72,
-    "guest-passes": 68,
+    "guest-passes": 72,
     "git-worktrees": 71
   },
-  "promptQueueUseCount": 73,
+  "promptQueueUseCount": 74,
   "cachedGrowthBookFeatures": {
     "tengu_streaming_text": true,
     "tengu_slate_ribbon": false,
