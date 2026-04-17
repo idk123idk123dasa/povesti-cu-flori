@@ -366,20 +366,53 @@ body{
 
 /* Responsive */
 @media(max-width:700px){
-  .page-wrap{flex-direction:column;align-items:center;}
-  .story-panel{width:100%;flex-direction:row;align-items:center;gap:14px;order:-1;}
-  .story-panel img{width:70px;flex-shrink:0;border-radius:8px;}
-  .story-panel .story-name,.story-panel .story-tag{text-align:left;margin-top:0;margin-bottom:0;}
-  .story-panel .story-tag{margin-bottom:0;}
-  .story-panel>div:first-of-type{display:flex;flex-direction:column;}
-  .plan-section{flex:1;}
-  .envelope-wrap{padding:14px 14px 12px;}
-  .form-body{padding:16px 16px 20px;}
+  body{padding:12px 10px 40px;}
+
+  .page-wrap{flex-direction:column;align-items:stretch;gap:10px;}
+
+  /* Story panel: horizontal strip at top */
+  .story-panel{
+    width:100%;
+    flex-direction:column;
+    order:-1;
+  }
+  .story-panel img{display:none;}
+  .story-panel .story-name{
+    font-size:1rem;margin-top:0;text-align:center;
+  }
+  .story-panel .story-tag{
+    text-align:center;margin-bottom:10px;
+  }
+
+  /* Plan section full width */
+  .plan-section{width:100%;margin-top:0;}
+  .plan-card{padding:10px 10px 10px 10px;}
+  .plan-name{font-size:0.9rem;}
+  .plan-price{font-size:1rem;}
+
+  /* Episode grid 4 cols on phone */
+  .ep-grid{grid-template-columns:repeat(4,1fr);gap:4px;}
+  .ep-btn{padding:5px 2px;font-size:0.72rem;}
+
+  /* Main card */
+  .main-card{border-radius:10px;}
+  .envelope-wrap{padding:12px 12px 10px;}
+  .form-body{padding:14px 14px 18px;}
+
+  /* Form rows stack */
   .field-row{flex-direction:column;gap:0;}
-}
-@media(max-width:700px){
-  .story-panel{flex-wrap:wrap;}
-  .plan-section{width:100%;margin-top:12px;}
+  .field{margin-bottom:8px;}
+  .field:last-child{margin-bottom:0;}
+
+  /* County + postal stay side by side */
+  .field-row .field[style*="max-width:160px"],
+  .field-row .field[style*="max-width:100px"]{
+    max-width:none!important;
+  }
+
+  .btn-submit{font-size:1rem;padding:13px;}
+
+  .section-heading{font-size:0.65rem;margin-top:14px;}
 }
 </style>
 </head>
@@ -428,12 +461,12 @@ body{
         <label for="address2">Bloc, scară, apart. <span style="color:#bbb;font-weight:400">(opțional)</span></label>
         <input type="text" id="address2" placeholder="ex. Bl. A2, Sc. 1, Ap. 5"/>
       </div>
+      <div class="field">
+        <label for="city">Oraș</label>
+        <input type="text" id="city" placeholder="ex. Cluj-Napoca" autocomplete="address-level2"/>
+      </div>
       <div class="field-row">
         <div class="field">
-          <label for="city">Oraș</label>
-          <input type="text" id="city" placeholder="ex. Cluj-Napoca" autocomplete="address-level2"/>
-        </div>
-        <div class="field" style="max-width:160px">
           <label for="county">Județ</label>
           <select id="county">
             <option value="">Selectează</option>
@@ -450,7 +483,7 @@ body{
             <option>Vaslui</option><option>Vrancea</option>
           </select>
         </div>
-        <div class="field" style="max-width:100px">
+        <div class="field" style="max-width:120px;flex-shrink:0">
           <label for="postal">Cod poștal</label>
           <input type="text" id="postal" placeholder="000000" maxlength="6" autocomplete="postal-code"/>
         </div>
