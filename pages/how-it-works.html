@@ -623,6 +623,13 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"1.9",plat:"SHOPIF
 <style>
 html.gemapp{ visibility: visible !important; }
 </style>
+<style>
+/* Hide GemPage lazy sections that render as blank white space without JS */
+#shopify-section-template--21596060090624__gp_section_605184337109124065,
+#shopify-section-template--21596060090624__gp_section_605184337108796385 { display: none !important; }
+/* Collapse empty gp-row custom elements */
+.gps-lazy { overflow: hidden !important; }
+</style>
 <!-- END app block --><!-- BEGIN app block: shopify://apps/triplewhale/blocks/triple_pixel_snippet/483d496b-3f1a-4609-aea7-8eee3b6b7a2a --><link crossorigin="" href="https://api.config-security.com/" rel="preconnect dns-prefetch"/>
 <link crossorigin="" href="https://conf.config-security.com/" rel="preconnect dns-prefetch"/>
 <script>
