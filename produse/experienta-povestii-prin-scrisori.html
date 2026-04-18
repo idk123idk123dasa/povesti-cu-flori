@@ -771,37 +771,37 @@ html.gemapp{ visibility: visible !important; }
 <div class="stories-head">ALEGE-ȚI POVESTEA</div>
 <div class="stories-grid">
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?poveste=camellia-grace">
+<a class="story-link" href="/pagini/get-started?poveste=camellia-grace">
 <img alt="" height="200" src="/assets/3_5d12303b-4845-4b2d-b891-39fedff3798b.jpg" width="200"/>
 <p class="name">NOU! Camellia Grace | Epoca de Aur</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?poveste=adelaide-magnolia">
+<a class="story-link" href="/pagini/get-started?poveste=adelaide-magnolia">
 <img alt="" height="200" src="/assets/AM.png" width="200"/>
 <p class="name">Adelaide Magnolia | Regență</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?poveste=audrey-rose">
+<a class="story-link" href="/pagini/get-started?poveste=audrey-rose">
 <img alt="" height="200" src="/assets/ARProductPage-1.jpg" width="200"/>
 <p class="name">Audrey Rose | Al Doilea Război Mondial</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?poveste=orchid-mae">
+<a class="story-link" href="/pagini/get-started?poveste=orchid-mae">
 <img alt="" height="200" src="/assets/OMProductPage-1.jpg" width="200"/>
 <p class="name">Orhideea Mae | Arheologie</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?poveste=lily-clara">
+<a class="story-link" href="/pagini/get-started?poveste=lily-clara">
 <img alt="" height="200" src="/assets/LCProductPage-1_d4b31969-d125-4f93-aa34-0cfe2dd0b0cc.jpg" width="200"/>
 <p class="name">Lily Clara | occidental</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?poveste=norah-aven">
+<a class="story-link" href="/pagini/get-started?poveste=norah-aven">
 <img alt="" height="200" src="/assets/NAProductPage-1.jpg" width="200"/>
 <p class="name">Norah Aven 1 | Fantezie</p>
 </a>
@@ -843,7 +843,7 @@ html.gemapp{ visibility: visible !important; }
 <li class="lvl-2"><a href="/pagini/misiunea-noastra">Misiunea noastră</a></li>
 <li class="lvl-2"><a href="/politici/politica-livrare">Expediții</a></li>
 <li class="lvl-2"><a href="/pagini/recenzii-scrisori-cu-povesti">Recenzii</a></li>
-<li class="lvl-2"><a href="/pages/gift-printout">Imprimări cadou </a></li>
+<li class="lvl-2"><a href="/pagini/gift-printout">Imprimări cadou </a></li>
 
 <li class="lvl-2"><a href="/pagini/contacteaza-ne">Contactează-ne </a></li>
 </ul>
@@ -1516,18 +1516,6 @@ if(_tilesParent){
 #SearchDrawer { display: none !important }
 </style>
 <script>
-/* Force nav links to navigate before GemPage can intercept */
-(function(){
-  document.addEventListener('click', function(e){
-    var a = e.target.closest('a[href]');
-    if (!a) return;
-    if (!a.closest('#AccessibleNav, #custom-nav, #MobileNav, .nav-bottom-cta, .announcement-bar')) return;
-    var href = a.getAttribute('href');
-    if (!href || href.charAt(0) === '#') return;
-    e.stopImmediatePropagation();
-    window.location.href = href;
-  }, true);
-})();
 (function(){
   document.querySelectorAll('[data-has-dropdowns] .site-nav__link--button').forEach(function(btn){
     btn.addEventListener('click', function(e){
@@ -1554,6 +1542,20 @@ if(_tilesParent){
       if (b) b.setAttribute('aria-expanded','false');
     });
   });
+})();
+</script>
+<script>
+/* Force nav links to navigate before GemPage can intercept */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    if (!a.closest('#AccessibleNav, #custom-nav, #MobileNav, .nav-bottom-cta, .announcement-bar')) return;
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    e.stopImmediatePropagation();
+    window.location.href = href;
+  }, true);
 })();
 </script>
 </body>

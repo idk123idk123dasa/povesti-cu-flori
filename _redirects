@@ -11,4 +11,9 @@
 /pages/* /pagini/:splat 301
 /products/an-immersive-story-experience-told-through-letters /produse/experienta-povestii-prin-scrisori 301
 /produse/an-immersive-story-experience-told-through-letters /produse/experienta-povestii-prin-scrisori 301
+/produse/the-orchid-mae-letters /produse/experienta-povestii-prin-scrisori?poveste=orchid-mae 301
+/produse/the-adelaide-magnolia-collection-annual /produse/experienta-povestii-prin-scrisori?poveste=adelaide-magnolia 301
+/produse/the-audrey-rose-collection-monthly /produse/experienta-povestii-prin-scrisori?poveste=audrey-rose 301
+/produse/the-lily-clara-collection-annual /produse/experienta-povestii-prin-scrisori?poveste=lily-clara 301
+/produse/the-norah-aven-chronicles /produse/experienta-povestii-prin-scrisori?poveste=norah-aven 301
 /products/* /produse/:splat 301
