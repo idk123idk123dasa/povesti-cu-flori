@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Luna</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #05050f; --text: #d4c8f0; --text-dim: #7a6fa0;
+      --card: #0e0e20; --border: #2a2040; --accent: #c084fc;
+      --ok: #4ade80; --err: #f87171; --btn: #7c5cbf;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; padding: 40px 20px; }
+    h1 { font-size: 1.6rem; font-weight: 500; color: var(--accent); margin-bottom: 6px; }
+    .sub { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 32px; }
+    a.back { color: var(--accent); font-size: 0.85rem; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    a.back:hover { text-decoration: underline; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    label { font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.05em; }
+    input[type="password"] {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); padding: 10px 14px; font-size: 0.95rem; width: 100%;
+    }
+    input:focus { outline: none; border-color: var(--accent); }
+    button {
+      background: var(--btn); color: white; border: none; border-radius: 8px;
+      padding: 10px 24px; font-size: 0.95rem; cursor: pointer; transition: background 0.15s;
+    }
+    button:hover { background: #9b73e0; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg { font-size: 0.85rem; margin-top: 10px; padding: 8px 12px; border-radius: 6px; }
+    .msg.ok { background: rgba(74,222,128,0.1); color: var(--ok); border: 1px solid rgba(74,222,128,0.3); }
+    .msg.err { background: rgba(248,113,113,0.1); color: var(--err); border: 1px solid rgba(248,113,113,0.3); }
+    #auth-section { max-width: 420px; }
+    #upload-section { display: none; max-width: 760px; }
+    .section-title {
+      font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase;
+      border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; margin-top: 32px;
+    }
+
+    /* Keymap grid */
+    .keymap-grid {
+      display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px;
+    }
+    .km-row { display: flex; gap: 6px; }
+    .km-key {
+      background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      width: 52px; height: 52px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px; position: relative;
+      transition: border-color 0.2s;
+    }
+    .km-key.has-sound { border-color: var(--accent); }
+    .km-key .kk { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+    .km-key .ks { font-size: 0.65rem; color: var(--ok); }
+    .km-key .del-btn {
+      position: absolute; top: 2px; right: 3px; background: none; border: none;
+      color: var(--err); font-size: 0.6rem; cursor: pointer; padding: 0; opacity: 0;
+      transition: opacity 0.15s; line-height: 1;
+    }
+    .km-key.has-sound:hover .del-btn { opacity: 1; }
+
+    /* Folder upload */
+    .upload-box {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+    }
+    .folder-drop {
+      border: 2px dashed var(--border); border-radius: 8px; padding: 32px;
+      text-align: center; color: var(--text-dim); font-size: 0.9rem;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      position: relative; margin-bottom: 16px;
+    }
+    .folder-drop:hover, .folder-drop.drag { border-color: var(--accent); background: rgba(192,132,252,0.05); }
+    .folder-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+
+    /* Preview table */
+    #preview-list { margin: 16px 0; display: flex; flex-direction: column; gap: 6px; }
+    .preview-item {
+      background: rgba(192,132,252,0.05); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 14px; display: flex; align-items: center; gap: 12px; font-size: 0.88rem;
+    }
+    .preview-item.skip { opacity: 0.4; }
+    .preview-key {
+      background: var(--border); border-radius: 5px; width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 600; color: var(--accent); flex-shrink: 0;
+    }
+    .preview-name { flex: 1; color: var(--text-dim); }
+    .preview-status { font-size: 0.78rem; min-width: 60px; text-align: right; }
+    .preview-status.ok { color: var(--ok); }
+    .preview-status.err { color: var(--err); }
+    .preview-status.skip { color: var(--text-dim); }
+    .preview-status.pending { color: var(--text-dim); }
+
+    .progress { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; display: none; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.2s; }
+
+    .upload-actions { display: flex; align-items: center; gap: 16px; margin-top: 4px; }
+    .upload-summary { font-size: 0.82rem; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+  <a class="back" href="/">← Înapoi la tastatură</a>
+  <h1>🔧 Admin – Sunete</h1>
+  <p class="sub">Fiecare tastă are sunetul ei propriu</p>
+
+  <div id="auth-section">
+    <div class="field">
+      <label>Cheie de acces</label>
+      <input type="password" id="key-input" placeholder="Introdu cheia secretă..." autocomplete="off">
+    </div>
+    <button id="auth-btn">Conectează-te</button>
+    <div id="auth-msg"></div>
+  </div>
+
+  <div id="upload-section">
+    <div class="section-title">Taste cu sunete</div>
+    <div class="keymap-grid" id="keymap-grid"></div>
+
+    <div class="section-title">Upload folder</div>
+    <div class="upload-box">
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:14px;">
+        Selectează folderul cu fișierele audio. Fiecare fișier trebuie să fie numit după tastă: <strong style="color:var(--text)">t.wav</strong>, <strong style="color:var(--text)">a.wav</strong> etc.
+      </p>
+      <div class="folder-drop" id="folder-drop">
+        <input type="file" id="folder-input" multiple webkitdirectory accept=".wav,.mp3,.ogg,.m4a">
+        <div>📁 Click pentru a selecta folderul</div>
+        <div style="font-size:0.75rem;margin-top:6px;">WAV · MP3 · OGG · M4A</div>
+      </div>
+      <div id="preview-list"></div>
+      <div class="upload-actions" id="upload-actions" style="display:none">
+        <button id="upload-all-btn">Încarcă tot</button>
+        <span class="upload-summary" id="upload-summary"></span>
+      </div>
+      <div class="progress" id="progress"><div class="progress-bar" id="progress-bar"></div></div>
+      <div id="folder-msg"></div>
+    </div>
+  </div>
+
+  <script>
+    const KNOWN_KEYS = new Set([
+      '1','2','3','4','5','6','7','8','9','0','-','=',
+      'q','w','e','r','t','y','u','i','o','p','[',']',
+      'a','s','d','f','g','h','j','k','l',';',"'",
+      'z','x','c','v','b','n','m',',','.','/','space'
+    ]);
+    const ROWS = [
+      ['1','2','3','4','5','6','7','8','9','0','-','='],
+      ['q','w','e','r','t','y','u','i','o','p','[',']'],
+      ['a','s','d','f','g','h','j','k','l',';',"'"],
+      ['z','x','c','v','b','n','m',',','.','/',]
+    ];
+
+    const $ = id => document.getElementById(id);
+    let uploadKey = localStorage.getItem('taste_upload_key') || '';
+    let currentKeyMap = {};
+    let filesToUpload = [];
+
+    if (uploadKey) $('key-input').value = uploadKey;
+
+    $('auth-btn').addEventListener('click', async () => {
+      const k = $('key-input').value.trim();
+      if (!k) return;
+      const r = await fetch('/api/config');
+      if (r.ok) {
+        uploadKey = k;
+        localStorage.setItem('taste_upload_key', k);
+        showAdmin();
+      } else {
+        showMsg('auth-msg', 'Eroare de conexiune', 'err');
+      }
+    });
+    $('key-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('auth-btn').click(); });
+    if (uploadKey) fetch('/api/config').then(r => { if (r.ok) showAdmin(); });
+
+    function showAdmin() {
+      $('auth-section').style.display = 'none';
+      $('upload-section').style.display = 'block';
+      loadKeyMap();
+    }
+
+    async function loadKeyMap() {
+      const r = await fetch('/api/config?t=' + Date.now());
+      const data = r.ok ? await r.json() : { keyMap: {} };
+      currentKeyMap = data.keyMap || {};
+      renderKeyMapGrid();
+    }
+
+    function renderKeyMapGrid() {
+      const grid = $('keymap-grid');
+      grid.innerHTML = '';
+      ROWS.forEach(row => {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'km-row';
+        row.forEach(k => {
+          const el = document.createElement('div');
+          const entry = currentKeyMap[k];
+          el.className = 'km-key' + (entry ? ' has-sound' : '');
+          el.innerHTML = `
+            <span class="kk">${k === "'" ? "'" : k}</span>
+            ${entry ? `<span class="ks">✓</span><button class="del-btn" onclick="deleteKey('${k}')">✕</button>` : ''}
+          `;
+          rowEl.appendChild(el);
+        });
+        grid.appendChild(rowEl);
+      });
+    }
+
+    async function deleteKey(key) {
+      if (!confirm(`Ștergi sunetul pentru tasta "${key}"?`)) return;
+      const r = await fetch('/api/upload', {
+        method: 'DELETE',
+        headers: { 'X-Upload-Key': uploadKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key })
+      });
+      const d = await r.json();
+      if (d.ok) loadKeyMap();
+      else alert(d.error || 'Eroare');
+    }
+
+    // Folder input
+    $('folder-input').addEventListener('change', e => {
+      const files = Array.from(e.target.files).filter(f => /\.(wav|mp3|ogg|m4a)$/i.test(f.name));
+      preparePreview(files);
+    });
+
+    const drop = $('folder-drop');
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('drag'));
+    drop.addEventListener('drop', e => {
+      e.preventDefault(); drop.classList.remove('drag');
+      const files = Array.from(e.dataTransfer.files).filter(f => /\.(wav|mp3|ogg|m4a)$/i.test(f.name));
+      preparePreview(files);
+    });
+
+    function preparePreview(files) {
+      $('preview-list').innerHTML = '';
+      $('upload-actions').style.display = 'none';
+      $('folder-msg').textContent = '';
+      filesToUpload = [];
+
+      if (files.length === 0) return;
+
+      files.forEach(file => {
+        const nameNoExt = file.name.replace(/\.[^.]+$/, '').toLowerCase();
+        const known = KNOWN_KEYS.has(nameNoExt);
+
+        if (known) filesToUpload.push({ file, key: nameNoExt });
+
+        const item = document.createElement('div');
+        item.className = 'preview-item' + (known ? '' : ' skip');
+        item.dataset.key = nameNoExt;
+        item.innerHTML = `
+          <div class="preview-key">${nameNoExt}</div>
+          <div class="preview-name">${file.name}</div>
+          <div class="preview-status pending" data-status="${nameNoExt}">${known ? 'gata' : 'ignorat'}</div>
+        `;
+        $('preview-list').appendChild(item);
+      });
+
+      if (filesToUpload.length > 0) {
+        $('upload-actions').style.display = 'flex';
+        $('upload-summary').textContent = `${filesToUpload.length} fișiere recunoscute`;
+      }
+    }
+
+    $('upload-all-btn').addEventListener('click', async () => {
+      if (filesToUpload.length === 0) return;
+      $('upload-all-btn').disabled = true;
+      $('progress').style.display = 'block';
+
+      let done = 0;
+      for (const { file, key } of filesToUpload) {
+        const statusEl = document.querySelector(`[data-status="${key}"]`);
+        if (statusEl) { statusEl.textContent = '⏳'; statusEl.className = 'preview-status pending'; }
+
+        const form = new FormData();
+        form.append('key', key);
+        form.append('file', file);
+
+        try {
+          const r = await fetch('/api/upload', {
+            method: 'POST',
+            headers: { 'X-Upload-Key': uploadKey },
+            body: form
+          });
+          const d = await r.json();
+          if (statusEl) {
+            statusEl.textContent = d.ok ? '✓' : '✕';
+            statusEl.className = 'preview-status ' + (d.ok ? 'ok' : 'err');
+          }
+        } catch {
+          if (statusEl) { statusEl.textContent = '✕'; statusEl.className = 'preview-status err'; }
+        }
+
+        done++;
+        $('progress-bar').style.width = (done / filesToUpload.length * 100) + '%';
+      }
+
+      $('upload-all-btn').disabled = false;
+      setTimeout(() => { $('progress').style.display = 'none'; $('progress-bar').style.width = '0'; }, 800);
+      showMsg('folder-msg', `✓ Upload complet — ${done} sunete încărcate`, 'ok');
+      loadKeyMap();
+    });
+
+    function showMsg(id, text, type) {
+      const el = $(id);
+      el.className = 'msg ' + type;
+      el.textContent = text;
+      if (type === 'ok') setTimeout(() => { el.textContent = ''; el.className = ''; }, 5000);
+    }
+  </script>
+</body>
+</html>

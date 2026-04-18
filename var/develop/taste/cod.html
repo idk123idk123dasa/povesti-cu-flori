@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cod Hammerspoon – Luna</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #05050f;
+      color: #d4c8f0;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+    a.back {
+      color: #c084fc; font-size: 0.85rem; text-decoration: none;
+      display: inline-block; margin-bottom: 24px;
+    }
+    a.back:hover { text-decoration: underline; }
+    h1 { font-size: 1.5rem; font-weight: 500; color: #c084fc; margin-bottom: 6px; }
+    .sub { color: #7a6fa0; font-size: 0.88rem; margin-bottom: 28px; line-height: 1.6; }
+    .steps {
+      background: #0e0e20; border: 1px solid #2a2040; border-radius: 12px;
+      padding: 20px 24px; margin-bottom: 24px; max-width: 680px;
+    }
+    .steps h2 { font-size: 0.8rem; color: #7a6fa0; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+    .step { display: flex; gap: 12px; margin-bottom: 10px; font-size: 0.88rem; line-height: 1.6; }
+    .step-num { color: #c084fc; font-weight: bold; min-width: 20px; }
+    code { background: #1a1a35; border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: 0.85em; color: #e2d9ff; }
+    .hotkeys {
+      background: #0e0e20; border: 1px solid #2a2040; border-radius: 12px;
+      padding: 16px 24px; margin-bottom: 24px; max-width: 680px;
+    }
+    .hotkeys h2 { font-size: 0.8rem; color: #7a6fa0; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+    .hk-row { display: flex; gap: 16px; align-items: center; margin-bottom: 8px; font-size: 0.85rem; }
+    .hk-key { background: #1a1a35; border: 1px solid #3a2f60; border-radius: 6px; padding: 3px 10px; font-family: monospace; font-size: 0.8rem; color: #c084fc; white-space: nowrap; }
+    .hk-desc { color: #a090c0; }
+    .code-box { max-width: 680px; position: relative; }
+    .copy-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: #7c5cbf; color: white; border: none; border-radius: 8px;
+      padding: 7px 18px; font-size: 0.82rem; cursor: pointer;
+      transition: background 0.15s; z-index: 2;
+    }
+    .copy-btn:hover { background: #9b73e0; }
+    .copy-btn.copied { background: #16a34a; }
+    pre {
+      background: #0a0a1a; border: 1px solid #2a2040; border-radius: 12px;
+      padding: 20px; overflow-x: auto;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 0.82rem; line-height: 1.65; color: #c8bfea; tab-size: 4;
+    }
+    .c  { color: #4a4070; font-style: italic; }
+    .kw { color: #c084fc; }
+    .st { color: #86efac; }
+    .nm { color: #fbbf24; }
+  </style>
+</head>
+<body>
+  <a class="back" href="/">← Înapoi la tastatură</a>
+  <h1>🌙 Cod Hammerspoon</h1>
+  <p class="sub">Copiază codul de mai jos în <code>~/.hammerspoon/init.lua</code></p>
+
+  <div class="steps">
+    <h2>Pași de instalare</h2>
+    <div class="step"><span class="step-num">1</span><span>Deschide Hammerspoon → click pe iconița din meniu bar → <strong>Open Config</strong></span></div>
+    <div class="step"><span class="step-num">2</span><span>Șterge tot ce e în fișier și lipește codul de mai jos</span></div>
+    <div class="step"><span class="step-num">3</span><span>Salvează (<code>Cmd+S</code>) și apasă <strong>Reload Config</strong> în Hammerspoon</span></div>
+    <div class="step"><span class="step-num">4</span><span>Acceptă permisiunea de <strong>Accessibility</strong> în System Settings</span></div>
+    <div class="step"><span class="step-num">5</span><span>Pune fișierele audio în <code>~/.hammerspoon/sounds/</code> — numite după tastă: <code>t.wav</code>, <code>a.wav</code>, <code>1.wav</code> etc. — apoi apasă <code>Cmd+Alt+R</code></span></div>
+  </div>
+
+  <div class="hotkeys">
+    <h2>Taste rapide</h2>
+    <div class="hk-row"><span class="hk-key">Cmd+Alt+↑</span><span class="hk-desc">Volum mai tare (+10%)</span></div>
+    <div class="hk-row"><span class="hk-key">Cmd+Alt+↓</span><span class="hk-desc">Volum mai încet (-10%)</span></div>
+    <div class="hk-row"><span class="hk-key">Cmd+Alt+S</span><span class="hk-desc">Selector sunete</span></div>
+    <div class="hk-row"><span class="hk-key">Cmd+Alt+R</span><span class="hk-desc">Reîncărcare sunete</span></div>
+    <div class="hk-row"><span class="hk-key">🌙 meniu bar</span><span class="hk-desc">Volum 10% / 25% / 50% / 75% / 100%</span></div>
+  </div>
+
+  <div class="code-box">
+    <button class="copy-btn" id="copy-btn" onclick="copyCode()">Copiază</button>
+    <pre id="code-block"></pre>
+  </div>
+
+  <script>
+    const CODE = `-- Luna cu Hamerspoon
+-- Fisierele trebuie numite dupa tasta: t.wav, a.wav, 1.wav etc.
+-- Pune fisierele in: ~/.hammerspoon/sounds/
+-- Cmd+Alt+R  = reincarcare sunete
+-- Cmd+Alt+S  = selector sunete
+-- Cmd+Alt+↑  = volum mai tare
+-- Cmd+Alt+↓  = volum mai incet
+
+local SOUNDS_DIR = os.getenv("HOME") .. "/.hammerspoon/sounds/"
+local EXTENSIONS = {mp3=true, wav=true, aiff=true, aif=true, m4a=true}
+
+local soundMap = {}  -- char → {name, path, sound}
+local enabled  = true
+local volume   = 1.0
+
+-- ── Volum ─────────────────────────────────────────────────────────────────────
+
+local VOLUME_STEPS = {0.1, 0.25, 0.5, 0.75, 1.0}
+
+local function volumeBar(v)
+    local blocks = math.floor(v * 10 + 0.5)
+    return string.rep("█", blocks) .. string.rep("░", 10 - blocks)
+end
+
+local function setVolume(v)
+    volume = math.max(0.0, math.min(1.0, v))
+    for _, entry in pairs(soundMap) do
+        entry.sound:volume(volume)
+    end
+    hs.alert.show(string.format("🔊 %d%%  %s", math.floor(volume * 100), volumeBar(volume)))
+end
+
+local function changeVolume(delta)
+    setVolume(volume + delta)
+end
+
+-- ── Incarcare sunete ──────────────────────────────────────────────────────────
+
+local function loadSounds()
+    soundMap = {}
+    hs.execute("mkdir -p " .. SOUNDS_DIR)
+
+    local files = hs.execute("ls -1 " .. SOUNDS_DIR .. " 2>/dev/null")
+    local count = 0
+    for filename in files:gmatch("[^\\n]+") do
+        local ext = filename:match("%.([^.]+)$")
+        if ext and EXTENSIONS[ext:lower()] then
+            local key = filename:gsub("%.[^.]+$", ""):lower()
+            local path = SOUNDS_DIR .. filename
+            local s = hs.sound.getByFile(path)
+            if s then
+                s:volume(volume)
+                soundMap[key] = { name=key, path=path, sound=s }
+                count = count + 1
+            end
+        end
+    end
+
+    if count > 0 then
+        hs.alert.show("🌙 Luna: " .. count .. " sunet" .. (count == 1 and "" or "e") .. " incarcate")
+    else
+        hs.alert.show("🌙 Luna: niciun sunet in\\n" .. SOUNDS_DIR)
+    end
+end
+
+-- ── Event tap ─────────────────────────────────────────────────────────────────
+
+local tap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+    if not enabled then return false end
+    local flags = event:getFlags()
+    if flags.cmd or flags.ctrl then return false end
+
+    local char = event:getCharacters(true)
+    if char and char ~= "" then
+        local entry = soundMap[char:lower()]
+        if entry then
+            entry.sound:volume(volume)
+            entry.sound:stop()
+            entry.sound:play()
+        end
+    end
+    return false
+end)
+
+tap:start()
+
+-- ── Selector de sunete ────────────────────────────────────────────────────────
+
+local function openChooser()
+    local list = {}
+    for k, entry in pairs(soundMap) do
+        table.insert(list, { text=entry.name, subText=entry.path, key=k })
+    end
+    table.sort(list, function(a, b) return a.text < b.text end)
+
+    if #list == 0 then
+        hs.alert.show("Niciun sunet gasit in\\n" .. SOUNDS_DIR)
+        return
+    end
+
+    local chooser = hs.chooser.new(function(choice)
+        if choice then
+            local e = soundMap[choice.key]
+            if e then e.sound:volume(volume); e.sound:stop(); e.sound:play() end
+        end
+    end)
+    chooser:choices(list)
+    chooser:placeholderText("Cauta sau asculta un sunet...")
+    chooser:searchSubText(true)
+    chooser:show()
+end
+
+-- ── Meniu bar ─────────────────────────────────────────────────────────────────
+
+local menuBar = hs.menubar.new()
+if menuBar then
+    menuBar:setTitle("🌙")
+    menuBar:setTooltip("Luna cu Hamerspoon")
+    menuBar:setMenu(function()
+        local volItems = {}
+        for _, v in ipairs(VOLUME_STEPS) do
+            local pct = math.floor(v * 100)
+            local check = (math.abs(volume - v) < 0.01) and "✓ " or "   "
+            table.insert(volItems, {
+                title = check .. pct .. "%",
+                fn = function() setVolume(v) end
+            })
+        end
+        local count = 0
+        for _ in pairs(soundMap) do count = count + 1 end
+        return {
+            { title = enabled and "✓ Sunete active" or "✗ Sunete oprite", fn = function()
+                enabled = not enabled
+                menuBar:setTitle(enabled and "🌙" or "🌑")
+            end },
+            { title = "-" },
+            { title = "🔊 Volum: " .. math.floor(volume * 100) .. "%", disabled = true },
+            table.unpack(volItems),
+            { title = "-" },
+            { title = "🎵 Alege sunet   (Cmd+Alt+S)", fn = openChooser },
+            { title = "🔄 Reincarcare   (Cmd+Alt+R)", fn = loadSounds },
+            { title = "-" },
+            { title = "📁 Deschide folderul cu sunete", fn = function()
+                hs.execute("open " .. SOUNDS_DIR)
+            end },
+            { title = "-" },
+            { title = count .. " sunet" .. (count == 1 and "" or "e") .. " incarcate", disabled = true },
+        }
+    end)
+end
+
+-- ── Hotkeys ───────────────────────────────────────────────────────────────────
+
+hs.hotkey.bind({"cmd","alt"}, "R",    loadSounds)
+hs.hotkey.bind({"cmd","alt"}, "S",    openChooser)
+hs.hotkey.bind({"cmd","alt"}, "up",   function() changeVolume(0.1)  end)
+hs.hotkey.bind({"cmd","alt"}, "down", function() changeVolume(-0.1) end)
+
+-- ── Start ─────────────────────────────────────────────────────────────────────
+
+loadSounds()`;
+
+    function highlight(code) {
+      return code
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/(--[^\n]*)/g, '<span class="c">$1</span>')
+        .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="st">$1</span>')
+        .replace(/\b(local|function|if|then|else|elseif|end|return|not|and|or|for|in|do|while|true|false|nil)\b/g, '<span class="kw">$1</span>')
+        .replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="nm">$1</span>');
+    }
+
+    document.getElementById('code-block').innerHTML = highlight(CODE);
+
+    function copyCode() {
+      navigator.clipboard.writeText(CODE).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copiat!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copiază'; btn.classList.remove('copied'); }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>
