@@ -576,7 +576,7 @@ body{
     }
   };
 
-  var storyId  = new URLSearchParams(window.location.search).get('story');
+  var storyId  = new URLSearchParams(window.location.search).get('poveste');
   var story    = stories[storyId] || null;
   var selPlan  = 'lunar';
   var selEp    = 1; // starting episode (1, 3, 5, ... 23)
@@ -686,7 +686,7 @@ body{
       startEpisode: selPlan === 'lunar' ? selEp : null
     }));
 
-    window.location.href = '/pages/plata?story=' + (storyId||'') + '&plan=' + selPlan + (selPlan==='lunar'?'&ep='+selEp:'');
+    window.location.href = '/pages/plata?poveste=' + (storyId||'') + '&plan=' + selPlan + (selPlan==='lunar'?'&ep='+selEp:'');
   };
 
   var _toastTimer = null;

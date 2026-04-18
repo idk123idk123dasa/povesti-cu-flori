@@ -580,37 +580,37 @@ first.parentNode.insertBefore(script, first);
         <div class="stories-head">CHOOSE YOUR STORY</div>
 <div class="stories-grid">
     <div class="story-single">
-    <a href="/pages/get-started?story=camellia-grace" class="story-link">
+    <a href="/pages/get-started?poveste=camellia-grace" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/3_5d12303b-4845-4b2d-b891-39fedff3798b.jpg?v=1759857300" width="200" height="200" alt="">
     <p class="name">NEW! Camellia Grace | Gilded Age</p>
     </a>
   </div>
   <div class="story-single">
-    <a href="/pages/get-started?story=adelaide-magnolia" class="story-link">
+    <a href="/pages/get-started?poveste=adelaide-magnolia" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/AM.png?v=1713566663" width="200" height="200" alt="">
     <p class="name">Adelaide Magnolia | Regency</p>
     </a>
   </div>
   <div class="story-single">
-    <a href="/pages/get-started?story=audrey-rose" class="story-link">
+    <a href="/pages/get-started?poveste=audrey-rose" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/ARProductPage-1.jpg?v=1758861329" width="200" height="200" alt="">
     <p class="name">Audrey Rose | WW2</p>
     </a>
   </div>
   <div class="story-single">
-      <a href="/pages/get-started?story=orchid-mae" class="story-link">
+      <a href="/pages/get-started?poveste=orchid-mae" class="story-link">
         <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/OMProductPage-1.jpg?v=1758861329" width="200" height="200" alt="">
         <p class="name">Orchid Mae | Archaeology</p>
       </a>
   </div>
   <div class="story-single">
-    <a href="/pages/get-started?story=lily-clara" class="story-link">
+    <a href="/pages/get-started?poveste=lily-clara" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/LCProductPage-1_d4b31969-d125-4f93-aa34-0cfe2dd0b0cc.jpg?v=1758861329" width="200" height="200" alt="">
     <p class="name">Lily Clara | Western</p>
     </a>
   </div>
   <div class="story-single">
-    <a href="/pages/get-started?story=norah-aven" class="story-link">
+    <a href="/pages/get-started?poveste=norah-aven" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/NAProductPage-1.jpg?v=1758861329" width="200" height="200" alt="">
     <p class="name">Norah Aven 1 | Fantasy</p>
     </a>
@@ -1287,7 +1287,7 @@ function showStoryReview(storyId,idx){const reviews=storyReviews[storyId];if(!re
 function jumpReview(storyId,idx){srIdx=idx;clearInterval(srTimer);showStoryReview(storyId,idx);srTimer=setInterval(()=>{const reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx)},5000)}
 function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);const box=document.getElementById('storyReviewBox');if(box){box.style.display='block';const carousel=document.getElementById('storyReviewCarousel');if(carousel&&!carousel.contains(box))carousel.appendChild(box)}showStoryReview(storyId,0);srTimer=setInterval(()=>{const reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx)},5000)}
 function renderTiles(){document.getElementById('tiles').innerHTML=S.map(s=>'<div class="tile '+(sel.story?.id===s.id?'sel':'')+'" onclick="pickStory(\''+s.id+'\')"><div class="tile-img"><img src="'+s.tileImg+'" alt="'+s.title+'" loading="lazy"></div><div class="tile-name">'+s.title.replace('The ','').replace(' Letters','').replace(' Chronicles','')+'</div><div class="tile-era">'+s.tag+'</div></div>').join('')}
-function pickStory(id){sel.story=S.find(s=>s.id===id);const url=new URL(window.location);url.searchParams.set('story',id);window.history.replaceState({},'',url);renderTiles();document.getElementById('detail').classList.add('show');document.getElementById('dpImg').src=sel.story.detailImg;document.getElementById('dpTitle').textContent=sel.story.title;document.getElementById('dpEra').textContent=sel.story.era;document.getElementById('dpTag').textContent=sel.story.tag;document.getElementById('dpDesc').textContent=sel.story.desc;document.getElementById('dpDesc').classList.add('clamp');document.getElementById('dpMore').textContent='Read full synopsis ↓';if(sel.story.envelope){document.getElementById('envImg').src=sel.story.envelope;document.getElementById('sbEnv').src=sel.story.envelope;document.getElementById('sbEnv').style.display='block';document.getElementById('envImg3').src=sel.story.envelope}else{document.getElementById('sbEnv').style.display='none'}document.getElementById('revImg').src=sel.story.tileImg;if(sel.story.flatlay)document.getElementById('flatlayImg').src=sel.story.flatlay;document.getElementById('s1btn').disabled=false;const sh=sel.story.title.replace('The ','').replace(' Letters','').replace(' Chronicles','');document.getElementById('s1btn').textContent='Continue With '+sh+' →';document.getElementById('stickyCta').classList.add('show');document.getElementById('stickyTitle').textContent='Continue with '+sh;document.getElementById('sbEmpty').style.display='none';document.getElementById('sbContent').style.display='block';document.getElementById('sbImg').src=sel.story.tileImg;document.getElementById('sbTitle').textContent=sel.story.title;document.getElementById('sbEra').textContent=sel.story.era;document.querySelector('.fl .side-col').classList.add('show');document.querySelector('.fl .main-layout').classList.add('has-sidebar');document.getElementById('dpLearnLine').style.display=sel.story.id==='norah-aven'?'none':'block';startReviewCarousel(sel.story.id);
+function pickStory(id){sel.story=S.find(s=>s.id===id);const url=new URL(window.location);url.searchParams.set('poveste',id);window.history.replaceState({},'',url);renderTiles();document.getElementById('detail').classList.add('show');document.getElementById('dpImg').src=sel.story.detailImg;document.getElementById('dpTitle').textContent=sel.story.title;document.getElementById('dpEra').textContent=sel.story.era;document.getElementById('dpTag').textContent=sel.story.tag;document.getElementById('dpDesc').textContent=sel.story.desc;document.getElementById('dpDesc').classList.add('clamp');document.getElementById('dpMore').textContent='Read full synopsis ↓';if(sel.story.envelope){document.getElementById('envImg').src=sel.story.envelope;document.getElementById('sbEnv').src=sel.story.envelope;document.getElementById('sbEnv').style.display='block';document.getElementById('envImg3').src=sel.story.envelope}else{document.getElementById('sbEnv').style.display='none'}document.getElementById('revImg').src=sel.story.tileImg;if(sel.story.flatlay)document.getElementById('flatlayImg').src=sel.story.flatlay;document.getElementById('s1btn').disabled=false;const sh=sel.story.title.replace('The ','').replace(' Letters','').replace(' Chronicles','');document.getElementById('s1btn').textContent='Continue With '+sh+' →';document.getElementById('stickyCta').classList.add('show');document.getElementById('stickyTitle').textContent='Continue with '+sh;document.getElementById('sbEmpty').style.display='none';document.getElementById('sbContent').style.display='block';document.getElementById('sbImg').src=sel.story.tileImg;document.getElementById('sbTitle').textContent=sel.story.title;document.getElementById('sbEra').textContent=sel.story.era;document.querySelector('.fl .side-col').classList.add('show');document.querySelector('.fl .main-layout').classList.add('has-sidebar');document.getElementById('dpLearnLine').style.display=sel.story.id==='norah-aven'?'none':'block';startReviewCarousel(sel.story.id);
   fixSticky();loadPrices();updateMobile();setTimeout(()=>slowScroll(document.getElementById('detail'),800),100)}
 function togDesc(){const d=document.getElementById('dpDesc'),b=document.getElementById('dpMore');if(d.classList.contains('clamp')){d.classList.remove('clamp');b.textContent='Show less ↑'}else{d.classList.add('clamp');b.textContent='Read full synopsis ↓'}}
 function updateEnv(){const n=document.getElementById('aName').value.trim(),a1=document.getElementById('aAddr1').value.trim(),a2=document.getElementById('aAddr2').value.trim(),city=document.getElementById('aCity').value.trim(),st=document.getElementById('aState').value.trim().toUpperCase(),zip=document.getElementById('aZip').value.trim();const nEl=document.getElementById('envName'),aEl=document.getElementById('envAddr'),ph=document.getElementById('envPh');if(!n&&!a1){nEl.style.display='none';aEl.style.display='none';ph.style.display='block';syncEnv2();checkS2();return}ph.style.display='none';nEl.style.display='block';nEl.textContent=n||'';nEl.style.fontFamily=sel.story?("'"+sel.story.nameFont+"',serif"):'serif';let lines=[];if(a1)lines.push(a1);if(a2)lines.push(a2);let csz=[];if(city)csz.push(city);if(st)csz.push(st);let cl=csz.join(', ');if(zip)cl+=' '+zip;if(cl)lines.push(cl);aEl.style.display='block';aEl.innerHTML=lines.join('<br>');if(n){document.getElementById('sbAddrRow').style.display='grid';let sa=[n];if(a1)sa.push(a1);if(cl)sa.push(cl);document.getElementById('sbAddr').innerHTML=sa.join('<br>')}syncEnv2();updateMobile();checkS2()}
@@ -1330,7 +1330,7 @@ renderTiles();renderPlans();startS3Carousel();
 function fixSticky(){const el=document.querySelector('.fl .side-col');if(el){let p=el.parentElement;while(p&&p!==document.body){const s=getComputedStyle(p);if(s.overflow==='hidden'||s.overflowY==='hidden'||s.overflow==='auto'||s.overflowY==='auto'){p.style.setProperty('overflow','visible','important');p.style.setProperty('overflow-y','visible','important')}p=p.parentElement}}}
 fixSticky();
 
-const urlParams=new URLSearchParams(window.location.search);const storyParam=urlParams.get('story');if(storyParam){const match=S.find(s=>s.id===storyParam);if(match){pickStory(match.id);setTimeout(()=>{const el=document.getElementById('detail');if(el){const y=el.getBoundingClientRect().top+window.pageYOffset-20;window.scrollTo({top:y,behavior:'smooth'})}},500)}}
+const urlParams=new URLSearchParams(window.location.search);const storyParam=urlParams.get('poveste');if(storyParam){const match=S.find(s=>s.id===storyParam);if(match){pickStory(match.id);setTimeout(()=>{const el=document.getElementById('detail');if(el){const y=el.getBoundingClientRect().top+window.pageYOffset-20;window.scrollTo({top:y,behavior:'smooth'})}},500)}}
 if(!window.location.hash)setHash(1);else{const h=window.location.hash.replace('#',''),i=stepNames.indexOf(h);if(i>0)showStep(i,true)}
 
 // === SESSION STORAGE PERSISTENCE ===

@@ -771,37 +771,37 @@ html.gemapp{ visibility: visible !important; }
 <div class="stories-head">ALEGE-ȚI POVESTEA</div>
 <div class="stories-grid">
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?story=camellia-grace">
+<a class="story-link" href="/pages/get-started?poveste=camellia-grace">
 <img alt="" height="200" src="/assets/3_5d12303b-4845-4b2d-b891-39fedff3798b.jpg" width="200"/>
 <p class="name">NOU! Camellia Grace | Epoca de Aur</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?story=adelaide-magnolia">
+<a class="story-link" href="/pages/get-started?poveste=adelaide-magnolia">
 <img alt="" height="200" src="/assets/AM.png" width="200"/>
 <p class="name">Adelaide Magnolia | Regență</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?story=audrey-rose">
+<a class="story-link" href="/pages/get-started?poveste=audrey-rose">
 <img alt="" height="200" src="/assets/ARProductPage-1.jpg" width="200"/>
 <p class="name">Audrey Rose | Al Doilea Război Mondial</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?story=orchid-mae">
+<a class="story-link" href="/pages/get-started?poveste=orchid-mae">
 <img alt="" height="200" src="/assets/OMProductPage-1.jpg" width="200"/>
 <p class="name">Orhideea Mae | Arheologie</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?story=lily-clara">
+<a class="story-link" href="/pages/get-started?poveste=lily-clara">
 <img alt="" height="200" src="/assets/LCProductPage-1_d4b31969-d125-4f93-aa34-0cfe2dd0b0cc.jpg" width="200"/>
 <p class="name">Lily Clara | occidental</p>
 </a>
 </div>
 <div class="story-single">
-<a class="story-link" href="/pages/get-started?story=norah-aven">
+<a class="story-link" href="/pages/get-started?poveste=norah-aven">
 <img alt="" height="200" src="/assets/NAProductPage-1.jpg" width="200"/>
 <p class="name">Norah Aven 1 | Fantezie</p>
 </a>
@@ -1399,7 +1399,7 @@ window._pickStory=function(id){
   selStory=S.find(function(s){return s.id===id;});
   if(!selStory)return;
   var url=new URL(window.location.href);
-  url.searchParams.set('story',id);
+  url.searchParams.set('poveste',id);
   window.history.replaceState({},'',url.toString());
   renderTiles();
   var detail=document.getElementById('detail');
@@ -1419,7 +1419,7 @@ window._pickStory=function(id){
   if(s1btn){
     s1btn.disabled=false;
     s1btn.textContent='Continuă cu '+sh+' →';
-    s1btn.onclick=function(){window.location.href='/pages/continua?story='+selStory.id;};
+    s1btn.onclick=function(){window.location.href='/pages/continua?poveste='+selStory.id;};
   }
   if(typeof startReviewCarousel==='function')startReviewCarousel(id);
 };
@@ -1432,7 +1432,7 @@ window.togDesc=function(){
   b.textContent=expanded?'Citește rezumatul complet ↓':'Restrânge rezumatul ↑';
 };
 window.go=function(step){
-  if(step===2&&selStory)window.location.href='/pages/continua?story='+selStory.id;
+  if(step===2&&selStory)window.location.href='/pages/continua?poveste='+selStory.id;
 };
 
 const storyReviews={
@@ -1485,7 +1485,7 @@ function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);var box=doc
 
 function initStory(){
   renderTiles();
-  var urlStory=new URLSearchParams(window.location.search).get('story')||'audrey-rose';
+  var urlStory=new URLSearchParams(window.location.search).get('poveste')||'audrey-rose';
   var m=S.find(function(s){return s.id===urlStory;});
   if(m)window._pickStory(m.id);
 }
