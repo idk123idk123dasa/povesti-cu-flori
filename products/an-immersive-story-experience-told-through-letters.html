@@ -1405,7 +1405,7 @@ window._pickStory=function(id){
   var detail=document.getElementById('detail');
   if(detail)detail.classList.add('show');
   var dpImg=document.getElementById('dpImg');if(dpImg)dpImg.src=selStory.detailImg;
-  var dpTitle=document.getElementById('dpTitle');if(dpTitle)dpTitle.textContent=selStory.title;
+  var dpTitle=document.getElementById('dpTitle');if(dpTitle)dpTitle.textContent=selStory.title.replace(' Letters','').replace(' Chronicles','');
   var dpEra=document.getElementById('dpEra');if(dpEra)dpEra.textContent=selStory.era;
   var dpTag=document.getElementById('dpTag');if(dpTag)dpTag.textContent=selStory.tag;
   var flatlayImg=document.getElementById('flatlayImg');if(flatlayImg&&selStory.flatlay)flatlayImg.src=selStory.flatlay;
