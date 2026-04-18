@@ -1,4 +1,7 @@
 /policies/shipping-policy /politici/politica-livrare 301
+/pages/refund-policy /pages/returnari-si-rambursari 301
+/pages/privacy-policy /pages/politica-confidentialitate 301
+/pages/terms-and-conditions /pages/termeni-si-conditii 301
 /products/an-immersive-story-experience-told-through-letters /produse/experienta-povestii-prin-scrisori 301
 /produse/an-immersive-story-experience-told-through-letters /produse/experienta-povestii-prin-scrisori 301
 /products/* /produse/:splat 301
