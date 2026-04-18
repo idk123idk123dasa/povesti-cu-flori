@@ -1649,6 +1649,18 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
 #CăutareDrawer, #SearchDrawer { display: none !important }
 </style>
 <script>
+/* Force nav links to navigate before GemPage can intercept */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    if (!a.closest('#AccessibleNav, #custom-nav, #MobileNav, .nav-bottom-cta, .announcement-bar')) return;
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    e.stopImmediatePropagation();
+    window.location.href = href;
+  }, true);
+})();
 (function(){
   document.querySelectorAll('[data-has-dropdowns] .site-nav__link--button').forEach(function(btn){
     btn.addEventListener('click', function(e){
