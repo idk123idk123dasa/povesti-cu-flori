@@ -455,7 +455,7 @@ first.parentNode.insertBefore(script, first);
                 </li>
               
                 <li>
-                  <a href="/site/products/the-norah-aven-chronicles-pt2"
+                  <a href="/site/produse/the-norah-aven-chronicles-pt2"
                   class="site-nav__link site-nav__child-link"
                   
                 >
@@ -464,7 +464,7 @@ first.parentNode.insertBefore(script, first);
                 </li>
               
                 <li>
-                  <a href="/site/products/norah-aven-part-3-prepaid"
+                  <a href="/site/produse/norah-aven-part-3-prepaid"
                   class="site-nav__link site-nav__child-link"
                   
                 >
@@ -473,7 +473,7 @@ first.parentNode.insertBefore(script, first);
                 </li>
               
                 <li>
-                  <a href="/site/products/the-norah-aven-chronicles-complete-sets"
+                  <a href="/site/produse/the-norah-aven-chronicles-complete-sets"
                   class="site-nav__link site-nav__child-link"
                   
                 >
@@ -701,19 +701,19 @@ first.parentNode.insertBefore(script, first);
     </a>
   </div>
   <div class="story-single">
-    <a href="/products/the-norah-aven-chronicles-pt2" class="story-link">
+    <a href="/produse/the-norah-aven-chronicles-pt2" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Norah_Aven_-_HP.png?v=1675445974" width="200" height="200" alt="">
     <p class="name">Norah Aven 2 | Fantasy</p>
     </a>
   </div>
   <div class="story-single">
-    <a href="/products/norah-aven-part-3-prepaid" class="story-link">
+    <a href="/produse/norah-aven-part-3-prepaid" class="story-link">
     <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Product_Photos_Norah_Aven_Launch.jpg?v=1742251728" width="200" height="200" alt="">
     <p class="name">Norah Aven 3 | Fantasy</p>
     </a>
   </div><div class="story-single">
-    <a href="/products/the-norah-aven-chronicles-complete-sets" class="story-link">
-    <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/products/NATin-2.png?v=1759442668" width="200" height="200" alt="">
+    <a href="/produse/the-norah-aven-chronicles-complete-sets" class="story-link">
+    <img src="https://cdn.shopify.com/s/files/1/0419/4517/0084/produse/NATin-2.png?v=1759442668" width="200" height="200" alt="">
     <p class="name">Norah Aven Complete Sets | Fantasy</p>
     </a>
   </div>
@@ -1364,7 +1364,7 @@ const variantMap={
   'lily-clara':     {tin:'47045817794816',prepaid:'47045817762048',monthly:'47516955279616',sellingPlan:'3063251200'},
   'norah-aven':     {tin:'47045817925888',prepaid:'47045817893120',monthly:'47516955345152',sellingPlan:'3063283968'}
 };
-async function loadPrices(){if(!sel.story)return;const vm=variantMap[sel.story.id];if(!vm)return;try{const r=await fetch('/products/an-immersive-story-experience-told-through-letters-1.json');const d=await r.json();for(const v of d.product.variants){const sid=String(v.id);if(sid===vm.tin){prices.prepaidTin=v.price;prices.prepaidTinWas=v.compare_at_price||'';prices.prepaidTinVid=sid;prices.prepaidTinAvailable=v.available!==false}else if(sid===vm.prepaid){prices.prepaid=v.price;prices.prepaidWas=v.compare_at_price||'';prices.prepaidVid=sid}else if(sid===vm.monthly){prices.monthly=v.price;prices.monthlyWas=v.compare_at_price||'';prices.monthlyVid=sid}}}catch(e){console.log('Price fetch error',e)}renderPlans();showDetailPricing()}
+async function loadPrices(){if(!sel.story)return;const vm=variantMap[sel.story.id];if(!vm)return;try{const r=await fetch('/produse/an-immersive-story-experience-told-through-letters-1.json');const d=await r.json();for(const v of d.product.variants){const sid=String(v.id);if(sid===vm.tin){prices.prepaidTin=v.price;prices.prepaidTinWas=v.compare_at_price||'';prices.prepaidTinVid=sid;prices.prepaidTinAvailable=v.available!==false}else if(sid===vm.prepaid){prices.prepaid=v.price;prices.prepaidWas=v.compare_at_price||'';prices.prepaidVid=sid}else if(sid===vm.monthly){prices.monthly=v.price;prices.monthlyWas=v.compare_at_price||'';prices.monthlyVid=sid}}}catch(e){console.log('Price fetch error',e)}renderPlans();showDetailPricing()}
 function showDetailPricing(){const mo=prices.monthly||'13.00';const pp=prices.prepaid||'96.00';const pt=prices.prepaidTin||'126.00';const tinAvailable=prices.prepaidTinAvailable!==false;document.getElementById('dpPriceMo').textContent='$'+mo+'/mo';document.getElementById('dpPricePP').textContent='$'+pp+' Prepaid Story';document.getElementById('dpPricePT').textContent=tinAvailable?'$'+pt+' Prepaid+Tin':'';document.querySelectorAll('.dp-price-sep').forEach((s,i)=>{s.style.display=(i===1&&!tinAvailable)?'none':'inline'});document.getElementById('dpPricing').style.display='flex'}
 const storyReviews={'camellia-grace':[{t:'"I got the letters for my mother. She watches Gilded Age, Bridgerton, Downton Abbey. She loves the letters and looks forward to them. She says she feels so \'fancy high society.\'"',n:'Crystal B., Verified Buyer'},{t:'"What a glorious presentation! The detail and love and artistry that went into this is breathtaking. So many sweet things and beautiful details to sweep me away to the Newport mansions."',n:'Jamie O., Verified Buyer'},{t:'"This was a gift for Mom. It is her 3rd story. She loves the stories and stores each one carefully. It is common for others in her community to read along with her. This gift is truly special."',n:'Suzanne R., Verified Buyer'},{t:'"It reminds me of days gone by when people used to write letters to one another in cursive. I look forward to my deliveries."',n:'Kerri B., Verified Buyer'},{t:'"First letter in, and it\'s so delightful! I love that the pages are discreetly numbered so I\'ll know the correct order later."',n:'Perry A., Verified Buyer'}],'audrey-rose':[{t:'"I purchased the Audrey Rose letters as a Mother\'s Day gift. She\'s excited to check her mailbox and always gives me an update on what\'s going on."',n:'Melissa H., Verified Buyer'},{t:'"She calls me every time she knows they have been mailed and again when she receives the letter. I just love seeing how excited she gets!"',n:'Kelly M., Verified Buyer'},{t:'"I gifted the Audrey Rose letters to my 93-year-old grandmother for her birthday. She has loved receiving the letters and anxiously looks forward to them."',n:'Kimberly N., Verified Buyer'},{t:'"I got this for my daughter as a birthday gift. She loves it! She finds herself anxiously awaiting each letter. It really warms my heart."',n:'Sonya Y., Verified Buyer'},{t:'"When my mother-in-law received hers, she was overwhelmed with joy. We have all enjoyed getting the letters and anticipate their arrival."',n:'Jennifer B., Verified Buyer'}],'adelaide-magnolia':[{t:'"I gave this to my mom as a Mother\'s Day gift, and she loves it so much! She is always excited when she receives an envelope and can\'t wait to see what\'s inside!"',n:'Mollie M., Verified Buyer'},{t:'"I purchased the Regency England story for my 91-year-old mother. She loves getting the story parts each month. A wonderful gift to look forward to."',n:'Julie S., Verified Buyer'},{t:'"She loves looking forward to checking her mailbox and seeing the beautiful letter there awaiting her quiet time to sit and read."',n:'Cecil R., Verified Buyer'},{t:'"I purchased The Flower Letters for my mother for Mother\'s Day. She absolutely loves them! I enjoy watching her get excited each time a new letter arrives."',n:'Donna B., Verified Buyer'},{t:'"The story is wonderful but I really love the floral artwork. I plan to share the letters with the person who gave them to me — it\'s too good not to share!"',n:'Jill K., Verified Buyer'}],'lily-clara':[{t:'"I JUST LOVE GETTING THESE LETTERS!!! What an amazing concept — getting letters every month for a year! My daughter-in-law gave me this as a Christmas gift. Best gift I have ever gotten!"',n:'Judy N., Verified Buyer'},{t:'"It is one of the best gifts they could have given me. I have always loved the West and dreamed of marrying a cowboy. I have enjoyed every single letter."',n:'Jody R., Verified Buyer'},{t:'"She absolutely loves the letters and gets so excited when she gets a new one in the mail. She decorated her own wooden treasure box to keep them in!"',n:'Lisa R., Verified Buyer'},{t:'"She calls it the gift that keeps giving. She is excited to check the mail and follow along with the amazing story!"',n:'Aimee H., Verified Buyer'},{t:'"I absolutely love it. I look forward to getting the next letter in the mail and find a quiet place to devour it. All the extras inside are such fun and tremendous quality."',n:'Sheila J., Verified Buyer'}],'orchid-mae':[{t:'"She is six letters in and thoroughly enjoying them. She looks forward to each one! Loves all the extras."',n:'Melissa F., Verified Buyer'},{t:'"I love the anticipation this process brings — going to the mailbox, finding a beautiful letter. I love reading, getting caught up in and enjoying every page."',n:'Kelly S., Verified Buyer'},{t:'"I was so excited. I can\'t wait until Orchid Mae arrives in Brazil. I\'m looking forward to my letters arriving every month and becoming part of the story."',n:'Joy L., Verified Buyer'},{t:'"I love these letters so much, I ordered a Gift Bundle for 2 of my friends! The detail is wonderful and the writing just pulls me in."',n:'Colleen M., Verified Buyer'},{t:'"Wow, I could not have anticipated just how much she would LOVE them."',n:'Rebecca L., Verified Buyer'}],'norah-aven':[{t:'"I so look forward to receiving each letter! I love the book so far, and enjoy the mystery. This gift from my daughter is truly enjoyable!"',n:'Kathy L., Verified Buyer'},{t:'"She was so excited to receive the tin! What a wonderful gift — she loves to read and is a history buff."',n:'Shannon D., Verified Buyer'},{t:'"I am absolutely loving the Norah Aven Collection! Beautifully written, incredibly engaging and interactive. This is genius at its finest."',n:'Sharon L., Verified Buyer'},{t:'"My 13-year-old daughter loves this. She is very excited for her next letter!"',n:'Jennifer S., Verified Buyer'},{t:'"Our grandma absolutely loves getting these in the mail!! She shares the letters with our family — her great grandkids love them just as much."',n:'Joyce M., Verified Buyer'}]};
 let srIdx=0,srTimer=null;
@@ -1570,25 +1570,25 @@ function initGooglePlaces(){
              >
           <div class="site-footer__item-inner site-footer__item-inner--link_list"><p class="h4">story collections</p><ul class="site-footer__linklist
                             "><li class="site-footer__linklist-item">
-                        <a href="/en-ca/products/the-adelaide-magnolia-collection-annual"
+                        <a href="/en-ca/produse/the-adelaide-magnolia-collection-annual"
                           
                         >
                           Adelaide Magnolia Collection
                         </a>
                       </li><li class="site-footer__linklist-item">
-                        <a href="/en-ca/products/the-audrey-rose-letters-prepaid"
+                        <a href="/en-ca/produse/the-audrey-rose-letters-prepaid"
                           
                         >
                           Audrey Rose Collection
                         </a>
                       </li><li class="site-footer__linklist-item">
-                        <a href="/en-ca/products/the-lily-clara-collection-annual"
+                        <a href="/en-ca/produse/the-lily-clara-collection-annual"
                           
                         >
                           Lily Clara Collection
                         </a>
                       </li><li class="site-footer__linklist-item">
-                        <a href="/en-ca/products/the-norah-aven-chronicles"
+                        <a href="/en-ca/produse/the-norah-aven-chronicles"
                           
                         >
                           Norah Aven Chronicles
