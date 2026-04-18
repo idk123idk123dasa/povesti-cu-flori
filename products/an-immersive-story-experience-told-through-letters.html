@@ -1486,7 +1486,7 @@ function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);var box=doc
 
 function initStory(){
   renderTiles();
-  var urlStory=new URLSearchParams(window.location.search).get('poveste');
+  var _sp=new URLSearchParams(window.location.search);var urlStory=_sp.get('poveste')||_sp.get('story');
   if(urlStory){var m=S.find(function(s){return s.id===urlStory;});if(m)window._pickStory(m.id);}
 }
 

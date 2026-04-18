@@ -576,7 +576,7 @@ body{
     }
   };
 
-  var storyId  = new URLSearchParams(window.location.search).get('poveste');
+  var storyId  = (new URLSearchParams(window.location.search).get('poveste')||new URLSearchParams(window.location.search).get('story'));
   var story    = stories[storyId] || null;
   var selPlan  = 'lunar';
   var selEp    = 1; // starting episode (1, 3, 5, ... 23)
