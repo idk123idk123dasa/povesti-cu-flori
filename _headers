@@ -1,5 +1,6 @@
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
+  Access-Control-Allow-Origin: *
 
 /pages/*
   Cache-Control: no-cache, no-store, must-revalidate
