@@ -1,7 +1,14 @@
 /policies/shipping-policy /politici/politica-livrare 301
-/pages/refund-policy /pages/returnari-si-rambursari 301
-/pages/privacy-policy /pages/politica-confidentialitate 301
-/pages/terms-and-conditions /pages/termeni-si-conditii 301
+/pages/contact-us /pagini/contacteaza-ne 301
+/pages/mission /pagini/misiunea-noastra 301
+/pages/faq /pagini/intrebari-frecvente 301
+/pages/the-flower-letters-reviews /pagini/recenzii-scrisori-cu-povesti 301
+/pages/how-it-works /pagini/cum-functioneaza 301
+/pages/disclaimer /pagini/disclaimer 301
+/pages/refund-policy /pagini/returnari-si-rambursari 301
+/pages/privacy-policy /pagini/politica-confidentialitate 301
+/pages/terms-and-conditions /pagini/termeni-si-conditii 301
+/pages/* /pagini/:splat 301
 /products/an-immersive-story-experience-told-through-letters /produse/experienta-povestii-prin-scrisori 301
 /produse/an-immersive-story-experience-told-through-letters /produse/experienta-povestii-prin-scrisori 301
 /products/* /produse/:splat 301
