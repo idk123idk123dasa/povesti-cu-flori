@@ -1711,25 +1711,42 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
 </script>
 <script>
 (function fixNoastreBtn() {
+  var TARGET = '/products/an-immersive-story-experience-told-through-letters';
   function patchBtn() {
-    document.querySelectorAll('a[href="/pages/get-started"]').forEach(function(el) {
-      if (el.textContent.indexOf('noastre') !== -1) {
-        el.removeAttribute('data-scroll-speed');
-        el.removeAttribute('data-scroll-speed-md');
-        el.removeAttribute('data-scroll-speed-sm');
-        el.removeAttribute('data-scroll-speed-xs');
-        el.href = '/products/an-immersive-story-experience-told-through-letters';
-        el.addEventListener('click', function(e) {
-          e.stopImmediatePropagation();
-          window.location.href = '/products/an-immersive-story-experience-told-through-letters';
-        }, true);
-      }
+    var btn = null;
+    document.querySelectorAll('a').forEach(function(el) {
+      if (el.textContent.indexOf('noastre') !== -1) btn = el;
     });
+    if (!btn || btn._patched) return;
+    btn._patched = true;
+    /* Change href and remove GemPage scroll attributes */
+    btn.href = TARGET;
+    ['data-scroll-speed','data-scroll-speed-md','data-scroll-speed-sm','data-scroll-speed-xs'].forEach(function(a){ btn.removeAttribute(a); });
+    /* Create a transparent overlay <a> positioned over the button */
+    var overlay = document.createElement('a');
+    overlay.href = TARGET;
+    overlay.style.cssText = 'position:fixed;z-index:999999;background:transparent;cursor:pointer;display:block;';
+    document.body.appendChild(overlay);
+    function positionOverlay() {
+      var r = btn.getBoundingClientRect();
+      if (r.width === 0) return;
+      overlay.style.left   = r.left + window.scrollX + 'px';
+      overlay.style.top    = r.top  + window.scrollY + 'px';
+      overlay.style.width  = r.width  + 'px';
+      overlay.style.height = r.height + 'px';
+      overlay.style.position = 'absolute';
+    }
+    positionOverlay();
+    window.addEventListener('scroll', positionOverlay);
+    window.addEventListener('resize', positionOverlay);
+    setTimeout(positionOverlay, 800);
+    setTimeout(positionOverlay, 2000);
   }
   document.addEventListener('DOMContentLoaded', patchBtn);
   window.addEventListener('load', patchBtn);
   setTimeout(patchBtn, 500);
   setTimeout(patchBtn, 1500);
+  setTimeout(patchBtn, 3000);
 })();
 </script>
 </body>
