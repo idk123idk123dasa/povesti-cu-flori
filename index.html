@@ -1709,6 +1709,29 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
   setTimeout(fixHeroBg, 1500);
 })();
 </script>
+<script>
+(function fixNoastreBtn() {
+  function patchBtn() {
+    document.querySelectorAll('a[href="/pages/get-started"]').forEach(function(el) {
+      if (el.textContent.indexOf('noastre') !== -1) {
+        el.removeAttribute('data-scroll-speed');
+        el.removeAttribute('data-scroll-speed-md');
+        el.removeAttribute('data-scroll-speed-sm');
+        el.removeAttribute('data-scroll-speed-xs');
+        el.href = '/products/an-immersive-story-experience-told-through-letters';
+        el.addEventListener('click', function(e) {
+          e.stopImmediatePropagation();
+          window.location.href = '/products/an-immersive-story-experience-told-through-letters';
+        }, true);
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', patchBtn);
+  window.addEventListener('load', patchBtn);
+  setTimeout(patchBtn, 500);
+  setTimeout(patchBtn, 1500);
+})();
+</script>
 </body>
 </html>
 <style>
