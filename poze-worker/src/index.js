@@ -424,7 +424,7 @@ export default {
       return new Response(bytes, {
         headers: {
           'Content-Type': ct,
-          'Cache-Control': 'public, max-age=31536000',
+          'Cache-Control': 'public, max-age=31536000, no-transform',
           'Access-Control-Allow-Origin': '*',
         }
       });
