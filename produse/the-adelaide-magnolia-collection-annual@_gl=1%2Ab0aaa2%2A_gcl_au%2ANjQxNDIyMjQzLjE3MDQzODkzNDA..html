@@ -1574,25 +1574,26 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
 #e-1704406132927 .footer-overlay{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:10px;text-align:center;
-  padding-bottom:6%;
+  flex-direction:column;gap:14px;text-align:center;
+  padding:0 20%;
   pointer-events:none;
   font-family:Georgia,serif;
 }
 #e-1704406132927 .footer-overlay a{pointer-events:auto;}
-#e-1704406132927 .footer-overlay .fo-emblem{
-  width:110px;height:110px;object-fit:contain;
-  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));opacity:0.95;
-  margin-bottom:4px;
-}
 #e-1704406132927 .footer-overlay .fo-title{
-  margin:0;font-size:20px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.16em;color:rgba(240,208,80,0.95);
-  text-shadow:0 1px 5px rgba(0,0,0,0.7);
+  margin:0;font-size:26px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.16em;color:rgba(240,208,80,0.97);
+  text-shadow:0 2px 6px rgba(0,0,0,0.8);
 }
 #e-1704406132927 .footer-overlay a{
-  color:rgba(255,255,255,0.96);font-size:18px;font-weight:500;
-  text-decoration:none;text-shadow:0 1px 4px rgba(0,0,0,0.8);
+  color:#fff;font-size:22px;font-weight:600;
+  text-decoration:none;text-shadow:0 2px 5px rgba(0,0,0,0.9);
+}
+#e-1704406132927 .footer-emblem{
+  position:absolute;bottom:8%;right:6%;
+  width:120px;height:120px;object-fit:contain;
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,0.6));
+  opacity:0.95;pointer-events:none;
 }
 </style>
 <script>
@@ -1602,14 +1603,18 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
     if(!el||el.querySelector('.footer-overlay'))return;
     var d=document.createElement('div');
     d.className='footer-overlay';
-    d.innerHTML='<img class="fo-emblem" src="/assets/emblema-v2.png" alt="Scrisori cu Povești">'
-      +'<p class="fo-title">Mai multe informații</p>'
+    d.innerHTML='<p class="fo-title">Mai multe informații</p>'
       +'<a href="/pagini/terms-and-conditions">Termeni și condiții</a>'
       +'<a href="/pagini/privacy-policy">Politica de confidențialitate</a>'
       +'<a href="/pagini/refund-policy">Returnări și rambursări</a>'
       +'<a href="/politici/politica-livrare">Politica de expediere</a>';
+    var emb=document.createElement('img');
+    emb.className='footer-emblem';
+    emb.src='/assets/emblema-v2.png';
+    emb.alt='Scrisori cu Povești';
     el.style.position='relative';
     el.appendChild(d);
+    el.appendChild(emb);
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectOverlay);}
   else{injectOverlay();}
