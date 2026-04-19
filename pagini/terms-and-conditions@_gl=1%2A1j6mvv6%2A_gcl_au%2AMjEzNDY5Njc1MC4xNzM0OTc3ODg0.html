@@ -1237,7 +1237,16 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 <!--GEM_FOOTER_END-->
 </link></link></link></link></link></main>
 <div class="shopify-section" id="shopify-section-footer">
-<footer style="margin:0;padding:0;line-height:0;"><img src="/assets/Footer-Floral-v2.png" alt="Footer Scrisori cu Povești" style="width:100%;display:block;"></footer>
+<footer style="margin:0;padding:0;position:relative;line-height:0;font-family:Georgia,serif;">
+<img src="/assets/Footer-Floral-v2.png" alt="" style="width:100%;display:block;">
+<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;">
+<p style="margin:0;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(240,208,80,0.85);text-shadow:0 1px 4px rgba(0,0,0,0.6);">Mai multe informații</p>
+<a href="/pagini/terms-and-conditions" style="color:rgba(255,255,255,0.82);font-size:13px;text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.6);">Termeni și condiții</a>
+<a href="/pagini/privacy-policy" style="color:rgba(255,255,255,0.82);font-size:13px;text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.6);">Politica de confidențialitate</a>
+<a href="/pagini/refund-policy" style="color:rgba(255,255,255,0.82);font-size:13px;text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.6);">Returnări și rambursări</a>
+<a href="/politici/politica-livrare" style="color:rgba(255,255,255,0.82);font-size:13px;text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.6);">Politica de expediere</a>
+</div>
+</footer>
 </div>
 <div aria-hidden="true" class="visually-hidden" id="slideshow-info">Folosiți săgețile stânga/dreapta pentru a naviga prin prezentare sau glisați la stânga/dreapta dacă utilizați un dispozitiv mobil</div>
 </div>
@@ -1567,6 +1576,45 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
     e.stopImmediatePropagation();
     window.location.href = href;
   }, true);
+})();
+</script>
+<style id="footer-overlay-css">
+#e-1704406132927{position:relative!important;line-height:0;}
+#e-1704406132927 .footer-overlay{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;text-align:center;
+  pointer-events:none;
+  font-family:Georgia,serif;
+}
+#e-1704406132927 .footer-overlay a{pointer-events:auto;}
+#e-1704406132927 .footer-overlay .fo-title{
+  margin:0;font-size:14px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.12em;color:rgba(240,208,80,0.85);
+  text-shadow:0 1px 4px rgba(0,0,0,0.6);
+}
+#e-1704406132927 .footer-overlay a{
+  color:rgba(255,255,255,0.82);font-size:13px;
+  text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.6);
+}
+</style>
+<script>
+(function(){
+  function injectOverlay(){
+    var el=document.getElementById('e-1704406132927');
+    if(!el||el.querySelector('.footer-overlay'))return;
+    var d=document.createElement('div');
+    d.className='footer-overlay';
+    d.innerHTML='<p class="fo-title">Mai multe informații</p>'
+      +'<a href="/pagini/terms-and-conditions">Termeni și condiții</a>'
+      +'<a href="/pagini/privacy-policy">Politica de confidențialitate</a>'
+      +'<a href="/pagini/refund-policy">Returnări și rambursări</a>'
+      +'<a href="/politici/politica-livrare">Politica de expediere</a>';
+    el.style.position='relative';
+    el.appendChild(d);
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectOverlay);}
+  else{injectOverlay();}
 })();
 </script>
 </body>
