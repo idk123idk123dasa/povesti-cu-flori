@@ -1222,24 +1222,23 @@ html.gemapp{ visibility: visible !important; }
 </main>
 <div class="shopify-section" id="shopify-section-footer">
 <style id="scp-footer-css">
-.scp-footer{background:#1B3A52;color:#E8DDD0;font-family:Georgia,serif;margin-top:0}
-.scp-footer__links{max-width:1100px;margin:0 auto;padding:32px 40px 28px;text-align:center}
-.scp-footer__heading{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A96E;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.15);display:inline-block}
+.scp-footer{background-image:url('/assets/Footer-Floral-v2.png');background-size:cover;background-position:center;color:#E8DDD0;font-family:Georgia,serif;margin-top:0}
+.scp-footer__inner{max-width:700px;margin:0 auto;padding:48px 40px 44px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px}
+.scp-footer__emblem{width:130px;height:130px;object-fit:contain}
+.scp-footer__contact{font-size:14px;color:rgba(255,255,255,.8);line-height:1.6}
+.scp-footer__contact a{color:#C9A96E;text-decoration:none}
+.scp-footer__contact a:hover{text-decoration:underline}
+.scp-footer__links{width:100%}
+.scp-footer__heading{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#C9A96E;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.2);display:inline-block}
 .scp-footer__links ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;align-items:center;gap:6px}
 .scp-footer__links li{margin:0}
 .scp-footer__links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;transition:color .2s}
 .scp-footer__links a:hover{color:#C9A96E}
-.scp-footer__img{display:block;width:100%;line-height:0}
-.scp-footer__img img{width:100%;height:auto;display:block}
-.scp-footer__img-mobile{display:none}
-@media(max-width:767px){
-  .scp-footer__img{display:none}
-  .scp-footer__img-mobile{display:block;width:100%;line-height:0}
-  .scp-footer__img-mobile img{width:100%;height:auto;display:block}
-  .scp-footer__links{padding:24px 20px 20px}
-}
+@media(max-width:767px){.scp-footer__inner{padding:36px 20px 32px}}
 </style>
 <footer class="scp-footer">
+<div class="scp-footer__inner">
+<img class="scp-footer__emblem" src="/assets/emblema-v2.png" alt="Scrisori cu Povești">
   <div class="scp-footer__links">
     <p class="scp-footer__heading">Mai multe informații</p>
     <ul>
@@ -1249,12 +1248,7 @@ html.gemapp{ visibility: visible !important; }
       <li><a href="/politici/politica-livrare">Politica Livrare</a></li>
     </ul>
   </div>
-  <div class="scp-footer__img">
-    <img src="/assets/Footer-Bottom-Desktop.jpg" alt="">
-  </div>
-  <div class="scp-footer__img-mobile">
-    <img src="/assets/Floral-Footer.jpg" alt="">
-  </div>
+</div>
 </footer>
 </div>
 <div aria-hidden="true" class="visually-hidden" id="slideshow-info">Folosiți săgețile stânga/dreapta pentru a naviga prin prezentare sau glisați la stânga/dreapta dacă utilizați un dispozitiv mobil</div>
