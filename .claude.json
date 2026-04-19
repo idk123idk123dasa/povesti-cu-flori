@@ -1,10 +1,10 @@
 {
-  "numStartups": 85,
+  "numStartups": 93,
   "installMethod": "native",
   "autoUpdates": false,
   "tipsHistory": {
     "new-user-warmup": 9,
-    "plan-mode-for-complex-tasks": 81,
+    "plan-mode-for-complex-tasks": 91,
     "terminal-setup": 84,
     "memory-command": 79,
     "theme-command": 83,
@@ -13,27 +13,27 @@
     "prompt-queue": 13,
     "enter-to-steer-in-relatime": 85,
     "todo-list": 85,
-    "install-github-app": 78,
-    "install-slack-app": 78,
-    "double-esc-code-restore": 78,
-    "continue": 81,
+    "install-github-app": 88,
+    "install-slack-app": 88,
+    "double-esc-code-restore": 88,
+    "continue": 91,
     "color-when-multi-clauding": 85,
-    "shift-tab": 81,
-    "image-paste": 67,
+    "shift-tab": 91,
+    "image-paste": 87,
     "custom-agents": 81,
     "agent-flag": 81,
     "web-app": 82,
     "mobile-app": 82,
-    "frontend-design-plugin": 84,
+    "frontend-design-plugin": 91,
     "feedback-command": 83,
-    "default-permission-mode-config": 78,
+    "default-permission-mode-config": 88,
     "permissions": 84,
-    "rename-conversation": 72,
-    "custom-commands": 72,
-    "guest-passes": 84,
-    "git-worktrees": 81
+    "rename-conversation": 87,
+    "custom-commands": 88,
+    "guest-passes": 91,
+    "git-worktrees": 91
   },
-  "promptQueueUseCount": 78,
+  "promptQueueUseCount": 79,
   "cachedGrowthBookFeatures": {
     "tengu_sm_compact": false,
     "tengu_bridge_min_version": {
@@ -504,48 +504,55 @@
       "hasClaudeMdExternalIncludesApproved": false,
       "hasClaudeMdExternalIncludesWarningShown": false,
       "exampleFiles": [],
-      "lastCost": 5.392887299999999,
-      "lastAPIDuration": 982140,
-      "lastAPIDurationWithoutRetries": 982043,
-      "lastToolDuration": 201012,
-      "lastDuration": 5424516,
-      "lastLinesAdded": 0,
-      "lastLinesRemoved": 1,
-      "lastTotalInputTokens": 2007,
-      "lastTotalOutputTokens": 48239,
-      "lastTotalCacheCreationInputTokens": 319906,
-      "lastTotalCacheReadInputTokens": 11545446,
+      "lastCost": 24.057652949999976,
+      "lastAPIDuration": 4610530,
+      "lastAPIDurationWithoutRetries": 4610014,
+      "lastToolDuration": 823492,
+      "lastDuration": 27741543,
+      "lastLinesAdded": 225,
+      "lastLinesRemoved": 113,
+      "lastTotalInputTokens": 10995,
+      "lastTotalOutputTokens": 243891,
+      "lastTotalCacheCreationInputTokens": 961557,
+      "lastTotalCacheReadInputTokens": 55868214,
       "lastTotalWebSearchRequests": 0,
-      "lastFpsAverage": 1.76,
-      "lastFpsLow1Pct": 273.3,
+      "lastFpsAverage": 4.42,
+      "lastFpsLow1Pct": 217.49,
       "lastModelUsage": {
         "claude-sonnet-4-6": {
-          "inputTokens": 2007,
-          "outputTokens": 48239,
-          "cacheReadInputTokens": 11545446,
-          "cacheCreationInputTokens": 319906,
+          "inputTokens": 10995,
+          "outputTokens": 243891,
+          "cacheReadInputTokens": 55868214,
+          "cacheCreationInputTokens": 961557,
           "webSearchRequests": 0,
-          "costUSD": 5.392887299999999
+          "costUSD": 24.057652949999976
         }
       },
       "lastSessionId": "96e7e9b6-ca60-4354-b1b7-e470b78c24cd",
       "lastSessionMetrics": {
-        "frame_duration_ms_count": 2688,
-        "frame_duration_ms_min": 0.11472399999911431,
-        "frame_duration_ms_max": 53.02950400000009,
-        "frame_duration_ms_avg": 0.7151253299851205,
-        "frame_duration_ms_p50": 0.5147564999861061,
-        "frame_duration_ms_p95": 1.45893454999459,
-        "frame_duration_ms_p99": 3.637181590000617,
-        "pre_tool_hook_duration_ms_count": 23,
+        "frame_duration_ms_count": 61850,
+        "frame_duration_ms_min": 0.03770000021904707,
+        "frame_duration_ms_max": 134.696414,
+        "frame_duration_ms_avg": 1.1433032187073162,
+        "frame_duration_ms_p50": 1.0891689993441105,
+        "frame_duration_ms_p95": 1.6094394495245066,
+        "frame_duration_ms_p99": 4.295420139618209,
+        "pre_tool_hook_duration_ms_count": 346,
         "pre_tool_hook_duration_ms_min": 0,
         "pre_tool_hook_duration_ms_max": 1,
-        "pre_tool_hook_duration_ms_avg": 0.08695652173913043,
+        "pre_tool_hook_duration_ms_avg": 0.046242774566473986,
         "pre_tool_hook_duration_ms_p50": 0,
-        "pre_tool_hook_duration_ms_p95": 0.8999999999999986,
-        "pre_tool_hook_duration_ms_p99": 1
+        "pre_tool_hook_duration_ms_p95": 0,
+        "pre_tool_hook_duration_ms_p99": 1,
+        "hook_duration_ms_count": 55,
+        "hook_duration_ms_min": 0,
+        "hook_duration_ms_max": 1,
+        "hook_duration_ms_avg": 0.18181818181818182,
+        "hook_duration_ms_p50": 0,
+        "hook_duration_ms_p95": 1,
+        "hook_duration_ms_p99": 1
       },
-      "lastGracefulShutdown": true
+      "lastGracefulShutdown": false
     },
     "/": {
       "allowedTools": [],
@@ -625,7 +632,7 @@
   "groveConfigCache": {
     "3ad61cfd-a922-4dfc-a4cf-b9842c9bdac7": {
       "grove_enabled": true,
-      "timestamp": 1776423283026
+      "timestamp": 1776621664698
     }
   },
   "clientDataCache": {},
@@ -633,13 +640,13 @@
   "overageCreditGrantCache": {
     "6351c07d-9623-42ca-bdd4-1279b75aeb17": {
       "info": {
-        "available": true,
-        "eligible": true,
+        "available": false,
+        "eligible": false,
         "granted": false,
-        "amount_minor_units": 8500,
-        "currency": "EUR"
+        "amount_minor_units": null,
+        "currency": null
       },
-      "timestamp": 1776490454430
+      "timestamp": 1776621667337
     }
   },
   "penguinModeOrgEnabled": false,
@@ -659,7 +666,7 @@
         "currency": "EUR"
       },
       "remaining_passes": 3,
-      "timestamp": 1776423284486
+      "timestamp": 1776621666792
     }
   },
   "lastPlanModeUse": 1775213003184,
