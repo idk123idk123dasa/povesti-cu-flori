@@ -1744,19 +1744,23 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
 #e-1704406132927 .footer-overlay{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:10px;text-align:center;
+  flex-direction:column;gap:12px;text-align:center;
   pointer-events:none;
   font-family:Georgia,serif;
 }
 #e-1704406132927 .footer-overlay a{pointer-events:auto;}
+#e-1704406132927 .footer-overlay .fo-emblem{
+  width:100px;height:100px;object-fit:contain;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));opacity:0.9;
+}
 #e-1704406132927 .footer-overlay .fo-title{
-  margin:0;font-size:14px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.12em;color:rgba(240,208,80,0.85);
-  text-shadow:0 1px 4px rgba(0,0,0,0.6);
+  margin:0;font-size:17px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;color:rgba(240,208,80,0.9);
+  text-shadow:0 1px 4px rgba(0,0,0,0.7);
 }
 #e-1704406132927 .footer-overlay a{
-  color:rgba(255,255,255,0.82);font-size:13px;
-  text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.6);
+  color:rgba(255,255,255,0.88);font-size:16px;
+  text-decoration:none;text-shadow:0 1px 3px rgba(0,0,0,0.7);
 }
 </style>
 <script>
@@ -1766,7 +1770,8 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
     if(!el||el.querySelector('.footer-overlay'))return;
     var d=document.createElement('div');
     d.className='footer-overlay';
-    d.innerHTML='<p class="fo-title">Mai multe informații</p>'
+    d.innerHTML='<img class="fo-emblem" src="/assets/emblema-v2.png" alt="Scrisori cu Povești">'
+      +'<p class="fo-title">Mai multe informații</p>'
       +'<a href="/pagini/terms-and-conditions">Termeni și condiții</a>'
       +'<a href="/pagini/privacy-policy">Politica de confidențialitate</a>'
       +'<a href="/pagini/refund-policy">Returnări și rambursări</a>'
