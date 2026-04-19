@@ -1234,6 +1234,22 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   }
 </script>
 <style>
+  /* Footer emblem overlay */
+  #e-1704406132927 {
+    position: relative !important;
+  }
+  #footer-emblem-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    z-index: 10;
+    pointer-events: none;
+  }
+
   /* Story card images — uniform aspect ratio and alignment */
   #r-1713563109849 .gf_image,
   #r-1704325620542 .gf_image {
@@ -1771,6 +1787,22 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
   setTimeout(patchBtn, 500);
   setTimeout(patchBtn, 1500);
   setTimeout(patchBtn, 3000);
+})();
+</script>
+<script>
+(function(){
+  function addFooterEmblem(){
+    var el = document.getElementById('e-1704406132927');
+    if(!el || document.getElementById('footer-emblem-overlay')) return;
+    var img = document.createElement('img');
+    img.id = 'footer-emblem-overlay';
+    img.src = '/assets/emblema-v2.png';
+    img.alt = 'Scrisori cu Povești';
+    el.appendChild(img);
+  }
+  document.addEventListener('DOMContentLoaded', addFooterEmblem);
+  window.addEventListener('load', addFooterEmblem);
+  setTimeout(addFooterEmblem, 800);
 })();
 </script>
 </body>
