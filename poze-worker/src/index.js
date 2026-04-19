@@ -12,14 +12,14 @@ body{
   background-image:url('https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Red-FloralBG-Square-2.jpg?v=1774999232');
   background-size:400px;
   font-family:'Georgia',serif;
-  display:flex;align-items:center;justify-content:center;
-  padding:24px 16px;
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:32px 16px;
 }
 .card{
   background:#fff;
   border-radius:16px;
   box-shadow:0 16px 60px rgba(0,0,0,0.35);
-  width:100%;max-width:480px;
+  width:100%;max-width:620px;
   overflow:hidden;
 }
 .card-head{
@@ -40,24 +40,62 @@ body{
 .drop-zone{
   border:2px dashed #d8d0c8;
   border-radius:12px;
-  padding:40px 20px;
+  padding:48px 20px;
   text-align:center;
   cursor:pointer;
   transition:all 0.2s;
   background:#faf9f7;
   position:relative;
-  margin-bottom:16px;
+  margin-bottom:20px;
 }
 .drop-zone.over{border-color:#B8913A;background:#fdf8ef;}
 .drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.drop-icon{font-size:2.5rem;margin-bottom:10px;}
+.drop-icon{font-size:2.8rem;margin-bottom:10px;}
 .drop-text{color:#666;font-size:0.95rem;line-height:1.6;}
 .drop-text strong{color:#333;}
 .drop-hint{font-size:0.78rem;color:#aaa;margin-top:4px;}
 
-.preview{display:none;text-align:center;margin-bottom:16px;}
-.preview img{max-width:100%;max-height:220px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);}
-.preview-name{font-size:0.8rem;color:#888;margin-top:6px;}
+.preview-grid{
+  display:none;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:10px;
+  margin-bottom:20px;
+}
+.preview-grid:empty{display:none;}
+.preview-item{
+  position:relative;
+  border-radius:8px;
+  overflow:hidden;
+  background:repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 0 0/16px 16px;
+  aspect-ratio:1;
+}
+.preview-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.preview-item .remove-btn{
+  position:absolute;top:4px;right:4px;
+  background:rgba(0,0,0,0.55);color:#fff;
+  border:none;border-radius:50%;
+  width:22px;height:22px;font-size:14px;line-height:22px;text-align:center;
+  cursor:pointer;padding:0;
+}
+.preview-item .item-name{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(0,0,0,0.5);color:#fff;
+  font-size:0.65rem;padding:3px 5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.preview-item .item-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,0.45);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:4px;
+  display:none;
+}
+.preview-item.uploading .item-overlay{display:flex;}
+.preview-item.done .item-overlay{display:flex;background:rgba(40,120,40,0.55);}
+.preview-item.error .item-overlay{display:flex;background:rgba(180,30,30,0.55);}
+.item-status{font-size:1.5rem;}
+.item-pct{color:#fff;font-size:0.72rem;}
 
 .btn{
   display:block;width:100%;
@@ -67,174 +105,232 @@ body{
   font-size:1rem;font-weight:600;
   border:none;border-radius:8px;cursor:pointer;
   transition:opacity 0.2s;
-  margin-bottom:12px;
+  margin-bottom:16px;
 }
 .btn:hover{opacity:0.88;}
-.btn:disabled{opacity:0.5;cursor:default;}
+.btn:disabled{opacity:0.4;cursor:default;}
 
-.progress-wrap{display:none;margin-bottom:12px;}
-.progress-bar{height:6px;background:#ece7df;border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#B8913A,#D4B060);width:0%;transition:width 0.2s;}
-.progress-label{font-size:0.78rem;color:#888;text-align:center;margin-top:5px;}
-
-.result{
-  display:none;
+.results{margin-top:4px;}
+.result-item{
   background:#f0f9f0;
   border:1px solid #c3e6cb;
   border-radius:8px;
-  padding:14px;
-  margin-top:12px;
+  padding:12px 14px;
+  margin-bottom:10px;
 }
 .result-label{font-size:0.72rem;color:#388e3c;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin-bottom:6px;}
 .result-url{
-  font-size:0.88rem;
+  font-size:0.82rem;
   color:#1a1a1a;
   word-break:break-all;
   background:#fff;
   border:1px solid #d8d0c8;
   border-radius:6px;
-  padding:8px 10px;
+  padding:7px 10px;
   margin-bottom:8px;
   font-family:monospace;
 }
 .copy-btn{
   background:#388e3c;color:#fff;
   border:none;border-radius:5px;
-  padding:6px 14px;font-size:0.82rem;
+  padding:5px 12px;font-size:0.8rem;
   cursor:pointer;transition:background 0.15s;
 }
 .copy-btn:hover{background:#2e7d32;}
 .copy-btn.copied{background:#1b5e20;}
 
-.err{
+.err-global{
   display:none;background:#fff0f0;border:1px solid #ffcdd2;
   border-radius:8px;padding:12px;color:#c62828;
-  font-size:0.88rem;margin-top:12px;
+  font-size:0.88rem;margin-bottom:12px;
 }
 </style>
 </head>
 <body>
 <div class="card">
   <div class="card-head">
-    <h1>📷 Încarcă o poză</h1>
-    <p>Poza va fi accesibilă printr-un link direct</p>
+    <h1>📷 Încarcă poze</h1>
+    <p>Trage mai multe poze simultan</p>
   </div>
   <div class="card-body">
     <div class="drop-zone" id="dropZone">
-      <input type="file" id="fileInput" accept="image/*" onchange="handleFile(this.files[0])"/>
+      <input type="file" id="fileInput" accept="image/*" multiple onchange="addFiles(this.files)"/>
       <div class="drop-icon">🖼️</div>
-      <div class="drop-text"><strong>Trage poza aici</strong><br>sau apasă să alegi un fișier</div>
-      <div class="drop-hint">PNG, JPG, GIF, WebP · max 200 MB</div>
+      <div class="drop-text"><strong>Trage pozele aici</strong><br>sau apasă să alegi fișiere</div>
+      <div class="drop-hint">PNG, JPG, GIF, WebP · max 200 MB per poză · multiple fișiere odată</div>
     </div>
 
-    <div class="preview" id="preview">
-      <img id="previewImg" src="" alt=""/>
-      <div class="preview-name" id="previewName"></div>
-    </div>
+    <div class="preview-grid" id="previewGrid"></div>
 
-    <button class="btn" id="uploadBtn" onclick="upload()" disabled>Încarcă poza →</button>
+    <div class="err-global" id="errGlobal"></div>
 
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-label" id="progressLabel">0%</div>
-    </div>
+    <button class="btn" id="uploadBtn" onclick="uploadAll()" disabled>Încarcă pozele →</button>
 
-    <div class="result" id="result">
-      <div class="result-label">✓ Poza e online</div>
-      <div class="result-url" id="resultUrl"></div>
-      <button class="copy-btn" id="copyBtn" onclick="copyUrl()">Copiază linkul</button>
-    </div>
-    <div class="err" id="err"></div>
+    <div class="results" id="results"></div>
   </div>
 </div>
 
 <script>
-var selectedFile = null;
+var files = [];
 
 var dz = document.getElementById('dropZone');
 dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('over'); });
 dz.addEventListener('dragleave', function(){ dz.classList.remove('over'); });
 dz.addEventListener('drop', function(e){
   e.preventDefault(); dz.classList.remove('over');
-  var f = e.dataTransfer.files[0];
-  if(f) handleFile(f);
+  addFiles(e.dataTransfer.files);
 });
 
-function handleFile(file){
-  if(!file || !file.type.startsWith('image/')){ showErr('Te rugăm să alegi un fișier imagine.'); return; }
-  if(file.size > 200*1024*1024){ showErr('Fișierul e prea mare (max 200 MB).'); return; }
-  selectedFile = file;
-  var reader = new FileReader();
-  reader.onload = function(e){
-    document.getElementById('previewImg').src = e.target.result;
-    var mb = (file.size/1024/1024).toFixed(1);
-    document.getElementById('previewName').textContent = file.name + ' (' + mb + ' MB)';
-    document.getElementById('preview').style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-  document.getElementById('uploadBtn').disabled = false;
-  document.getElementById('result').style.display = 'none';
-  document.getElementById('err').style.display = 'none';
+function addFiles(fileList) {
+  var added = 0;
+  for (var i = 0; i < fileList.length; i++) {
+    var f = fileList[i];
+    if (!f.type.startsWith('image/')) continue;
+    if (f.size > 200*1024*1024) { showErr('„' + f.name + '" e prea mare (max 200 MB).'); continue; }
+    // skip duplicates by name+size
+    var dup = files.some(function(x){ return x.name===f.name && x.size===f.size; });
+    if (!dup) { files.push(f); renderPreview(f, files.length-1); added++; }
+  }
+  if (files.length > 0) document.getElementById('uploadBtn').disabled = false;
+  document.getElementById('errGlobal').style.display = 'none';
 }
 
-function upload(){
-  if(!selectedFile) return;
+function renderPreview(file, idx) {
+  var grid = document.getElementById('previewGrid');
+  grid.style.display = 'grid';
+  var item = document.createElement('div');
+  item.className = 'preview-item';
+  item.id = 'item-' + idx;
+
+  var img = document.createElement('img');
+  var reader = new FileReader();
+  reader.onload = function(e){ img.src = e.target.result; };
+  reader.readAsDataURL(file);
+
+  var rm = document.createElement('button');
+  rm.className = 'remove-btn';
+  rm.textContent = '×';
+  rm.title = 'Elimină';
+  (function(i){ rm.onclick = function(e){ e.stopPropagation(); removeFile(i); }; })(idx);
+
+  var name = document.createElement('div');
+  name.className = 'item-name';
+  name.textContent = file.name;
+
+  var overlay = document.createElement('div');
+  overlay.className = 'item-overlay';
+  overlay.innerHTML = '<span class="item-status">⏳</span><span class="item-pct" id="pct-'+idx+'">0%</span>';
+
+  item.appendChild(img);
+  item.appendChild(rm);
+  item.appendChild(name);
+  item.appendChild(overlay);
+  grid.appendChild(item);
+}
+
+function removeFile(idx) {
+  files[idx] = null;
+  var el = document.getElementById('item-' + idx);
+  if (el) el.remove();
+  var remaining = files.filter(function(f){ return f !== null; });
+  if (remaining.length === 0) {
+    document.getElementById('uploadBtn').disabled = true;
+    document.getElementById('previewGrid').style.display = 'none';
+  }
+}
+
+function uploadAll() {
   var btn = document.getElementById('uploadBtn');
   btn.disabled = true;
-  document.getElementById('progressWrap').style.display = 'block';
-  document.getElementById('result').style.display = 'none';
-  document.getElementById('err').style.display = 'none';
+  document.getElementById('errGlobal').style.display = 'none';
+
+  var toUpload = files.map(function(f,i){ return {file:f,idx:i}; }).filter(function(x){ return x.file !== null; });
+  if (!toUpload.length) return;
+
+  var done = 0;
+  toUpload.forEach(function(entry){
+    uploadOne(entry.file, entry.idx, function(){
+      done++;
+      if (done === toUpload.length) {
+        // allow uploading more
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+function uploadOne(file, idx, onDone) {
+  var item = document.getElementById('item-' + idx);
+  if (item) item.classList.add('uploading');
 
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/upload');
 
   xhr.upload.onprogress = function(e){
-    if(e.lengthComputable){
+    if (e.lengthComputable) {
       var pct = Math.round(e.loaded/e.total*100);
-      document.getElementById('progressFill').style.width = pct + '%';
-      document.getElementById('progressLabel').textContent = pct + '%';
+      var pctEl = document.getElementById('pct-' + idx);
+      if (pctEl) pctEl.textContent = pct + '%';
     }
   };
 
   xhr.onload = function(){
-    document.getElementById('progressWrap').style.display = 'none';
+    if (item) item.classList.remove('uploading');
     try {
       var d = JSON.parse(xhr.responseText);
-      if(d.url){
-        document.getElementById('resultUrl').textContent = d.url;
-        document.getElementById('result').style.display = 'block';
+      if (d.url) {
+        if (item) { item.classList.add('done'); item.querySelector('.item-status').textContent = '✓'; }
+        addResult(file.name, d.url);
       } else {
-        showErr(d.error || 'Eroare la încărcare.');
-        btn.disabled = false;
+        if (item) { item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
       }
-    } catch(e){
-      showErr('Eroare server.');
-      btn.disabled = false;
+    } catch(e) {
+      if (item) { item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
     }
+    onDone();
   };
 
   xhr.onerror = function(){
-    document.getElementById('progressWrap').style.display = 'none';
-    showErr('Eroare de rețea. Încearcă din nou.');
-    btn.disabled = false;
+    if (item) { item.classList.remove('uploading'); item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
+    onDone();
   };
 
   var fd = new FormData();
-  fd.append('file', selectedFile);
+  fd.append('file', file);
   xhr.send(fd);
 }
 
-function copyUrl(){
-  var url = document.getElementById('resultUrl').textContent;
-  navigator.clipboard.writeText(url).then(function(){
-    var b = document.getElementById('copyBtn');
-    b.textContent = 'Copiat ✓'; b.classList.add('copied');
-    setTimeout(function(){ b.textContent='Copiază linkul'; b.classList.remove('copied'); }, 2000);
-  });
+function addResult(name, url) {
+  var results = document.getElementById('results');
+  var div = document.createElement('div');
+  div.className = 'result-item';
+
+  var label = document.createElement('div');
+  label.className = 'result-label';
+  label.textContent = '✓ ' + name;
+
+  var urlDiv = document.createElement('div');
+  urlDiv.className = 'result-url';
+  urlDiv.textContent = url;
+
+  var copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-btn';
+  copyBtn.textContent = 'Copiază linkul';
+  copyBtn.onclick = function(){
+    navigator.clipboard.writeText(url).then(function(){
+      copyBtn.textContent = 'Copiat ✓'; copyBtn.classList.add('copied');
+      setTimeout(function(){ copyBtn.textContent='Copiază linkul'; copyBtn.classList.remove('copied'); }, 2000);
+    });
+  };
+
+  div.appendChild(label);
+  div.appendChild(urlDiv);
+  div.appendChild(copyBtn);
+  results.appendChild(div);
 }
 
 function showErr(msg){
-  var e = document.getElementById('err');
+  var e = document.getElementById('errGlobal');
   e.textContent = msg; e.style.display = 'block';
 }
 </script>
@@ -294,7 +390,6 @@ export default {
         const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
         const key = Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
 
-        // Chunked base64 to avoid stack overflow on large files
         const buffer = await file.arrayBuffer();
         const bytes = new Uint8Array(buffer);
         let binary = '';
@@ -325,10 +420,12 @@ export default {
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
 
+      const ct = metadata?.contentType || 'image/jpeg';
       return new Response(bytes, {
         headers: {
-          'Content-Type': metadata?.contentType || 'image/jpeg',
+          'Content-Type': ct,
           'Cache-Control': 'public, max-age=31536000',
+          'Access-Control-Allow-Origin': '*',
         }
       });
     }
