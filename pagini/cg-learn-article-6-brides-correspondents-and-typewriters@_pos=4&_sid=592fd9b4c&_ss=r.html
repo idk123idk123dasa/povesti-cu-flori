@@ -1012,17 +1012,18 @@ first.parentNode.insertBefore(script, first);
   }
 </script>
 <style>
-  body .site-header { overflow: hidden; }
-  body .site-header__logo { margin: 0 !important; padding: 0; line-height: 0; }
+  body .site-header { overflow: visible; }
+  body .site-header__logo { margin: 0 !important; padding: 0; line-height: 0; margin-top: -100px !important; }
   body .site-header__logo a.site-header__logo-image img {
     max-width: 55px !important;
     width: 55px !important;
     display: block;
   }
   @media screen and (max-width: 767px) {
+    body .site-header__logo { margin-top: 0 !important; }
     body .site-header__logo a.site-header__logo-image img {
-      max-width: 95px !important;
-      width: 95px !important;
+      max-width: 110px !important;
+      width: 110px !important;
     }
   }
 </style>
