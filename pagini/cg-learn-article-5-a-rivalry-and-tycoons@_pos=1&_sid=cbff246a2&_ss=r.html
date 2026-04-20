@@ -1029,12 +1029,15 @@ first.parentNode.insertBefore(script, first);
   }
 </script>
 <style>
-  body .site-header__logo { vertical-align: top; margin-top: 6px; }
-  body .grid--table > .grid__item:first-child { vertical-align: top; }
+  body .site-header__logo { margin: 6px 0; }
+  body .site-header__logo a.site-header__logo-image img {
+    max-width: 55px !important;
+    width: 55px !important;
+  }
   @media screen and (max-width: 767px) {
     body .site-header__logo a.site-header__logo-image img {
-      max-width: 70px !important;
-      width: 70px !important;
+      max-width: 45px !important;
+      width: 45px !important;
     }
   }
 </style>
