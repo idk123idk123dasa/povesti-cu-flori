@@ -690,7 +690,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 <div class="grid grid--no-gutters grid--table site-header__mobile-nav">
 <div class="grid__item medium-up--one-quarter logo-align--left">
 <div class="h2 site-header__logo">
-<a class="site-header__logo-image hide-logo-mobile" data-image-loading-animation="" href="/">
+<a class="site-header__logo-image" href="/">
 <img alt="Scrisorile cu Flori" class="lazyload js" data-aspectratio="0.8888888888888888" data-sizes="auto" data-src="/assets/The-Flower-Letters-Logo_{width}x.png" data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]" src="/assets/The-Flower-Letters-Logo_300x300.png" style="max-width: 100px"/>
 <noscript>
 <img alt="Scrisorile cu Flori" src="/assets/The-Flower-Letters-Logo_100x.png" srcset="/assets/The-Flower-Letters-Logo_100x.png 1x, //theflowerletters.com/cdn/shop/files/The-Flower-Letters-Logo_100x@2x.png?v=1660586173 2x" style="max-width: 100px;"/>
@@ -1221,7 +1221,21 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   }
 </script>
 <style>
+  body .site-header__logo { margin: 0 0 5px 0 !important; }
+  body .site-header__logo a.site-header__logo-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  body .site-header__logo a.site-header__logo-image img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100px !important;
+    width: 100px !important;
+  }
   @media only screen and (max-width: 749px) {
+    body .grid__item:has(.site-header__logo) { flex-shrink: 0; }
     body .site-header__logo a.site-header__logo-image img {
       max-width: 100px !important;
       width: 100px !important;

@@ -703,7 +703,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 <div class="grid grid--no-gutters grid--table site-header__mobile-nav">
 <div class="grid__item medium-up--one-quarter logo-align--left">
 <div class="h2 site-header__logo">
-<a class="site-header__logo-image hide-logo-mobile" data-image-loading-animation="" href="/">
+<a class="site-header__logo-image" href="/">
 <img src="/assets/emblema-v2.png" alt="Scrisori Cu Povesti" class="lazyload js" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;"/>
 <noscript>
 <img src="/assets/emblema-v2.png" alt="Scrisori Cu Povesti" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;"/>
@@ -1223,7 +1223,21 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   }
 </script>
 <style>
+  body .site-header__logo { margin: 0 0 5px 0 !important; }
+  body .site-header__logo a.site-header__logo-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  body .site-header__logo a.site-header__logo-image img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100px !important;
+    width: 100px !important;
+  }
   @media only screen and (max-width: 749px) {
+    body .grid__item:has(.site-header__logo) { flex-shrink: 0; }
     body .site-header__logo a.site-header__logo-image img {
       max-width: 100px !important;
       width: 100px !important;
