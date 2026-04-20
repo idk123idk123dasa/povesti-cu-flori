@@ -1201,18 +1201,19 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   }
 </script>
 <style>
-  body .site-header { overflow: visible; }
-  body .site-header__logo { margin: 0 !important; padding: 0; line-height: 0; margin-top: -100px !important; }
+  body .site-header { overflow: hidden; }
+  body .site-header__logo { margin: 6px 0 !important; padding: 0; line-height: 0; }
   body .site-header__logo a.site-header__logo-image img {
     max-width: 55px !important;
     width: 55px !important;
     display: block;
   }
-  @media screen and (max-width: 767px) {
-    body .site-header__logo { margin-top: 0 !important; }
+  @media only screen and (max-width: 749px) {
+    body .site-header__logo { margin: 4px 0 !important; }
+    body .site-header__logo a { display: block !important; }
     body .site-header__logo a.site-header__logo-image img {
-      max-width: 110px !important;
-      width: 110px !important;
+      max-width: 90px !important;
+      width: 90px !important;
     }
   }
 </style>
