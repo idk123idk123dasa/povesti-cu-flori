@@ -1029,10 +1029,12 @@ first.parentNode.insertBefore(script, first);
   }
 </script>
 <style>
-  body .site-header__logo { margin: 0; padding-top: 2px; }
+  body .site-header { overflow: hidden; }
+  body .site-header__logo { margin: 0 !important; padding: 5px 0; line-height: 0; }
   body .site-header__logo a.site-header__logo-image img {
     max-width: 55px !important;
     width: 55px !important;
+    display: block;
   }
   @media screen and (max-width: 767px) {
     body .site-header__logo a.site-header__logo-image img {
