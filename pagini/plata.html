@@ -359,7 +359,7 @@ body{
   // Plan + amount
   var isAnual = plan === 'anual';
   var suma    = isAnual ? 499 : 65;
-  var planLabel = isAnual ? 'Anual (499 lei)' : 'Lunar (65 lei/lună)';
+  var planLabel = isAnual ? 'Anual (500 lei)' : 'Lunar (60 lei/lună)';
   document.getElementById('sumPlan').textContent  = planLabel;
   document.getElementById('sumaVal').textContent  = suma + ' lei';
   document.getElementById('sumaPer').textContent  = isAnual ? 'pentru 12 luni' : 'prima lună';
