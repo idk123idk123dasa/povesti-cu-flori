@@ -7,11 +7,11 @@ import hashlib
 import requests
 import mimetypes
 
-API_TOKEN = "cfut_hS7zk6YBjKJMtqURxqgCvMCg3FAZRYykmIzVPf9314a59615"
+API_TOKEN = os.environ.get("CLOUDFLARE_API_TOKEN", "")
 ACCOUNT_ID = "641cf08cdd9060470052c8887e987a60"
-PROJECT_NAME = "scrisori"
+PROJECT_NAME = "scrisoricupovesti"
 BASE_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/pages/projects/{PROJECT_NAME}"
-SITE_DIR = "/var/develop/scrisoricupovesti/theflowerletters-original/theflowerletters.com"
+SITE_DIR = "/home/claude/site"
 
 HEADERS = {
     "Authorization": f"Bearer {API_TOKEN}",
@@ -20,11 +20,16 @@ HEADERS = {
 ALLOWED_EXT = {'.html', '.css', '.js', '.jpg', '.jpeg', '.png', '.gif', '.svg',
                '.woff', '.woff2', '.ico', '.webp', '.ttf', '.eot', '.json', '.xml', '.txt'}
 
+EXCLUDE_DIRS = {'frontend', 'cdn', 'backend', '__pycache__', '.git', 'node_modules'}
+
 
 def get_files():
     """Get all deployable files."""
     files = []
     for root, dirs, filenames in os.walk(SITE_DIR):
+        # Skip excluded directories
+        dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
+
         for fname in filenames:
             filepath = os.path.join(root, fname)
             relpath = os.path.relpath(filepath, SITE_DIR)
