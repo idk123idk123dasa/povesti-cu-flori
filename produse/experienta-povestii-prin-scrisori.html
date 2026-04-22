@@ -1399,6 +1399,7 @@ var S=[
 {id:'norah-aven',title:'Daria Serafina Chronicles',tag:'România mitică — Folclor românesc',era:'România mitică',tileImg:'https://cdn.midjourney.com/75a17217-8e4b-4dc1-b05e-1d35cd16f133/0_2.png',detailImg:'/assets/NAProductPage-1.jpg',flatlay:'/assets/Copy_of_NAProductPage-5v2.jpg',badge:'',desc:'Daria Serafina primește o moștenire neașteptată: un jurnal vechi care o poartă în lumea folclorului românesc, unde zeii sunt reali, iar destinul ei este împletit cu cel al unui războinic din altă eră. O Românie mitică — cu elfuri de lumină, valkirii și mistere ancestrale — spusă prin cronici care par rupte dintr-o altă dimensiune.'}
 ];
 var selStory=null;
+function storySlug(s){return s.title.replace(/ (Letters|Chronicles)$/,'');}
 
 function renderTiles(){
   var el=document.getElementById('tiles');
@@ -1414,7 +1415,7 @@ window._pickStory=function(id){
   selStory=S.find(function(s){return s.id===id;});
   if(!selStory)return;
   var url=new URL(window.location.href);
-  url.searchParams.set('poveste',id);
+  url.searchParams.set('poveste',storySlug(selStory));
   window.history.replaceState({},'',url.toString());
   renderTiles();
   var detail=document.getElementById('detail');
@@ -1434,7 +1435,7 @@ window._pickStory=function(id){
   if(s1btn){
     s1btn.disabled=false;
     s1btn.textContent='Continuă cu '+sh+' \u2192';
-    s1btn.onclick=function(){window.location.href='/pages/continua?poveste='+selStory.id;};
+    s1btn.onclick=function(){window.location.href='/pages/continua?poveste='+encodeURIComponent(storySlug(selStory));};
   }
   if(typeof startReviewCarousel==='function')startReviewCarousel(id);
 };
@@ -1448,7 +1449,7 @@ window.togDesc=function(){
   b.textContent=expanded?'Citește rezumatul complet ↓':'Restrânge rezumatul ↑';
 };
 window.go=function(step){
-  if(step===2&&selStory)window.location.href='/pages/continua?poveste='+selStory.id;
+  if(step===2&&selStory)window.location.href='/pages/continua?poveste='+encodeURIComponent(storySlug(selStory));
 };
 
 const storyReviews={
@@ -1502,7 +1503,7 @@ function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);var box=doc
 function initStory(){
   renderTiles();
   var _sp=new URLSearchParams(window.location.search);var urlStory=_sp.get('poveste')||_sp.get('story');
-  if(urlStory){var m=S.find(function(s){return s.id===urlStory;});if(m)window._pickStory(m.id);}
+  if(urlStory){var m=S.find(function(s){return s.id===urlStory||storySlug(s)===urlStory;});if(m)window._pickStory(m.id);}
 }
 
 initStory();
