@@ -601,7 +601,8 @@ body{
   };
 
   var storyId  = (new URLSearchParams(window.location.search).get('poveste')||new URLSearchParams(window.location.search).get('story'));
-  var story    = stories[storyId] || Object.values(stories).find(function(s){return s.title===storyId;}) || null;
+  var _sid=storyId?(storyId.replace(/_/g,' ')):storyId;
+  var story    = stories[storyId] || Object.values(stories).find(function(s){return s.title===_sid||s.title===storyId;}) || null;
   var selPlan  = 'lunar';
   var selEp    = 1; // starting episode (1, 3, 5, ... 23)
 
