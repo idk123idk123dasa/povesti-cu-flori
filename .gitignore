@@ -14,3 +14,4 @@ dumps/
 *.log
 node_modules/
 vendor/
+.u2net/
