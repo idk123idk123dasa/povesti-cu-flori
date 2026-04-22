@@ -661,14 +661,14 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 <header class="site-header border-bottom logo--left" role="banner">
 <div class="grid grid--no-gutters grid--table site-header__mobile-nav">
 <div class="grid__item medium-up--one-quarter logo-align--left">
-<h1 class="h2 site-header__logo">
+<div class="h2 site-header__logo">
 <a class="site-header__logo-image" href="/">
 <img src="/assets/emblema-v2.png" alt="Scrisori Cu Povesti" class="lazyload js" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;"/>
 <noscript>
 <img src="/assets/emblema-v2.png" alt="Scrisori Cu Povesti" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;"/>
 </noscript>
 </a>
-</h1>
+</div>
 </div>
 <nav class="grid__item medium-up--one-half small--hide" id="AccessibleNav" role="navigation">
 <ul class="site-nav list--inline" id="SiteNav">
@@ -684,8 +684,8 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 </a>
 </li>
 <li>
-<a class="site-nav__link site-nav__link--main" href="/pagini/learn-more">
-<span class="site-nav__label">Descoperă</span>
+<a class="site-nav__link site-nav__link--main" href="/pagini/intrebari-frecvente">
+<span class="site-nav__label">Întrebări frecvente</span>
 </a>
 </li>
 <li class="site-nav--has-dropdown" data-has-dropdowns="">
@@ -722,11 +722,6 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 </li>
 </ul>
 </div>
-</li>
-<li>
-<a class="site-nav__link site-nav__link--main" href="/pagini/intrebari-frecvente">
-<span class="site-nav__label">Întrebări frecvente</span>
-</a>
 </li>
 </ul>
 </nav>
@@ -805,7 +800,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 </li>
 </li>
 <li class="lvl-1">
-<div><a href="/pagini/learn-more">Descoperă</a></div>
+<div><a href="/pagini/intrebari-frecvente">Întrebări frecvente</a></div>
 </li>
 
 <li class="lvl-1">
@@ -904,6 +899,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
       scroll-snap-type: x mandatory;
       overflow-x: scroll;
       width: 100%;
+      align-items: flex-start;
     }
     
     .stories-head {
@@ -930,6 +926,9 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
     
     .story-single a img {
     width: 96%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
     }
     
     p.name {
@@ -938,7 +937,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
       font-family: 'EB Garamond';
       font-size: 18px;
       font-style: normal;
-      font-weight: 500;
+      font-weight: 900;
       line-height: normal;
     }
 
@@ -960,7 +959,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
       transition-delay : 0s;
       transition-property : all;
       position : relative;
-      font-weight : 600;
+      font-weight : 800;
     }
 
     #accordian ul ul {
@@ -1088,7 +1087,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
     p.text {
       font-family : 'EB Garamond';
       font-style : normal;
-      font-weight : 400;
+      font-weight : 800;
       font-size : 15px;
       line-height : 14px;
       color : rgb(77, 85, 94);
@@ -1165,7 +1164,7 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
     <ul style="list-style:none; padding:0; margin:0;">
       <li style="border-bottom:1px solid #eee; padding:16px 0;"><a href="/produse/experienta-povestii-prin-scrisori" style="font-size:18px; color:#333; text-decoration:none; font-family:serif;">Povești</a></li>
       <li style="border-bottom:1px solid #eee; padding:16px 0;"><a href="/pagini/cum-functioneaza" style="font-size:18px; color:#333; text-decoration:none; font-family:serif;">Cum funcționează</a></li>
-      <li style="border-bottom:1px solid #eee; padding:16px 0;"><a href="/pagini/learn-more" style="font-size:18px; color:#333; text-decoration:none; font-family:serif;">Descoperă</a></li>
+      <li style="border-bottom:1px solid #eee; padding:16px 0;"><a href="/pagini/intrebari-frecvente" style="font-size:18px; color:#333; text-decoration:none; font-family:serif;">Întrebări frecvente</a></li>
       <li style="border-bottom:1px solid #eee; padding:16px 0;">
         <span style="font-size:18px; color:#333; font-family:serif; cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">Mai mult ▾</span>
         <ul style="list-style:none; padding:0 0 0 16px; display:none; margin-top:8px;">
@@ -1174,7 +1173,6 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
           <li style="padding:10px 0;"><a href="/pagini/contacteaza-ne" style="font-size:16px; color:#555; text-decoration:none;">Contactează-ne</a></li>
         </ul>
       </li>
-      <li style="border-bottom:1px solid #eee; padding:16px 0;"><a href="/pagini/intrebari-frecvente" style="font-size:18px; color:#333; text-decoration:none; font-family:serif;">Întrebări frecvente</a></li>
     </ul>
   </nav>
 </div>
@@ -1235,6 +1233,31 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   }
 </script>
 <style>
+/* Override rose/floral background in stories section */
+  #r-1704325607814 {
+    background-image: url("/assets/stories-bg-v4.png") !important;
+    background-color: transparent !important;
+    background-size: 50% auto !important;
+    background-position: center center !important;
+    background-repeat: repeat !important;
+  }
+  #r-1704325607814 > .gf_column {
+    position: relative;
+  }
+
+/* Story card images — uniform aspect ratio and alignment */
+  #r-1713563109849 .gf_image,
+  #r-1704325620542 .gf_image {
+    width: 100% !important;
+    aspect-ratio: 3 / 2 !important;
+    height: auto !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  #r-1713563109849 {
+    align-items: stretch !important;
+  }
+
   /* Hide GemPage hero — replaced by custom hero below */
     #m-1742317278902 {
       display: none !important;
@@ -1249,8 +1272,8 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 
     @media screen and (max-width: 767px) {
     body .site-header__logo a.site-header__logo-image img {
-      max-width: 70px !important;
-      width: 70px !important;
+      max-width: 100px !important;
+      width: 100px !important;
     }
 
     
