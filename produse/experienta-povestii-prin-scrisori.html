@@ -1426,14 +1426,13 @@ html.gemapp{ visibility: visible !important; }
 @media(min-width:801px) and (max-width:1100px){.fl .dp-top{grid-template-columns:220px 1fr!important}.fl .main-layout.has-sidebar{grid-template-columns:1fr 280px!important}}
 </style>
 <div class="fl"><div class="pbar"><div class="pfill" id="pf" style="width:33%"></div></div>
-<div class="mob-header" id="mobHeader"><div class="mh-left" id="mhLeft"><span class="mh-stars" onclick="toggleRecenzii()">★★★★★ peste 3.000 de recenzii</span></div></div>
-<div class="mob-reviews-popup" id="mobRecenzii"><div class="mrp-top"><div class="mrp-title">★★★★★ 4,9 din 5</div><button class="mrp-close" onclick="toggleRecenzii()"></button></div><div class="mrp-subtitle">Bazat pe peste 3.000 de recenzii verificate</div><div class="mrp-review"><div class="mrp-stars">★★★★★</div><div class="mrp-q">"Mi-au plăcut atât de mult aceste scrisori! Simt că m-am întors în timp când le-am citit! Atenția la detalii este pur și simplu frumoasă!"</div><div class="mrp-a">— Hera W.</div></div><div class="mrp-review"><div class="mrp-stars">★★★★★</div><div class="mrp-q">"Am luat Scrisorile cu Povești pentru mama de Ziua Mamei. Le-a iubit atât de mult încât și eu și soțul meu le-am citit!"</div><div class="mrp-a">— Lina H.</div></div><div class="mrp-review"><div class="mrp-stars">★★★★★</div><div class="mrp-q">"Aceasta este o poveste minunată. Merită fiecare bănuț. Fiecare este diferit și atât de plăcut."</div><div class="mrp-a">— Sonia T.</div></div><div style="text-align:center!important;padding-top:12px!important;border-top:1px solid #ece7df!important;margin-top:8px!important"><a href="/pagini/recenzii-scrisori-cu-povesti" style="color:#B8913A!important;font-size:15px!important;font-weight:800!important;text-decoration:none!important" target="_blank">Vezi toate cele 3.000+ recenzii →</a></div></div>
+
 
 
 <div class="snav"><div class="sd on" id="d1" onclick="navClick(1)"><span>1</span></div><div class="sln" id="l1"></div><div class="sd" id="d2" onclick="navClick(2)"><span>2</span></div><div class="sln" id="l2"></div><div class="sd" id="d3" onclick="navClick(3)"><span>3</span></div></div>
 <div class="slbls"><div class="slb on" id="lb1" onclick="navClick(1)">Povestea</div><div class="slb" id="lb2" onclick="navClick(2)">Plic</div><div class="slb" id="lb3" onclick="navClick(3)">Abonament</div></div>
 <div class="main-layout"><div class="main-col"><div class="box">
-<div class="step active" id="s1"><div class="card-header"><span class="ch-stars" onclick="toggleRecenzii()">★★★★★ peste 3.000 de recenzii</span><span class="ch-guarantee"><svg fill="none" stroke="currentCuloare" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>30 De Zile Garanție de returnare</span></div>
+<div class="step active" id="s1"><div class="card-header"><span class="ch-guarantee"><svg fill="none" stroke="currentCuloare" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>30 De Zile Garanție de returnare</span></div>
 <!-- LOGO -->
 <div style="text-align:center!important;margin-bottom:4px!important"><img alt="Scrisori Cu Povesti" src="/assets/logo-scrisorile-wide.svg" style="max-width:340px!important;margin:0 auto!important;display:block!important"/></div>
 <h2 class="stitle">O experiență de poveste care vine in cutia poștală</h2>
@@ -1448,20 +1447,13 @@ html.gemapp{ visibility: visible !important; }
 </div>
 <!-- VIDEO -->
 <video autoplay="" class="hero-img" loop="" muted="" playsinline="" style="margin-bottom:24px!important"><source src="/assets/6bfb6d0699874fbfa979e32aa7e38af8.mp4" type="video/mp4"/></video>
-<!-- FEATURED REVIEW CAROUSEL - populated by JS based on selected story -->
-<div id="storyReviewBox" style="display:none;background:#faf9f7!important;border:1px solid #ece7df!important;border-radius:10px!important;padding:20px 24px!important;margin:0 auto 28px!important;max-width:560px!important;text-align:center!important;min-height:140px!important;position:relative!important">
-<div style="color:#B8913A!important;font-size:14px!important;letter-spacing:2px!important;margin-bottom:10px!important">★★★★★</div>
-<p id="srText" style="font-family:'Cormorant Garamond',serif!important;font-size:19px!important;font-style:italic!important;color:#222!important;line-height:1.6!important;margin-bottom:8px!important"></p>
-<div id="srNume" style="font-size:13px!important;color:#888!important"></div>
-<div id="srDots" style="display:flex!important;justify-content:center!important;gap:6px!important;margin-top:14px!important"></div>
-</div>
 <h3 class="section-label">Alege-ți povestea</h3>
 <div class="tiles" id="tiles"></div>
 <div class="dp" id="detail"><div class="dp-top"><div class="dp-img"><img loading="lazy" alt="" id="dpImg" src=""/></div><div class="dp-info"><div class="dp-title" id="dpTitle"></div><div class="dp-era" id="dpEra"></div><div class="dp-tag" id="dpTag"></div><div class="dp-desc clamp" id="dpDesc"></div><button class="dp-more" id="dpMore" onclick="togDesc()">Citește rezumatul complet ↓</button><div class="dp-meta"><span><svg fill="none" height="16" stroke="#B8913A" stroke-width="2" style="display:inline-block;vertical-align:-3px;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="16" rx="2" width="20" x="2" y="4"></rect><path d="M2 8l10 6 10-6"></path></svg> 24 de scrisori</span><span><svg fill="none" height="16" stroke="#B8913A" stroke-width="2" style="display:inline-block;vertical-align:-3px;flex-shrink:0" viewbox="0 0 24 24" width="16"><rect height="18" rx="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg> 12 luni</span><span><svg fill="none" height="16" stroke="#B8913A" stroke-width="2" style="display:inline-block;vertical-align:-3px;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Cărți poștale și bonusuri</span></div>
 <div style="margin-top:12px!important;padding-top:12px!important;border-top:1px solid #ece7df!important;font-size:14px!important;color:#444!important;line-height:1.7!important"><strong style="font-family:'Cormorant Garamond',serif!important;font-size:15px!important;color:#111!important;display:block!important;margin-bottom:4px!important">De asemenea, inclusiv gratuit</strong><span id="dpLearnLine" style="display:block!important"> <a href="/pagini/learn-more" style="color:#444!important;text-decoration:underline!important;text-underline-offset:2px!important" target="_blank">Contextul istoric al poveștii</a> — istorie reală din spatele fiecărei litere</span><span style="display:block!important"> <a href="/pagini/gift-story-letters" style="color:#444!important;text-decoration:underline!important;text-underline-offset:2px!important" target="_blank">Introducere cadou imprimabil</a> — perfect pentru a fi prezentat ca cadou</span></div><div class="dp-pricing" id="dpPricing" style="display:none"><span class="dp-price-monthly" id="dpPriceMo"></span><span class="dp-price-sep">|</span><span class="dp-price-prepaid" id="dpPricePP"></span><span class="dp-price-sep">|</span><span class="dp-price-tin" id="dpPricePT"></span></div></div></div></div>
 <div class="brow"><button class="bp" disabled="" id="s1btn" onclick="go(2)">Selectați o poveste pentru a continua</button></div>
 <div style="text-align:center!important;margin-top:12px!important;font-size:14px!important;color:#555!important;margin-bottom:20px!important"><svg fill="none" height="16" stroke="#B8913A" stroke-width="2" style="display:inline-block;vertical-align:-3px;flex-shrink:0" viewbox="0 0 24 24" width="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> <strong>30 De Zile Garanție de returnare</strong> — Nu esti mulțumit după primele două scrisori? Rambursare completă, fără întrebări.</div>
-<div id="storyReviewCarousel"></div><div class="whats-inside" id="whatsInside"><h4>Mai mult decât scrisori</h4><p>Fiecare plic este plin cu surprize - telegrame, tăieturi de ziare, hărți și multe altele pentru a ajuta la îmbogățirea poveștii.</p><img loading="lazy" alt="Ce este înăuntru" id="flatlayImg" src="/assets/LC_flatlay_1v2.jpg"/></div><div class="faq"><h4>Întrebări frecvente</h4><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Ce sunt Scrisori Cu Povesti? <span class="faq-arrow">▾</span></div><div class="faq-a">Scrisori Cu Povesti este o experiență de poveste de 12 luni, livrată prin 24 de scrisori frumos ilustrate trimise direct la ușa ta - două pe lună pentru un an întreg. Fiecare poveste este plasată într-o eră istorică diferită, plină de dragoste, aventură și intrigi.</div></div><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Cum fac cadou asta? <span class="faq-arrow">▾</span></div><div class="faq-a">Pur și simplu introduceți numele și adresa de expediere a destinatarului la finalizarea comenzii - scrisorile vor fi trimise direct către adresa aleasă. Veți primi, de asemenea, un card cadou imprimabil gratuit, descărcați-l și imprimați-l pentru a prezenta personal sau e-mail digital pentru a le anunța povestea lor pe drum.</div></div><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Ce voi primi? <span class="faq-arrow">▾</span></div><div class="faq-a">Fiecare plic conține o scrisoare de poveste realizată manual, plus accesorii precum cărți poștale, telegrame, decupaje din ziare, hărți și multe altele - toate concepute pentru a face povestea să pară reală și captivantă. Veți primi 24 de scrisori pe parcursul a 12 luni.</div></div><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Livrați național <span class="faq-arrow">▾</span></div><div class="faq-a">Da! Livrăm în toată România prin Poșta Română Recomandat, cu număr de tracking. Trimitem în fiecare joi — dacă comanzi înainte de joi ora 18:00, scrisoarea pleacă în același lot. Primul tău plic ajunge în 7–14 zile lucrătoare de la comandă. Scrisorile următoare vin automat în fiecare lună, tot joi, fără să mai trebuiască să faci nimic.</div></div></div><script>
+<div class="whats-inside" id="whatsInside"><h4>Mai mult decât scrisori</h4><p>Fiecare plic este plin cu surprize - telegrame, tăieturi de ziare, hărți și multe altele pentru a ajuta la îmbogățirea poveștii.</p><img loading="lazy" alt="Ce este înăuntru" id="flatlayImg" src="/assets/LC_flatlay_1v2.jpg"/></div><div class="faq"><h4>Întrebări frecvente</h4><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Ce sunt Scrisori Cu Povesti? <span class="faq-arrow">▾</span></div><div class="faq-a">Scrisori Cu Povesti este o experiență de poveste de 12 luni, livrată prin 24 de scrisori frumos ilustrate trimise direct la ușa ta - două pe lună pentru un an întreg. Fiecare poveste este plasată într-o eră istorică diferită, plină de dragoste, aventură și intrigi.</div></div><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Cum fac cadou asta? <span class="faq-arrow">▾</span></div><div class="faq-a">Pur și simplu introduceți numele și adresa de expediere a destinatarului la finalizarea comenzii - scrisorile vor fi trimise direct către adresa aleasă. Veți primi, de asemenea, un card cadou imprimabil gratuit, descărcați-l și imprimați-l pentru a prezenta personal sau e-mail digital pentru a le anunța povestea lor pe drum.</div></div><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Ce voi primi? <span class="faq-arrow">▾</span></div><div class="faq-a">Fiecare plic conține o scrisoare de poveste realizată manual, plus accesorii precum cărți poștale, telegrame, decupaje din ziare, hărți și multe altele - toate concepute pentru a face povestea să pară reală și captivantă. Veți primi 24 de scrisori pe parcursul a 12 luni.</div></div><div class="faq-item"><div class="faq-q" onclick="togFaq(this)">Livrați național <span class="faq-arrow">▾</span></div><div class="faq-a">Da! Livrăm în toată România prin Poșta Română Recomandat, cu număr de tracking. Trimitem în fiecare joi — dacă comanzi înainte de joi ora 18:00, scrisoarea pleacă în același lot. Primul tău plic ajunge în 7–14 zile lucrătoare de la comandă. Scrisorile următoare vin automat în fiecare lună, tot joi, fără să mai trebuiască să faci nimic.</div></div></div><script>
 (function(){
   var _fix = function(){
     var link = document.querySelector('.announcement-bar__link');
@@ -1565,7 +1557,6 @@ window._pickStory=function(id){
     s1btn.textContent='Continuă cu '+sh+' \u2192';
     s1btn.onclick=function(){window.location.href='/pages/continua?poveste='+storySlug(selStory);};
   }
-  if(typeof startReviewCarousel==='function')startReviewCarousel(id);
 };
 
 window.togDesc=function(){
@@ -1579,54 +1570,6 @@ window.togDesc=function(){
 window.go=function(step){
   if(step===2&&selStory)window.location.href='/pages/continua?poveste='+storySlug(selStory);
 };
-
-const storyReviews={
-'camellia-grace':[
-{t:'"Am luat scrisorile pentru mama. Le adoră și le așteaptă cu nerăbdare sa sosească următoarele. Spune că se simte atât de fericita când le primește."',n:'Cristina B., Cumpărător Verificat'},
-{t:'"Ce prezentare glorioasă! Detaliile, dragostea și arta care au intrat în acest proiect sunt uimitoare. Atâtea lucruri drăguțe și detalii frumoase ."',n:'Ioana O., Cumpărător Verificat'},
-{t:'"Acesta a fost un cadou pentru mama. Este a 3-a poveste a ei. Îi plac poveștile și le păstrează cu grijă. Alții din comunitatea ei obișnuiesc să citească împreună cu ea. Acest cadou este cu adevărat special."',n:'Suzana R., Cumpărător Verificat'},
-{t:'"Îmi amintește de vremuri apuse, când oamenii obișnuiau să-și scrie scrisori de mână. Aștept cu nerăbdare fiecare livrare."',n:'Carla B., Cumpărător Verificat'},
-{t:'"Prima scrisoare primită, și este atât de minunată! Îmi place că paginile sunt discret numerotate, astfel încât să știu ordinea corectă mai târziu."',n:'Petra A., Cumpărător Verificat'}
-],
-'audrey-rose':[
-{t:'"Am cumpărat scrisorile Camelia Sofia ca cadou de Ziua Mamei. Este entuziasmată să verifice cutia poștală și mereu îmi povestește ce se întâmplă în poveste."',n:'Melisa H., Cumpărător Verificat'},
-{t:'"Mă sună de fiecare dată când știe că scrisorile au fost trimise și din nou când le primește. Îmi place atât de mult să o văd cât de entuziasmată este!"',n:'Camelia M., Cumpărător Verificat'},
-{t:'"Am dăruit scrisorile Camelia Sofia bunicii mele de 93 de ani de ziua ei. I-a plăcut enorm să primească scrisorile și le așteaptă cu nerăbdare."',n:'Alina N., Cumpărător Verificat'},
-{t:'"Am luat asta pentru fiica mea ca cadou de ziua ei. O adoră! Se trezește așteptând cu nerăbdare fiecare scrisoare. Îmi bucură cu adevărat inima."',n:'Sonia Y., Cumpărător Verificat'},
-{t:'"Când soacra mea a primit scrisorile, a fost copleșită de bucurie. Ne-am bucurat cu toții primind scrisorile și le așteptăm cu nerăbdare."',n:'Gabriela B., Cumpărător Verificat'}
-],
-'adelaide-magnolia':[
-{t:'"I-am dăruit asta mamei de Ziua Mamei, și îi place atât de mult! Este mereu entuziasmată când primește un plic și nu poate să aștepte să vadă ce este înăuntru!"',n:'Mihaela M., Cumpărător Verificat'},
-{t:'"Am cumpărat povestea din Anglia Regency pentru mama mea de 91 de ani. Îi place să primească parțile poveștii în fiecare lună. Un cadou minunat de așteptat."',n:'Iulia S., Cumpărător Verificat'},
-{t:'"Îi place să aștepte cu nerăbdare momentul când verifică cutia poștală și vede frumoasa scrisoare acolo, așteptând-o să se așeze liniștită și să citească."',n:'Cecilia R., Cumpărător Verificat'},
-{t:'"Am cumpărat Scrisorile cu Povești pentru mama de Ziua Mamei. Le adoră absolut! Mă bucur să o văd entuziasmată de fiecare dată când sosește o scrisoare nouă."',n:'Denisa B., Cumpărător Verificat'},
-{t:'"Povestea este minunată, dar cu adevărat îmi place arta florală. Plănuiesc să împart scrisorile cu persoana care mi le-a dăruit — este prea frumoasă pentru a nu o împărtăși!"',n:'Iulia K., Cumpărător Verificat'}
-],
-'lily-clara':[
-{t:'"ÎMI PLACE ATÂT DE MULT SĂ PRIMESC ACESTE SCRISORI!!! Ce concept uimitor — să primești scrisori în fiecare lună timp de un an! Nora mea mi-a dăruit asta de Crăciun. Cel mai bun cadou pe care l-am primit vreodată!"',n:'Irina N., Cumpărător Verificat'},
-{t:'"Este unul dintre cele mai frumoase cadouri pe care le-am primit. Am iubit mereu Vestul Sălbatic și am visat la aventuri. Am savurat absolut fiecare scrisoare."',n:'Ioana R., Cumpărător Verificat'},
-{t:'"Adoră absolut scrisorile și se entuziasmează atât de mult când primește una nouă prin poștă. Și-a decorat propria cutie de lemn ca să le păstreze!"',n:'Ligia R., Cumpărător Verificat'},
-{t:'"O numește cadoul care nu se termină niciodată. Este entuziasmată să verifice cutia poștală și să urmărească povestea uimitoare!"',n:'Alina H., Cumpărător Verificat'},
-{t:'"Îmi place absolut. Aștept cu nerăbdare să primesc următoarea scrisoare și îmi găsesc un loc liniștit să o savurez. Toate suplimentele din interior sunt atât de distractive și de o calitate extraordinară."',n:'Ștefania J., Cumpărător Verificat'}
-],
-'orchid-mae':[
-{t:'"Are deja șase scrisori și le savurează din plin. Așteaptă cu nerăbdare fiecare una! Îi plac toate suplimentele."',n:'Melisa F., Cumpărător Verificat'},
-{t:'"Îmi place anticiparea pe care o aduce acest proces — să merg la cutia poștală, să găsesc o scrisoare frumoasă. Îmi place să citesc, să mă las prinsă și să savurez fiecare pagină."',n:'Camelia S., Cumpărător Verificat'},
-{t:'"Eram atât de entuziasmată. Abia aștept să primesc scrisorile Elvira Natalia. Aștept cu nerăbdare să sosească în fiecare lună și să devin parte din poveste."',n:'Ioana L., Cumpărător Verificat'},
-{t:'"Îmi plac atât de mult aceste scrisori, încât am comandat un Pachet Cadou pentru 2 dintre prietenele mele! Detaliile sunt minunate, iar scriitura mă atrage complet."',n:'Corina M., Cumpărător Verificat'},
-{t:'"Wow, nu aș fi putut anticipa cât de mult îi vor PLĂCEA scrisorile."',n:'Rebeca L., Cumpărător Verificat'}
-],
-'norah-aven':[
-{t:'"Aștept cu atâta nerăbdare fiecare scrisoare! Îmi place povestea până acum și mă bucur de mister. Acest cadou din partea fiicei mele este cu adevărat de neuitat!"',n:'Cătălina L., Cumpărător Verificat'},
-{t:'"Era atât de entuziasmată să primească cutia! Ce cadou minunat — îi place să citească și este o pasionată de povești."',n:'Ștefania D., Cumpărător Verificat'},
-{t:'"Sunt absolut îndrăgostită de Colecția Daria Serafina! Scrisă frumos, incredibil de captivantă și interactivă. Aceasta este geniu la cel mai înalt nivel."',n:'Simona L., Cumpărător Verificat'},
-{t:'"Fiicei mele de 13 ani îi place enorm. Este foarte entuziasmată pentru următoarea scrisoare!"',n:'Gabriela S., Cumpărător Verificat'},
-{t:'"Bunica noastră adoră absolut să primească scrisorile prin poștă!! Împarte scrisorile cu toată familia — stranepoților le îndrăgesc la fel de mult."',n:'Irina M., Cumpărător Verificat'}
-]};
-let srIdx=0,srTimer=null;
-function showStoryReview(storyId,idx){var reviews=storyReviews[storyId];if(!reviews)return;var r=reviews[idx];var box=document.getElementById('storyReviewBox');if(!box)return;document.getElementById('srText').innerHTML=r.t;document.getElementById('srNume').textContent='— '+r.n;var dots=document.getElementById('srDots');dots.innerHTML=reviews.map(function(_,i){return'<div onclick="jumpReview(\''+storyId+'\','+i+')" style="width:8px!important;height:8px!important;border-radius:50%!important;background:'+(i===idx?'#B8913A':'#ddd')+'!important;cursor:pointer!important;display:inline-block!important"></div>'}).join('');}
-window.jumpReview=function(storyId,idx){srIdx=idx;clearInterval(srTimer);showStoryReview(storyId,idx);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
-function startReviewCarousel(storyId){srIdx=0;clearInterval(srTimer);var box=document.getElementById('storyReviewBox');if(box){box.style.display='block';}showStoryReview(storyId,0);srTimer=setInterval(function(){var reviews=storyReviews[storyId];if(!reviews)return;srIdx=(srIdx+1)%reviews.length;showStoryReview(storyId,srIdx);},5000);}
 
 function initStory(){
   renderTiles();
