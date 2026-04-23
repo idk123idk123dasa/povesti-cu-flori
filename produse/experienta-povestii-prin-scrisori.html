@@ -1576,7 +1576,7 @@ window.go=function(step){
 function initStory(){
   renderTiles();
   var _sp=new URLSearchParams(window.location.search);var urlStory=_sp.get('poveste')||_sp.get('story');
-  if(urlStory){var m=S.find(function(s){return s.id===urlStory||storySlug(s)===urlStory;});if(m)window._pickStory(m.id);}
+  if(urlStory){var m=S.find(function(s){return s.id===urlStory||storySlug(s)===urlStory;});if(m){window._pickStory(m.id);setTimeout(function(){var el=document.getElementById('detail');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},300);}}
 }
 
 initStory();
