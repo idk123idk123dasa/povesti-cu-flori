@@ -1,37 +1,11 @@
-<!DOCTYPE html>
-<html><head>
-  <link rel="preconnect" href="https://assets.gemcommerce.com" crossorigin>
-  
-  <link rel="dns-prefetch" href="https://code.jquery.com">
-  <link rel="dns-prefetch" href="https://loox.io">
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="0;url=/pages/get-started">
-<link rel="canonical" href="/pagini/get-started"/>
-  <link rel="stylesheet" href="/fonts/fonts.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,800;1,800&family=Playfair+Display:wght@900&display=swap"><style>body,html{background-image:url("/assets/stories-bg-v4.png")!important;background-size:50% auto!important;background-repeat:repeat!important;background-position:center center!important;}</style></head><body>
-<div style="position:fixed;top:12px;left:14px;z-index:99999;"><a href="https://scrisoricupovesti.ro/"><img src="/assets/emblema-v2.png" alt="Scrisori Cu Povești" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;display:block;"></a></div>
+#!/usr/bin/env python3
+import os
+import re
+from pathlib import Path
 
+SITE_DIR = Path('/home/claude/site')
 
-
-
-
-<script>
-/* Force nav links to navigate before GemPage can intercept */
-(function(){
-  document.addEventListener('click', function(e){
-    var a = e.target.closest('a[href]');
-    if (!a) return;
-    if (!a.closest('#AccessibleNav, #custom-nav, #MobileNav, .nav-bottom-cta, .announcement-bar')) return;
-    var href = a.getAttribute('href');
-    if (!href || href.charAt(0) === '#') return;
-    e.stopImmediatePropagation();
-    window.location.href = href;
-  }, true);
-})();
-</script>
-<style>body,body *{font-weight:800!important}</style>
-<div style="margin-top:40px"></div>
-<style>html,body{margin:0!important;padding:0!important;}footer{display:block;width:100%;}</style>
+NEW_FOOTER = """<style>html,body{margin:0!important;padding:0!important;}footer{display:block;width:100%;}</style>
 <footer style="margin:0;padding:0;position:relative;line-height:0;overflow:hidden;">
 <video class="footer-video" data-src="https://poze.scrisoricupovesti.ro/1776963074544-0msl1j.mp4" muted loop playsinline style="width:100%;display:block;min-height:120px;object-fit:cover;"></video>
 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
@@ -65,5 +39,61 @@
   }
 })();
 </script>
-</footer>
-</body></html>
+</footer>"""
+
+updated = 0
+skipped = 0
+
+for html_file in sorted(SITE_DIR.rglob('*.html')):
+    if html_file.name == 'index.html' and html_file.parent == SITE_DIR:
+        continue
+
+    content = html_file.read_text(encoding='utf-8', errors='replace')
+
+    # Skip if already has new video footer
+    if 'footer-video' in content:
+        skipped += 1
+        continue
+
+    original = content
+
+    # Remove old static image footer (pagini/ type)
+    # Pattern: <footer style="...font-family:'EB Garamond'...">...</footer>
+    content = re.sub(
+        r'<footer\s+style="[^"]*font-family:[^"]*EB Garamond[^"]*"[^>]*>.*?</footer>',
+        '',
+        content,
+        flags=re.DOTALL
+    )
+
+    # Remove old GemPage footer overlay CSS+script block (pages/ type)
+    # Pattern: <style id="footer-overlay-css">...</style>\n<script>...injectOverlay...</script>
+    content = re.sub(
+        r'<style\s+id="footer-overlay-css">.*?</style>\s*<script>\s*\(function\(\)\{[^}]*function injectOverlay.*?</script>',
+        '',
+        content,
+        flags=re.DOTALL
+    )
+
+    # Insert new footer just before </body>
+    # The </body> appears inline: <style>body,body *{...}</style></body> or just </body>
+    if '</body>' in content:
+        # Insert before the LAST </body>
+        last_body = content.rfind('</body>')
+        content = content[:last_body] + '\n' + NEW_FOOTER + '\n' + content[last_body:]
+    else:
+        # Fallback: append before </html>
+        last_html = content.rfind('</html>')
+        if last_html != -1:
+            content = content[:last_html] + '\n' + NEW_FOOTER + '\n' + content[last_html:]
+        else:
+            content += '\n' + NEW_FOOTER
+
+    if content != original:
+        html_file.write_text(content, encoding='utf-8')
+        print(f'Updated: {html_file.relative_to(SITE_DIR)}')
+        updated += 1
+    else:
+        print(f'No change: {html_file.relative_to(SITE_DIR)}')
+
+print(f'\nDone: {updated} updated, {skipped} skipped (already correct)')
