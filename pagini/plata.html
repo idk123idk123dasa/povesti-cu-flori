@@ -16,10 +16,11 @@ body{
   background-color:#7D1E2A;
   background-image:url('/assets/stories-bg-v4.png');
   background-size:400px;background-repeat:repeat;
-  padding:40px 16px 60px;
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
+  padding:40px 16px 0;
+}
+.body-inner{
+  max-width:600px;
+  margin:0 auto 60px;
 }
 
 .pbar{position:fixed;top:0;left:0;width:100%;height:4px;background:rgba(0,0,0,0.2);z-index:1000;}
@@ -258,13 +259,8 @@ body{
   <link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,800;1,800&family=Playfair+Display:wght@900&display=swap"><style>body,html{background-image:url("/assets/stories-bg-v4.png")!important;background-size:50% auto!important;background-repeat:repeat!important;background-position:center center!important;}</style></head>
 <body>
-<div style="position:fixed;top:12px;left:14px;z-index:99999;"><a href="https://scrisoricupovesti.ro/"><img src="/assets/emblema-v2.png" alt="Scrisori Cu Povești" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;display:block;"></a></div>
-
-<header style="text-align:center;padding:10px 0 0;">
-  <a href="/"><img src="/assets/emblema-v2.png" alt="Scrisori Cu Povești" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;"></a>
-</header>
 <div class="pbar"><div class="pfill" style="width:100%"></div></div>
-
+<div class="body-inner">
 <div class="card">
 
   <div class="card-header">
@@ -404,8 +400,9 @@ body{
   };
 })();
 </script>
+</div>
 
-<footer style="margin:0;padding:0;position:relative;line-height:0;font-family:'EB Garamond',serif;">
+<footer style="width:100vw;margin-left:calc(-50vw + 50%);padding:0;position:relative;line-height:0;font-family:'EB Garamond',serif;">
 <img loading="lazy" src="/assets/Footer-Floral-v6.png" alt="" style="width:100%;display:block;">
 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;padding:5% 20% 0;">
 <p style="margin:0;font-size:22px;font-weight:800!important;text-transform:uppercase;letter-spacing:.16em;color:rgba(240,208,80,0.97);text-shadow:0 2px 6px rgba(0,0,0,0.8);">Mai multe informații</p>
