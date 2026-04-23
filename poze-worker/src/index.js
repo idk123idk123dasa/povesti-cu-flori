@@ -57,7 +57,6 @@ body{
 
 .preview-grid{
   display:none;
-  display:grid;
   grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
   gap:10px;
   margin-bottom:20px;
@@ -87,9 +86,9 @@ body{
 .preview-item .item-overlay{
   position:absolute;inset:0;
   background:rgba(0,0,0,0.45);
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:4px;
   display:none;
+  align-items:center;justify-content:center;
+  flex-direction:column;gap:4px;
 }
 .preview-item.uploading .item-overlay{display:flex;}
 .preview-item.done .item-overlay{display:flex;background:rgba(40,120,40,0.55);}
@@ -110,6 +109,33 @@ body{
 .btn:hover{opacity:0.88;}
 .btn:disabled{opacity:0.4;cursor:default;}
 
+.gallery-result{
+  display:none;
+  background:#fdf8ef;
+  border:2px solid #B8913A;
+  border-radius:10px;
+  padding:16px;
+  margin-bottom:16px;
+  text-align:center;
+}
+.gallery-result .gl-label{
+  font-size:0.78rem;color:#B8913A;text-transform:uppercase;
+  letter-spacing:0.1em;font-weight:700;margin-bottom:8px;
+}
+.gallery-result .gl-url{
+  font-size:0.85rem;color:#1a1a1a;word-break:break-all;
+  background:#fff;border:1px solid #d8d0c8;border-radius:6px;
+  padding:8px 10px;margin-bottom:10px;font-family:monospace;
+}
+.gl-copy-btn{
+  background:#B8913A;color:#fff;
+  border:none;border-radius:6px;
+  padding:8px 20px;font-size:0.9rem;font-weight:600;
+  cursor:pointer;transition:background 0.15s;
+}
+.gl-copy-btn:hover{background:#9a7a30;}
+.gl-copy-btn.copied{background:#5a7a30;}
+
 .results{margin-top:4px;}
 .result-item{
   background:#f0f9f0;
@@ -120,15 +146,9 @@ body{
 }
 .result-label{font-size:0.72rem;color:#388e3c;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin-bottom:6px;}
 .result-url{
-  font-size:0.82rem;
-  color:#1a1a1a;
-  word-break:break-all;
-  background:#fff;
-  border:1px solid #d8d0c8;
-  border-radius:6px;
-  padding:7px 10px;
-  margin-bottom:8px;
-  font-family:monospace;
+  font-size:0.82rem;color:#1a1a1a;word-break:break-all;
+  background:#fff;border:1px solid #d8d0c8;border-radius:6px;
+  padding:7px 10px;margin-bottom:8px;font-family:monospace;
 }
 .copy-btn{
   background:#388e3c;color:#fff;
@@ -166,12 +186,19 @@ body{
 
     <button class="btn" id="uploadBtn" onclick="uploadAll()" disabled>Încarcă pozele →</button>
 
+    <div class="gallery-result" id="galleryResult">
+      <div class="gl-label">🔗 Link unic pentru toate pozele</div>
+      <div class="gl-url" id="galleryUrl"></div>
+      <button class="gl-copy-btn" id="glCopyBtn" onclick="copyGallery()">Copiază linkul</button>
+    </div>
+
     <div class="results" id="results"></div>
   </div>
 </div>
 
 <script>
 var files = [];
+var uploadedUrls = [];
 
 var dz = document.getElementById('dropZone');
 dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('over'); });
@@ -182,14 +209,12 @@ dz.addEventListener('drop', function(e){
 });
 
 function addFiles(fileList) {
-  var added = 0;
   for (var i = 0; i < fileList.length; i++) {
     var f = fileList[i];
     if (!f.type.startsWith('image/')) continue;
     if (f.size > 200*1024*1024) { showErr('„' + f.name + '" e prea mare (max 200 MB).'); continue; }
-    // skip duplicates by name+size
-    var dup = files.some(function(x){ return x.name===f.name && x.size===f.size; });
-    if (!dup) { files.push(f); renderPreview(f, files.length-1); added++; }
+    var dup = files.some(function(x){ return x && x.name===f.name && x.size===f.size; });
+    if (!dup) { files.push(f); renderPreview(f, files.length-1); }
   }
   if (files.length > 0) document.getElementById('uploadBtn').disabled = false;
   document.getElementById('errGlobal').style.display = 'none';
@@ -243,17 +268,20 @@ function uploadAll() {
   var btn = document.getElementById('uploadBtn');
   btn.disabled = true;
   document.getElementById('errGlobal').style.display = 'none';
+  document.getElementById('galleryResult').style.display = 'none';
+  uploadedUrls = [];
 
   var toUpload = files.map(function(f,i){ return {file:f,idx:i}; }).filter(function(x){ return x.file !== null; });
   if (!toUpload.length) return;
 
   var done = 0;
   toUpload.forEach(function(entry){
-    uploadOne(entry.file, entry.idx, function(){
+    uploadOne(entry.file, entry.idx, function(url){
+      if (url) uploadedUrls.push(url);
       done++;
       if (done === toUpload.length) {
-        // allow uploading more
         btn.disabled = false;
+        if (uploadedUrls.length > 0) createGallery(uploadedUrls);
       }
     });
   });
@@ -281,23 +309,53 @@ function uploadOne(file, idx, onDone) {
       if (d.url) {
         if (item) { item.classList.add('done'); item.querySelector('.item-status').textContent = '✓'; }
         addResult(file.name, d.url);
+        onDone(d.url);
       } else {
         if (item) { item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
+        onDone(null);
       }
     } catch(e) {
       if (item) { item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
+      onDone(null);
     }
-    onDone();
   };
 
   xhr.onerror = function(){
     if (item) { item.classList.remove('uploading'); item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
-    onDone();
+    onDone(null);
   };
 
   var fd = new FormData();
   fd.append('file', file);
   xhr.send(fd);
+}
+
+function createGallery(urls) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/gallery');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function(){
+    try {
+      var d = JSON.parse(xhr.responseText);
+      if (d.url) showGallery(d.url);
+    } catch(e){}
+  };
+  xhr.send(JSON.stringify({ urls: urls }));
+}
+
+function showGallery(url) {
+  var box = document.getElementById('galleryResult');
+  document.getElementById('galleryUrl').textContent = url;
+  box.style.display = 'block';
+}
+
+function copyGallery() {
+  var url = document.getElementById('galleryUrl').textContent;
+  var btn = document.getElementById('glCopyBtn');
+  navigator.clipboard.writeText(url).then(function(){
+    btn.textContent = 'Copiat ✓'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent='Copiază linkul'; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 function addResult(name, url) {
@@ -319,7 +377,7 @@ function addResult(name, url) {
   copyBtn.onclick = function(){
     navigator.clipboard.writeText(url).then(function(){
       copyBtn.textContent = 'Copiat ✓'; copyBtn.classList.add('copied');
-      setTimeout(function(){ copyBtn.textContent='Copiază linkul'; copyBtn.classList.remove('copied'); }, 2000);
+      setTimeout(function(){ copyBtn.textContent='Copiează linkul'; copyBtn.classList.remove('copied'); }, 2000);
     });
   };
 
@@ -336,6 +394,63 @@ function showErr(msg){
 </script>
 </body>
 </html>`;
+
+function galleryHTML(urls) {
+  const items = urls.map((u, i) => `
+    <div class="img-item">
+      <div class="img-wrap">
+        <img src="${u}" alt="Poza ${i+1}" loading="lazy"/>
+      </div>
+      <div class="img-url">${u}</div>
+      <button class="copy-btn" onclick="copyUrl(this,'${u}')">Copiază linkul</button>
+    </div>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galerie poze – Scrisori cu Povești</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background-color:#7D1E2A;background-image:url('https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Red-FloralBG-Square-2.jpg?v=1774999232');background-size:400px;font-family:'Georgia',serif;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;}
+.card{background:#fff;border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,0.35);width:100%;max-width:700px;overflow:hidden;}
+.card-head{background:linear-gradient(135deg,#7D1E2A,#9E2535);padding:28px 28px 24px;text-align:center;}
+.card-head::after{content:'';display:block;height:18px;background:#fff;border-radius:50% 50% 0 0/18px 18px 0 0;margin:-1px -28px -1px;}
+.card-head h1{color:#fff;font-size:1.4rem;font-weight:600;margin-bottom:4px;}
+.card-head p{color:rgba(255,255,255,0.7);font-size:0.88rem;}
+.card-body{padding:28px;}
+.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;}
+.img-item{background:#faf9f7;border:1px solid #e0d5c8;border-radius:10px;overflow:hidden;padding:10px;}
+.img-wrap{background:repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/16px 16px;border-radius:6px;overflow:hidden;margin-bottom:8px;}
+.img-wrap img{width:100%;display:block;object-fit:contain;max-height:160px;}
+.img-url{font-size:0.68rem;color:#888;font-family:monospace;word-break:break-all;margin-bottom:8px;line-height:1.4;}
+.copy-btn{width:100%;background:#388e3c;color:#fff;border:none;border-radius:5px;padding:6px;font-size:0.8rem;cursor:pointer;}
+.copy-btn:hover{background:#2e7d32;}
+.copy-btn.copied{background:#1b5e20;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-head">
+    <h1>📷 ${urls.length} ${urls.length === 1 ? 'poză' : 'poze'}</h1>
+    <p>Apasă pe „Copiază linkul" pentru fiecare poză</p>
+  </div>
+  <div class="card-body">
+    <div class="img-grid">${items}</div>
+  </div>
+</div>
+<script>
+function copyUrl(btn, url){
+  navigator.clipboard.writeText(url).then(function(){
+    btn.textContent='Copiat ✓';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copiază linkul';btn.classList.remove('copied');},2000);
+  });
+}
+</script>
+</body>
+</html>`;
+}
 
 async function deleteOldImages(env) {
   const oneDayMs = 24 * 60 * 60 * 1000;
@@ -408,6 +523,41 @@ export default {
       } catch (e) {
         return Response.json({ error: 'Eroare server: ' + e.message }, { status: 500 });
       }
+    }
+
+    if (request.method === 'POST' && path === '/gallery') {
+      try {
+        const body = await request.json();
+        const urls = body.urls;
+        if (!Array.isArray(urls) || urls.length === 0) {
+          return Response.json({ error: 'Lista de URL-uri e goală.' }, { status: 400 });
+        }
+
+        const galleryId = Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+        const galleryKey = 'gallery-' + galleryId;
+
+        await env.POZE.put(galleryKey, JSON.stringify(urls), {
+          metadata: { type: 'gallery' }
+        });
+
+        return Response.json({ url: 'https://' + url.hostname + '/g/' + galleryId });
+
+      } catch (e) {
+        return Response.json({ error: 'Eroare server: ' + e.message }, { status: 500 });
+      }
+    }
+
+    if (request.method === 'GET' && path.startsWith('/g/')) {
+      const galleryId = path.slice(3);
+      const galleryKey = 'gallery-' + galleryId;
+      const value = await env.POZE.get(galleryKey);
+
+      if (!value) return new Response('Galerie negăsită.', { status: 404 });
+
+      const urls = JSON.parse(value);
+      return new Response(galleryHTML(urls), {
+        headers: { 'Content-Type': 'text/html;charset=UTF-8' }
+      });
     }
 
     if (request.method === 'GET' && path.length > 1) {
