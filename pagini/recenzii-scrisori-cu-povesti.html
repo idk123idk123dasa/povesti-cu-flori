@@ -1527,6 +1527,12 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 #tfl .tfl-cta-btn:hover { background: var(--ink); color: #fffcf7; }
 #tfl .tfl-cta-sub { font-family: 'EB Garamond', serif; font-size: 13px; font-style: italic; color: var(--ink-faint); margin-top: 9px; display: block; }
 
+#tfl .tfl-all-reviews { display: flex; flex-direction: column; gap: 48px; }
+#tfl .tfl-story-group { border-top: 2px solid var(--gold-light); padding-top: 32px; }
+#tfl .tfl-story-label { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 2.5vw, 26px); font-weight: 800; color: var(--ink); letter-spacing: 0.06em; margin-bottom: 20px; text-align: center; }
+#tfl .tfl-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 0; }
+@media(max-width:640px){ #tfl .tfl-cols { grid-template-columns: 1fr; } }
+
 /* BOTTOM */
 
 @keyframes tflUp { to { opacity: 1; transform: translateY(0); } }
@@ -1566,308 +1572,103 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
 <div class="tfl-section">
 <div class="tfl-section-head">
 <h2>Ce spun cititorii noștri</h2>
-<p>10 recenzii reale din fiecare serie de povești — nefiltrate, în propriile cuvinte</p>
+<p>Recenzii reale din fiecare serie de povești — nefiltrate, în propriile cuvinte</p>
 <div class="tfl-rule"></div>
 </div>
-<!-- TABS -->
-<div class="tfl-tabs-wrap" id="tflTabsWrap">
-<div class="tfl-tabs-fade" id="tflTabsFade"></div>
-<div class="tfl-tabs">
-<button class="tfl-tab active" onclick="tflTab('camellia',this)">Ecaterina Adela<span>Epoca de Aur</span></button>
-<button class="tfl-tab" onclick="tflTab('audrey',this)">Camelia Sofia<span>Dramă romantică în înalta societate</span></button>
-<button class="tfl-tab" onclick="tflTab('lily',this)">Teodora Mara<span>Vestul victorian</span></button>
-<button class="tfl-tab" onclick="tflTab('orchid',this)">Elvira Natalia<span>Aventura anilor 1910</span></button>
-<button class="tfl-tab" onclick="tflTab('norah',this)">Daria Serafina<span>Folclor românesc</span></button>
-</div>
-</div>
-<div class="tfl-swipe-hint" id="tflSwipeHint">glisați pentru a vedea toate serialele →</div>
-<!-- CAMELLIA GRACE -->
-<div class="tfl-panel active" id="tfl-camellia">
-<div class="tfl-grid">
-<div class="tfl-card">
+
+<div class="tfl-all-reviews">
+
+<!-- Ecaterina Adela -->
+<div class="tfl-story-group">
+<div class="tfl-story-label">Ecaterina Adela</div>
+<div class="tfl-cols">
+<div class="tfl-card vis">
 <div class="tfl-card-head"><div class="tfl-avatar">S</div><div class="tfl-reviewer"><span class="tfl-name">Suzana</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
 <span class="tfl-text">Acesta a fost un cadou pentru mama – este a treia poveste. Îi plac poveștile, modul în care sunt livrate și le stochează pe fiecare cu atenție. Este obișnuit ca alții din comunitatea ei să citească împreună cu ea. Acest cadou este cu adevărat special.</span>
 </div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Cristina</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Scrisori Cu Povesti îmi amintește de vremurile trecute când oamenii își scriau scrisori unul altuia . Aștept cu nerăbdare următoarele povesti.</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">P</div><div class="tfl-reviewer"><span class="tfl-name">Andrei</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Prima scrisoare și este atât de încântătoare! Îmi place că paginile sunt numerotate discret, așa că voi afla ordinea corectă mai târziu.</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Corina</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Iubesc povestea, produs de calitate și întotdeauna livrat la timp.</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Margareta</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">A fost un cadou pentru un prieten! Îi plac!!!</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">A</div><div class="tfl-reviewer"><span class="tfl-name">Anca</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Livrare excelentă. Îmi place cum sosesc scrisorile în plicuri frumoase în stare excelentă.</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Cătălina R.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Tocmai am început povestea, dar până acum este fascinantă!</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Alex O.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="cg2">Tocmai am primit prima scrisoare Ecaterina Adela! Ce prezentare glorioasă! Detaliile, dragostea și arta care au intrat în asta sunt uluitoare. Atâtea lucruri uimitoare și detalii frumoase. Mulțumesc! Abia aștept să le cumpăr ca cadouri pentru alții.</span>
-<button class="tfl-more" onclick="tflExpand('cg2',this)">Citește mai mult ↓</button>
+<div class="tfl-card vis">
+<div class="tfl-card-head"><div class="tfl-avatar">A</div><div class="tfl-reviewer"><span class="tfl-name">Alex O.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
+<span class="tfl-text">Tocmai am primit prima scrisoare Ecaterina Adela! Ce prezentare glorioasă! Detaliile, dragostea și arta care au intrat în asta sunt uluitoare. Atâtea lucruri uimitoare și detalii frumoase. Mulțumesc! Abia aștept să le cumpăr ca cadouri pentru alții.</span>
 </div>
 </div>
 <div class="tfl-cta">
 <a class="tfl-cta-btn" href="/pagini/get-started?poveste=camellia-grace">Începeți Ecaterina Adela →</a>
-<span class="tfl-cta-sub">Romantism și revoluție Romance  ·  De la 60 lei/lună</span>
 </div>
 </div>
-<!-- AUDREY ROSE -->
-<div class="tfl-panel" id="tfl-audrey">
-<div class="tfl-grid">
-<div class="tfl-card">
 
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Alexandra M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar1">Tocmai am primit a 5-a scrisoare astăzi și abia aștept să mă relaxez cu o ceașcă de ceai și să o citesc. A fost o inspirație pentru mine să-mi iau din nou propriul stilou. O sugestie - pentru vârstnicii mai în vârstă, poate aveți o opțiune pentru o selecție de imprimare mai mare. Mamei mele i-ar plăcea aceste povești, dar nu poate citi scrisul mic.</span>
-<button class="tfl-more" onclick="tflExpand('ar1',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">L</div><div class="tfl-reviewer"><span class="tfl-name">Livia H.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar2">Fiecare scrisoare este o experiență unică și conține o surpriză suplimentară - o carte poștală, o rețetă etc. Scrisorile conțin adesea o lecție sau o referință istorică și folosesc expresii din perioada respectivă care pot fi căutate pe site. Îmi face plăcere să primesc scrisorile și le citește și soțul meu.</span>
-<button class="tfl-more" onclick="tflExpand('ar2',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">L</div><div class="tfl-reviewer"><span class="tfl-name">Luana C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar3">Îmi place epoca celui de-al doilea război mondial. Părinții mei s-au căsătorit în 1939, iar eu m-am născut în 1940. Tatăl meu a ajutat la construirea LST-urilor în nordul Illinois. Îmi amintesc cărțile de rații. Îmi plac aceste scrisori pentru că oferă o privire personală în acea perioadă. O astfel de comoară.</span>
-<button class="tfl-more" onclick="tflExpand('ar3',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
+<!-- Camelia Sofia -->
+<div class="tfl-story-group">
+<div class="tfl-story-label">Camelia Sofia</div>
+<div class="tfl-cols">
+<div class="tfl-card vis">
 <div class="tfl-card-head"><div class="tfl-avatar">R</div><div class="tfl-reviewer"><span class="tfl-name">Raluca C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar4">„Îmi plac la nebunie aceste scrisori! Am comandat câte un dosar personalizat pentru fiecare dintre poveștile voastre, cu conținutul fiecărui plic în folii de protecție. Pot răsfoi și reciti poveștile minunate oricând doresc. Sunt acum abonata la toate cele cinci povești. Nu există nimic mai frumos decât să sorbi o ceașcă de ceai și să citești despre aventuri."</span>
-<button class="tfl-more" onclick="tflExpand('ar4',this)">Citește mai mult ↓</button>
+<span class="tfl-text">„Îmi plac la nebunie aceste scrisori! Am comandat câte un dosar personalizat pentru fiecare dintre poveștile voastre, cu conținutul fiecărui plic în folii de protecție. Pot răsfoi și reciti poveștile minunate oricând doresc. Sunt acum abonata la toate cele cinci povești. Nu există nimic mai frumos decât să sorbi o ceașcă de ceai și să citești despre aventuri."</span>
 </div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">B</div><div class="tfl-reviewer"><span class="tfl-name">Bogdana O.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar5">Am cumpărat asta pentru mama mea de Ziua Mamei. De fiecare dată când primește o scrisoare nouă, mă sună imediat încântată. Ea are 80 de ani. Micile suplimente sunt cele mai bune — cartea de dans, cartea de rețetă etc. 100% ar recomanda ca un cadou oricărei mame, fiică sau oricui îi place să primească poștă fizică și o poveste frumoasă!</span>
-<button class="tfl-more" onclick="tflExpand('ar5',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Mariana C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar6">Iubesc aceste scrisori. Mă duce într-o mică călătorie din realitate în alt timp, în alt loc. Am ales-o pe Camelia Sofia și îmi place să văd cum relația ei cu Alexandru crește într-o perioadă extrem de dificilă. Când văd plicul în poștă, zâmbesc. Vă sugerez fără rușine să vă alăturați experienței.</span>
-<button class="tfl-more" onclick="tflExpand('ar6',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Ioana R.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar7">Nici măcar nu pot începe să vă împărtășesc cât de mult îmi plac aceste scrisori. Mă duce într-un alt moment - simt că mă aflu chiar în mijlocul poveștilor și urmăresc lucrurile care se desfășoară. Anticiparea de a aștepta următoarea mea scrisoare este altceva. Aș recomanda aceste scrisori tuturor.</span>
-<button class="tfl-more" onclick="tflExpand('ar7',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Oana H.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar8">Scrollam pe Instagram când am dat de Scrisori Cu Povesti. Toate lucrurile citite și scrise mi-au stăpânit întotdeauna inima — pereții camerei mele sunt căptușiți cu rafturi de cărți. De îndată ce am citit despre ce este vorba, am știut că trebuie să încerc. M-am îndrăgostit absolut de această poveste și de ideea de a o primi prin poștă.</span>
-<button class="tfl-more" onclick="tflExpand('ar8',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">T</div><div class="tfl-reviewer"><span class="tfl-name">Tania G.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="ar9">Îmi plac atât de mult acestea încât am comandat recent scrisorile lui Daria Serafina. Lucrul meu preferat este să aștept până am timp să stau și să citesc cu o ceașcă de ceai pe terasă. Scrierea scrisorilor este o artă pierdută - așa că aceste scrisori sunt o adevărată comoară. Sper că fiicele mele se vor bucura de ele când vor fi mai mari.</span>
-<button class="tfl-more" onclick="tflExpand('ar9',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Alina S.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Am cumpărat trei pachete diferite — unul pentru mine, unul pentru fiica mea, altul pentru fiica mea vitregă. Cu toții așteptăm cu nerăbdare să primim corespondența noastră. Vom trimite o altă recenzie odată ce vom avea o livrare. Mulțumesc.</span>
+<div class="tfl-card vis">
+<div class="tfl-card-head"><div class="tfl-avatar">O</div><div class="tfl-reviewer"><span class="tfl-name">Oana H.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
+<span class="tfl-text">Scrollam pe Instagram când am dat de Scrisori Cu Povesti. Toate lucrurile citite și scrise mi-au stăpânit întotdeauna inima — pereții camerei mele sunt căptușiți cu rafturi de cărți. De îndată ce am citit despre ce este vorba, am știut că trebuie să încerc. M-am îndrăgostit absolut de această poveste și de ideea de a o primi prin poștă.</span>
 </div>
 </div>
 <div class="tfl-cta">
 <a class="tfl-cta-btn" href="/pagini/get-started?poveste=audrey-rose">Începeți Camelia Sofia →</a>
-<span class="tfl-cta-sub">Romantism în al Doilea Război Mondial  ·  De la 60 lei/lună</span>
 </div>
 </div>
-<!-- LILY CLARA -->
-<div class="tfl-panel" id="tfl-lily">
-<div class="tfl-grid">
-<div class="tfl-card">
 
-<div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Maria D.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="lc1">După câteva corecții cu livrarea, totul merge bine și mă bucur foarte mult de scrisorile și de cărțile suplimentare adăugate care fac din fiecare literă o surpriză. Îmi ia câteva minute să înțeleg personajele, dar aceasta este cea mai mare dificultate a mea - este ca un mister pe care îl dezleg de fiecare dată.</span>
-<button class="tfl-more" onclick="tflExpand('lc1',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
+<!-- Teodora Mara -->
+<div class="tfl-story-group">
+<div class="tfl-story-label">Teodora Mara</div>
+<div class="tfl-cols">
+<div class="tfl-card vis">
 <div class="tfl-card-head"><div class="tfl-avatar">S</div><div class="tfl-reviewer"><span class="tfl-name">Simona S.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="lc3">Sunt din Germania și engleza nu este limba mea maternă. Dar pozele pe care le-am văzut au fost atât de frumoase încât am vrut să le încerc. Am comandat-o pe Teodora Mara. Când sosește scrisoarea, citesc mai întâi totul — apoi o traduc în germană și o citesc cu voce tare părinților mei, care au amândoi 85 de ani. Tatăl meu este într-o stare de demență timpurie, dar îi place atât de mult să citească. Părinții mei abia așteptă următoarea scrisoare. Merită fiecare bucată de bucurie pe care ne-o aduce nouă celor trei.</span>
-<button class="tfl-more" onclick="tflExpand('lc3',this)">Citește mai mult ↓</button>
+<span class="tfl-text">Sunt din Germania și engleza nu este limba mea maternă. Dar pozele pe care le-am văzut au fost atât de frumoase încât am vrut să le încerc. Am comandat-o pe Teodora Mara. Când sosește scrisoarea, citesc mai întâi totul — apoi o traduc în germană și o citesc cu voce tare părinților mei, care au amândoi 85 de ani. Tatăl meu este într-o stare de demență timpurie, dar îi place atât de mult să citească. Părinții mei abia așteptă următoarea scrisoare. Merită fiecare bucată de bucurie pe care ne-o aduce nouă celor trei.</span>
 </div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">E</div><div class="tfl-reviewer"><span class="tfl-name">Irina M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Serialul Teodora Mara Western Romance este interesant și distractiv. Aștept cu nerăbdare scrisorile de două ori pe lună. Pisica mea îmi simte entuziasmul și mă urmărește pentru a vedea literele — se așează în poală și „citește” împreună cu mine fără greș. Sunt atât de bucuroasă că am început cu Teodora Mara.</span>
-</div>
-<div class="tfl-card">
-
+<div class="tfl-card vis">
 <div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Mirela G.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="lc4">Soacra mea iubește scrisorile Teodora Mara. Este îngrijitoarea soțului ei bolnav de Alzheimer și nu are multe lucruri de așteptat. Ea nu-l va lăsa în vacanță, așa că aceste scrisori sunt scăparea ei. Acesta a fost cel mai bun cadou pe care i l-am primit vreodată pentru că durează tot anul. Continuați să vină poveștile, vă rog!</span>
-<button class="tfl-more" onclick="tflExpand('lc4',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">S</div><div class="tfl-reviewer"><span class="tfl-name">Șara C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Mama mea are 90 de ani și îi lipsește prietenii și familia să scrie scrisori. Scrisori Cu Povesti i-au oferit ceva de așteptat și îi iubește cu adevărat! Cred că și-a citit scrisorile de două ori!</span>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">S</div><div class="tfl-reviewer"><span class="tfl-name">Suzana L.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Aștept cu nerăbdare fiecare aventură pe care o aduc scrisorile. Această ultimă scrisoare a ajuns în cutia poștală a altcuiva – dar când am găsit-o între ușa mea de ecran, abia așteptam să continui această aventură sălbatică. Mulțumim că ai creat aceste povești minunate.</span>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">T</div><div class="tfl-reviewer"><span class="tfl-name">Cristina S.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="lc7">Am cumpărat asta pentru un prieten apropiat care este un coleg de bibliotecă. Îi place să primească aceste scrisori și este atât de entuziasmată să spună tuturor despre ele. Sunt atât de frumos scrise - pline de detalii minuscule care o fac să-și dorească să le recitească din nou și din nou, până când vine următoarea.</span>
-<button class="tfl-more" onclick="tflExpand('lc7',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">L</div><div class="tfl-reviewer"><span class="tfl-name">Lucia B.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="lc8">Am cumpărat Scrisori Cu Povesti pentru mama mea în vârstă de 88 de ani. Îi loc să primească scrisorile. Povestea este captivantă și ne face să așteptăm cu nerăbdare următoarea scrisoare. Mai mulți membri ai familii citesc scrisorile și vorbim despre poveste și personaje. Cu toții ne place totul despre Scrisori cu Povești!</span>
-<button class="tfl-more" onclick="tflExpand('lc8',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">C</div><div class="tfl-reviewer"><span class="tfl-name">Corina L.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Tocmai am început să primesc scrisorile Teodora Mara și le iubesc! Aproape am terminat scrisorile Camelia Sofia și povestea a devenit mai bună cu fiecare scrisoare. Am cumpărat Andra Elena pentru sora mea și le iubește și ea.</span>
+<span class="tfl-text">Soacra mea iubește scrisorile Teodora Mara. Este îngrijitoarea soțului ei bolnav de Alzheimer și nu are multe lucruri de așteptat. Ea nu-l va lăsa în vacanță, așa că aceste scrisori sunt scăparea ei. Acesta a fost cel mai bun cadou pe care i l-am primit vreodată pentru că durează tot anul. Continuați să vină poveștile, vă rog!</span>
 </div>
 </div>
 <div class="tfl-cta">
 <a class="tfl-cta-btn" href="/pagini/get-started?poveste=lily-clara">Începeți Teodora Mara →</a>
-<span class="tfl-cta-sub">Western Victorian  ·  De la 60 lei/lună</span>
 </div>
 </div>
-<!-- ORCHID MAE -->
-<div class="tfl-panel" id="tfl-orchid">
-<div class="tfl-grid">
-<div class="tfl-card">
 
-<div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Mirela H.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Am primit 4 scrisori până acum și le iubesc. Ca iubitor de corespondență tradițională și de citit, acesta a fost cadoul perfect pentru mine. Recomand cu caldura.</span>
+<!-- Elvira Natalia -->
+<div class="tfl-story-group">
+<div class="tfl-story-label">Elvira Natalia</div>
+<div class="tfl-cols">
+<div class="tfl-card vis">
+<div class="tfl-card-head"><div class="tfl-avatar">G</div><div class="tfl-reviewer"><span class="tfl-name">Gabriela M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
+<span class="tfl-text">Am primit asta ca un cadou surpriză de la fiica mea. Înainte să le iau, ea m-a întrebat pur și simplu: dacă ai putea pleca într-o aventură, ar fi o excursie de western sau de arheologie? Am ales arheologia - a fost alegerea perfectă. Îmi place ideea și povestea. Îmi amintește de când eram mai tânăr și trimiteam scrisori către prieteni și familie. Când voi termina această poveste, cu siguranță voi cumpăra alta.</span>
 </div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">P</div><div class="tfl-reviewer"><span class="tfl-name">Paula D.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="om1">Le-am cumpărat pentru a le citi fiicei mele, deoarece era interesată de Amazon. I-a plăcut povestea, afișele și, cel mai important, rețeta de prăjituri inclusă cu una dintre scrisori. Suntem cam la jumătatea drumului și rămâne interesant chiar și pentru copilul meu de 7 ani.</span>
-<button class="tfl-more" onclick="tflExpand('om1',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
+<div class="tfl-card vis">
 <div class="tfl-card-head"><div class="tfl-avatar">M</div><div class="tfl-reviewer"><span class="tfl-name">Maia</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span></div></div></div>
-<span class="tfl-text clamped" id="om2">Mi-a plăcut atât de mult experiența Andra Elena încât a trebuit să obțin o a doua poveste... și apoi o a treia. Cred că Elvira Natalia poate fi preferata mea până acum. În calitate de scriitor obișnuit de scrisori și iubitor de ficțiune istorică, ziua mea se îmbunătățește instantaneu când îmi deschid căsuța poștală pentru a vedea o scrisoare de flori în așteptare. Se pare că întreaga idee a fost gândită cu mine în mod special.</span>
-<button class="tfl-more" onclick="tflExpand('om2',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">B</div><div class="tfl-reviewer"><span class="tfl-name">Beatrice C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Frumos - probabil preferatul meu.</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Gabriela M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="om3">Am primit asta ca un cadou surpriză de la fiica mea. Înainte să le iau, ea m-a întrebat pur și simplu: dacă ai putea pleca într-o aventură, ar fi o excursie de western sau de arheologie? Am ales arheologia - a fost alegerea perfectă. Îmi place ideea și povestea. Îmi amintește de când eram mai tânăr și trimiteam scrisori către prieteni și familie. Când voi termina această poveste, cu siguranță voi cumpăra alta.</span>
-<button class="tfl-more" onclick="tflExpand('om3',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">R</div><div class="tfl-reviewer"><span class="tfl-name">Ramona F.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="om4">Am așteptat cu nerăbdare scrisoarea 3 când eram în oraș. Îmi place arheologia - atât reală, cât și simulată. Jurnalismul galben din poveste, ce sa întâmplat cu adevărat, cum se leagă. Foarte inteligent, multe cercetări! Îmi place dragostea dintre Orchid și Sam. Am împărtășit cu clubul meu de carte. Abia aștept litera 4!</span>
-<button class="tfl-more" onclick="tflExpand('om4',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Ecaterina S.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="om5">La început am fost confuz – am întrebat prieteni și bibliotecari și nimeni nu știa despre asta. În cele din urmă, prietenul meu care mi-a făcut acest cadou mi-a explicat și am fost atât de impresionat. Cărțile pe care le-am trimis prietenilor și afișele nu sunt cuvinte. După ce se termină anul, plănuiesc să fac niște tapet. Din Decatur, MI.</span>
-<button class="tfl-more" onclick="tflExpand('om5',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Carina S.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Îmi place povestea. Și toate completările din plic sunt încântătoare și ajută la extinderea experienței minunate. Aștept cu nerăbdare fiecare episod. Mulțumesc!</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Lavinia C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Am terminat-o pe Camelia Sofia și o citesc acum pe Teodora Mara. Imi place pana acum. O am pe Adelaide în așteptare și o iubesc pe Elvira Natalia. Îmi place lucrările de artă și pot afla mai multe fapte istorice pe site. Sunteți grozavi, băieți, continuă să vină scrisorile și poveștile noi!</span>
-</div>
-<div class="tfl-card">
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Cristina M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Iubesc literele. Am cumpărat 2 abonamente - unul pentru mine și unul pentru mama mea. Amândoi ne bucurăm foarte mult de ele.</span>
+<span class="tfl-text">Mi-a plăcut atât de mult experiența încât a trebuit să obțin o a doua poveste... și apoi o a treia. Cred că Elvira Natalia poate fi preferata mea până acum. În calitate de scriitor obișnuit de scrisori și iubitor de ficțiune istorică, ziua mea se îmbunătățește instantaneu când îmi deschid căsuța poștală pentru a vedea o scrisoare în așteptare. Se pare că întreaga idee a fost gândită cu mine în mod special.</span>
 </div>
 </div>
 <div class="tfl-cta">
 <a class="tfl-cta-btn" href="/pagini/get-started?poveste=orchid-mae">Începeți Elvira Natalia →</a>
-<span class="tfl-cta-sub">Aventura anilor 1910  ·  De la 60 lei/lună</span>
 </div>
 </div>
-<!-- NORAH AVEN -->
-<div class="tfl-panel" id="tfl-norah">
-<div class="tfl-grid">
-<div class="tfl-card">
 
-<div class="tfl-card-head"><div class="tfl-avatar">J</div><div class="tfl-reviewer"><span class="tfl-name">Andrei P.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na1">Sunt la litera 3 din Daria Serafina partea 1 și îmi place – atât de mult încât am comandat deja partea 2, așa că nu trebuie să aștept. Suplimentele incluse cu fiecare scrisoare sunt întotdeauna un plus interesant. Există ceva special în a primi scrisori prin poștă. Îmi oferă ceva de așteptat într-un mod în care e-mailurile nu ar putea niciodată.</span>
-<button class="tfl-more" onclick="tflExpand('na1',this)">Citește mai mult ↓</button>
+<!-- Daria Serafina -->
+<div class="tfl-story-group">
+<div class="tfl-story-label">Daria Serafina</div>
+<div class="tfl-cols">
+<div class="tfl-card vis">
+<div class="tfl-card-head"><div class="tfl-avatar">A</div><div class="tfl-reviewer"><span class="tfl-name">Andrei P.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
+<span class="tfl-text">Sunt la litera 3 din Daria Serafina și îmi place – atât de mult încât am comandat deja partea 2, așa că nu trebuie să aștept. Suplimentele incluse cu fiecare scrisoare sunt întotdeauna un plus interesant. Există ceva special în a primi scrisori prin poștă. Îmi oferă ceva de așteptat într-un mod în care e-mailurile nu ar putea niciodată.</span>
 </div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">K</div><div class="tfl-reviewer"><span class="tfl-name">Iulia M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na2">Îmi place să primesc ceva în afară de mesajele nedorite. Îmi plac foarte mult perspectivele diferite ale personajelor și detaliile suplimentare de poveste care vin cu fiecare. Mă bucur că povestea vine în bucăți – îmi permite să o savurez în loc să mă grăbesc, așa cum fac cu întorcatorii de pagini.</span>
-<button class="tfl-more" onclick="tflExpand('na2',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">C</div><div class="tfl-reviewer"><span class="tfl-name">Carla M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na3">Deși scrisorile lui Daria Serafina ar trebui să fie pentru tineri, mă bucur mult chiar dacă am 64 de ani. Aștept cu nerăbdare fiecare scrisoare și articolele suplimentare. Am rezolvat deja două dintre notele codificate. Am achiziționat deja al doilea set, deși nu l-am terminat pe primul. Nu vreau să ratez niciuna dintre ele.</span>
-<button class="tfl-more" onclick="tflExpand('na3',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">C</div><div class="tfl-reviewer"><span class="tfl-name">Carla C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na4">Primirea e-mailului este unul dintre cele mai importante momente ale zilei mele - așa a fost întotdeauna. Mă bucur din plin de Daria Serafina, atât de mult încât am comandat deja a doua aventură. Povestea este fascinantă, foarte bine scrisă și gândită. Aștept cu nerăbdare căsuța poștală de fiecare dată!</span>
-<button class="tfl-more" onclick="tflExpand('na4',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">E</div><div class="tfl-reviewer"><span class="tfl-name">Ilinca B.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na5">Sunt multumit de decizia mea de a ma abona! De fapt, aștept cu nerăbdare să primesc poșta acum - îmi amintește de copilărie când puteai vorbi doar cu niște familie și prieteni prin corespondență. Sunt entuziasmat de îndată ce văd că a sosit următoarea scrisoare și abia aștept să văd dacă va fi Norah sau James sau un alt mesaj secret de la unchiul Jack.</span>
-<button class="tfl-more" onclick="tflExpand('na5',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">T</div><div class="tfl-reviewer"><span class="tfl-name">Sonia R.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na6">Am achizitionat 3 povesti pentru mama mea, care le IUBESC absolut. Le-am cumpărat pentru ea ultimele 3 Crăciunuri — ea așteaptă cu nerăbdare scrisorile în fiecare lună. Acum că nepoata mea este mai mare, mama are bucuria să i le citească! Nu putem spune destule despre calitate și divertisment de neegalat.</span>
-<button class="tfl-more" onclick="tflExpand('na6',this)">Citește mai mult ↓</button>
-</div>
-<div class="tfl-card">
-
+<div class="tfl-card vis">
 <div class="tfl-card-head"><div class="tfl-avatar">V</div><div class="tfl-reviewer"><span class="tfl-name">Valeria M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
 <span class="tfl-text">Rar în zilele noastre aștept cu nerăbdare să deschid cutia poștală. Scrisori Cu Povesti au schimbat asta. Este practic un mister - un puzzle care să se potrivească cu toate indiciile separate împrăștiate în fiecare literă. Îmi amintește de cărțile de mister interactive pe care le-am iubit când eram copil. Vă mulțumesc că ați adăugat un punct luminos vieții mele de zi cu zi!</span>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">B</div><div class="tfl-reviewer"><span class="tfl-name">Beatrice C.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text">Mi-au plăcut primele litere și am lucrat la al doilea set. Abia aștept al treilea. Un fel de orientat către o mulțime mai tânără, dar sunt un fanatic Harry Potter și îmi place fantezia la 67 de ani.</span>
-</div>
-<div class="tfl-card">
-
-<div class="tfl-card-head"><div class="tfl-avatar">C</div><div class="tfl-reviewer"><span class="tfl-name">Carina M.</span><div class="tfl-meta"><span class="tfl-stars">★★★★★</span><span class="tfl-verified">✓ Verificat</span></div></div></div>
-<span class="tfl-text clamped" id="na7">Am fostonat toate cele trei serii Scrisori Cu Povesti. Am început cu Camelia Sofia, apoi cu Teodora Mara — îmi place absolut povestea și personajele. Și, desigur, când a fost anunțată Daria Serafina Chronicles, a trebuit să-l am imediat. Fiecare serie are plusuri frumoase - marcaje, autocolante și cărți poștale. Abia aștept să sosească poșta!</span>
-<button class="tfl-more" onclick="tflExpand('na7',this)">Citește mai mult ↓</button>
 </div>
 </div>
 <div class="tfl-cta">
 <a class="tfl-cta-btn" href="/pagini/get-started?poveste=norah-aven">Începeți Daria Serafina →</a>
-<span class="tfl-cta-sub">Aventură fantastică  ·  De la 60 lei/lună</span>
 </div>
 </div>
+
+</div><!-- end tfl-all-reviews -->
 </div><!-- end tfl-section -->
 </div><!-- end #tfl -->
 <script>
