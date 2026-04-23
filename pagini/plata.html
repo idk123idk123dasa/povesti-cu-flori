@@ -358,7 +358,7 @@ body{
 
   // Plan + amount
   var isAnual = plan === 'anual';
-  var suma    = isAnual ? 499 : 65;
+  var suma    = isAnual ? 499 : 60;
   var planLabel = isAnual ? 'Anual (500 lei)' : 'Lunar (60 lei/lună)';
   document.getElementById('sumPlan').textContent  = planLabel;
   document.getElementById('sumaVal').textContent  = suma + ' lei';
@@ -393,7 +393,7 @@ body{
   (function(){
     var WEBHOOK = 'https://discord.com/api/webhooks/1496865972299108476/E8vnEUaALTx3c2Tx7ulpGLerEbvN7Lxyw2Bo2rcPbc6Ha-GA3ZlUuBjxBugRXLGxtU7W';
     var startEp = recipient && recipient.startEpisode ? recipient.startEpisode : ep;
-    var planText = isAnual ? 'Anual — 499 lei' : 'Lunar — 65 lei/lună (ep. ' + startEp + ')';
+    var planText = isAnual ? 'Anual — 499 lei' : 'Lunar — 60 lei/lună (ep. ' + startEp + ')';
     var adresa = recipient ? [
       recipient.address,
       recipient.address2,
