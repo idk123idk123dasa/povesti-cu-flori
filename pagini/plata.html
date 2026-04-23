@@ -382,7 +382,8 @@ body{
   }
 
   // Reference
-  var ref = (recipient ? [recipient.firstName, recipient.lastName].filter(Boolean).join(' ') : '') + (storyId ? ' · ' + (storyNames[storyId]||storyId) : '');
+  var storyLabel = (storyNames[storyId] || storyId || '').replace(/_/g, ' ');
+  var ref = (recipient ? [recipient.firstName, recipient.lastName].filter(Boolean).join(' ') : '') + (storyId ? ' · ' + storyLabel : '');
   if(ref.trim()) document.getElementById('refText').textContent = '"' + ref.trim() + '"';
 
   // Page title
