@@ -388,6 +388,38 @@ body{
   // Page title
   document.title = 'Plată – ' + (storyNames[storyId]||'Scrisori cu Povești');
 
+  // Discord webhook notification
+  (function(){
+    var WEBHOOK = 'https://discord.com/api/webhooks/1496865972299108476/E8vnEUaALTx3c2Tx7ulpGLerEbvN7Lxyw2Bo2rcPbc6Ha-GA3ZlUuBjxBugRXLGxtU7W';
+    var startEp = recipient && recipient.startEpisode ? recipient.startEpisode : ep;
+    var planText = isAnual ? 'Anual — 499 lei' : 'Lunar — 65 lei/lună (ep. ' + startEp + ')';
+    var adresa = recipient ? [
+      recipient.address,
+      recipient.address2,
+      recipient.city,
+      recipient.county,
+      recipient.postal
+    ].filter(Boolean).join(', ') : '—';
+    var numeDest = recipient ? [recipient.firstName, recipient.lastName].filter(Boolean).join(' ') : '—';
+    var embed = {
+      title: '📬 Comandă nouă — Scrisori cu Povești',
+      color: 0xC0392B,
+      fields: [
+        { name: '👤 Destinatar',  value: numeDest || '—',                         inline: true },
+        { name: '📖 Poveste',     value: storyNames[storyId] || storyId || '—',   inline: true },
+        { name: '💳 Abonament',   value: planText,                                 inline: true },
+        { name: '🏠 Adresă',      value: adresa || '—',                            inline: false }
+      ],
+      footer: { text: 'scrisoricupovesti.ro' },
+      timestamp: new Date().toISOString()
+    };
+    fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ embeds: [embed] })
+    }).catch(function(){});
+  })();
+
   // Copy IBAN
   window.copyIban = function(){
     var iban = document.getElementById('ibanText').textContent.replace(/\s/g,'');
