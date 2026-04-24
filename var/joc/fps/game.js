@@ -608,7 +608,8 @@ if (teamCards) {
             selectedTeam = card.dataset.team;
             console.log(`[UI] Team selected: ${selectedTeam}`);
             if (teamSelectionModal) teamSelectionModal.classList.remove('active');
-            startRound(); // Call startRound instead of just openBuyMenu to initialize the round and spawn bots
+            startRound();
+            if (controls) controls.lock();
         };
     });
 }
@@ -2696,8 +2697,8 @@ function startRound() {
     }
     updateHUD();
 
-    // Initialize Buy Phase
-    startBuyPhase(15);
+    // Skip buy phase - start immediately
+    endBuyPhase();
     clearDroppedWeapons(); // Clear any weapons from previous round <!-- id: 29 -->
 
     // Reset Player
