@@ -3,21 +3,876 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tren</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Choo-Choo Charles RO</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#000;overflow:hidden;font-family:'Courier New',monospace;color:#fff}
+    #c{display:block}
+    #hud{position:fixed;inset:0;pointer-events:none}
+
+    /* Player HP bottom-left */
+    #phpc{position:absolute;bottom:20px;left:20px}
+    #phpl{color:#f44;font-size:13px;font-weight:bold;text-shadow:0 0 8px #f00;margin-bottom:4px}
+    #phpb{width:200px;height:16px;background:#300;border:1px solid #600;border-radius:3px;overflow:hidden}
+    #phpf{height:100%;background:linear-gradient(90deg,#c00,#f66);transition:width .2s}
+
+    /* Charles HP top-center */
+    #chpc{position:absolute;top:16px;left:50%;transform:translateX(-50%);text-align:center}
+    #chn{font-size:18px;font-weight:bold;color:#f60;text-shadow:0 0 14px #f60;letter-spacing:3px;margin-bottom:4px}
+    #chpb{width:280px;height:20px;background:#420;border:1px solid #840;border-radius:3px;overflow:hidden;margin:0 auto}
+    #chpf{height:100%;background:linear-gradient(90deg,#f60,#fa0);transition:width .3s}
+
+    /* Speed */
+    #spd{position:absolute;bottom:52px;left:20px;color:#aaa;font-size:12px;text-shadow:0 0 6px #888}
+
+    /* Upgrades top-right */
+    #upl{position:absolute;top:16px;right:16px;color:#0f0;font-size:12px;text-shadow:0 0 8px #0a0;line-height:1.9;text-align:right}
+
+    /* Minimap bottom-right */
+    #mmc{position:absolute;bottom:16px;right:16px}
+    #mm{border:1px solid #444;border-radius:50%;background:#000}
+
+    /* Prompt center */
+    #prmpt{position:absolute;bottom:55%;left:50%;transform:translateX(-50%);
+      color:#ff0;font-size:17px;font-weight:bold;text-shadow:0 0 10px #ff0;
+      background:rgba(0,0,0,.75);padding:8px 20px;border-radius:6px;display:none;white-space:nowrap}
+
+    /* Flash */
+    #fl{position:absolute;inset:0;pointer-events:none}
+
+    /* Crosshair */
+    #xh{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      width:20px;height:20px;pointer-events:none;opacity:.7}
+    #xh::before,#xh::after{content:'';position:absolute;background:#f60}
+    #xh::before{width:2px;height:100%;left:9px}
+    #xh::after{width:100%;height:2px;top:9px}
+
+    /* Overlay screens */
+    .ov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;
+      align-items:center;justify-content:center;flex-direction:column;gap:18px;text-align:center;z-index:10}
+    .ov.show{display:flex}
+    .ov h1{font-size:48px;text-shadow:0 0 20px currentColor}
+    .ov p{font-size:18px;color:#bbb;max-width:400px;line-height:1.6}
+    .ov .ctrl{font-size:14px;color:#777;line-height:2.2}
+    .ov button{padding:12px 44px;font-size:19px;border:none;border-radius:6px;
+      cursor:pointer;font-family:'Courier New',monospace;pointer-events:all;margin-top:6px}
+    #ss h1{color:#f60}
+    #ss button{background:#b00;color:#fff}
+    #ss button:hover{background:#e00}
+    #go h1{color:#f00}
+    #go button{background:#900;color:#fff}
+    #go button:hover{background:#c00}
+    #vs h1{color:#0d0;font-size:42px}
+    #vs button{background:#050;color:#0f0}
+    #vs button:hover{background:#080}
+  </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <div id="ui">
-    <div id="score">Distanță: <span id="score-val">0</span> m</div>
-    <div id="lives">❤️ <span id="lives-val">3</span></div>
+<canvas id="c"></canvas>
+
+<div id="hud">
+  <div id="phpc">
+    <div id="phpl">❤ HP: <span id="php">100</span></div>
+    <div id="phpb"><div id="phpf" style="width:100%"></div></div>
   </div>
-  <div id="overlay" class="visible">
-    <h1>🚂 Tren</h1>
-    <p>Evită obstacolele!</p>
-    <p class="controls">← → Mișcă &nbsp;|&nbsp; SPAȚIU Sari</p>
-    <button id="start-btn">START</button>
+  <div id="chpc">
+    <div id="chn">☠ CHARLES ☠</div>
+    <div id="chpb"><div id="chpf" style="width:100%"></div></div>
   </div>
-  <script src="script.js"></script>
+  <div id="spd">Viteză: <span id="spdt">0</span> km/h</div>
+  <div id="upl"></div>
+  <div id="mmc"><canvas id="mm" width="130" height="130"></canvas></div>
+  <div id="prmpt">Apasă E pentru upgrade</div>
+  <div id="fl"></div>
+  <div id="xh"></div>
+</div>
+
+<div id="ss" class="ov show">
+  <h1>🚂 CHOO-CHOO CHARLES</h1>
+  <p>Supraviețuiește atacurilor lui Charles — trenul-păianjen monstruos!</p>
+  <div class="ctrl">
+    W / S &nbsp;—&nbsp; Accelerează / Frânează<br>
+    Mouse &nbsp;—&nbsp; Rotește camera (click pentru blocare)<br>
+    Click stâng / Space &nbsp;—&nbsp; Trage în Charles<br>
+    E &nbsp;—&nbsp; Colectează upgrade lângă cabană
+  </div>
+  <button id="sb">ÎNCEPE JOCUL</button>
+</div>
+<div id="go" class="ov">
+  <h1>💀 GAME OVER</h1>
+  <p>Charles a câștigat... insula aparține monstrului.</p>
+  <button id="rb">ÎNCEARCĂ DIN NOU</button>
+</div>
+<div id="vs" class="ov">
+  <h1>🎉 VICTORIE!</h1>
+  <p>Charles este mort! Insula este salvată!</p>
+  <button id="vb">JOC NOU</button>
+</div>
+
+<script>
+// ================================================================
+// CHOO-CHOO CHARLES RO — Three.js r128 — single file browser game
+// Controls: W/S=speed, mouse=camera, click/Space=shoot, E=upgrade
+// ================================================================
+
+const ISLAND_R   = 160;
+const TRACK_R    = 108;
+const TRACK_N    = 64;
+const CH_SPEED   = 13;
+const PL_MAXSPD  = 28;
+const CH_MAXHP   = 300;
+const PL_MAXHP   = 100;
+const ATK_DIST   = 16;
+const ATK_DMG    = 14;
+const ATK_CD     = 2.2;
+const BSPEED     = 110;
+
+// ---- renderer ----
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x04040e);
+scene.fog = new THREE.FogExp2(0x04040e, 0.011);
+
+const cam = new THREE.PerspectiveCamera(68, innerWidth / innerHeight, 0.2, 500);
+
+window.addEventListener('resize', () => {
+  renderer.setSize(innerWidth, innerHeight);
+  cam.aspect = innerWidth / innerHeight;
+  cam.updateProjectionMatrix();
+});
+
+// ---- lights ----
+const ambL = new THREE.AmbientLight(0x10102a, 1);
+scene.add(ambL);
+const moonL = new THREE.DirectionalLight(0x334466, 0.6);
+moonL.position.set(60, 120, 40);
+moonL.castShadow = true;
+moonL.shadow.mapSize.width = moonL.shadow.mapSize.height = 1024;
+scene.add(moonL);
+
+// ---- terrain height ----
+function th(x, z) {
+  const d = Math.sqrt(x*x + z*z);
+  if (d > ISLAND_R) return -4;
+  const edge = Math.max(0, 1 - d / ISLAND_R);
+  return edge * 22 * 0.45
+    + Math.sin(x * 0.07) * 2.5 + Math.cos(z * 0.09) * 2.5
+    + Math.sin(x * 0.18 + z * 0.14) * 1.2
+    + Math.cos(x * 0.12 - z * 0.19) * 1.2;
+}
+
+// ---- rail curve ----
+function mkCurve() {
+  const pts = [];
+  for (let i = 0; i < TRACK_N; i++) {
+    const a = (i / TRACK_N) * Math.PI * 2;
+    const r = TRACK_R + Math.sin(a * 5) * 9 + Math.cos(a * 3) * 6;
+    const x = Math.cos(a) * r, z = Math.sin(a) * r;
+    pts.push(new THREE.Vector3(x, th(x, z) + 0.7, z));
+  }
+  return new THREE.CatmullRomCurve3(pts, true, 'catmullrom', 0.5);
+}
+const curve = mkCurve();
+const curvePts = curve.getPoints(500);
+
+// ---- rails mesh ----
+function mkRails() {
+  const g = new THREE.Group();
+  const mat = new THREE.LineBasicMaterial({ color: 0x999999 });
+  const n = 500;
+  const lpts = [], rpts = [];
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    const p = curve.getPoint(t);
+    const tn = curve.getTangent(t);
+    const ri = new THREE.Vector3(tn.z, 0, -tn.x).normalize();
+    lpts.push(p.clone().addScaledVector(ri,  1.25).setY(p.y + 0.12));
+    rpts.push(p.clone().addScaledVector(ri, -1.25).setY(p.y + 0.12));
+  }
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(lpts), mat));
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rpts), mat));
+  const slMat = new THREE.MeshLambertMaterial({ color: 0x5c3d2e });
+  for (let i = 0; i < 280; i++) {
+    const t = i / 280;
+    const p = curve.getPoint(t);
+    const tn = curve.getTangent(t);
+    const sl = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.14, 0.38), slMat);
+    sl.position.copy(p).setY(p.y + 0.06);
+    sl.lookAt(p.clone().add(tn));
+    g.add(sl);
+  }
+  return g;
+}
+
+// ================================================================
+// GameWorld
+// ================================================================
+class GameWorld {
+  constructor() {
+    this.cabinDefs = [
+      { key:'fireRate', name:'🔫 Mitralieră rapidă', t: 0.08 },
+      { key:'armor',    name:'🛡 Blindaj',           t: 0.28 },
+      { key:'turbo',    name:'⚡ Motor turbo',        t: 0.50 },
+      { key:'explosive',name:'💥 Muniție explozivă', t: 0.70 },
+      { key:'radar',    name:'📡 Radar',              t: 0.88 },
+    ];
+    this.cabins = [];
+    this.waterMesh = null;
+    this.wt = 0;
+    this._build();
+  }
+
+  _build() {
+    this._terrain();
+    this._water();
+    this._trees();
+    this._cabins();
+    scene.add(mkRails());
+  }
+
+  _terrain() {
+    const sz = ISLAND_R * 2.6, seg = 90;
+    const geo = new THREE.PlaneGeometry(sz, sz, seg, seg);
+    geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position;
+    const col = [];
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), z = pos.getZ(i);
+      const y = th(x, z);
+      pos.setY(i, y);
+      const d = Math.sqrt(x*x + z*z);
+      if (d > ISLAND_R)          col.push(0.06, 0.08, 0.28);
+      else if (y < 0.8)          col.push(0.52, 0.44, 0.32);
+      else if (y < 7)            col.push(0.18, 0.40, 0.14);
+      else                       col.push(0.55, 0.55, 0.58);
+    }
+    geo.computeVertexNormals();
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    const mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true }));
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+  }
+
+  _water() {
+    const geo = new THREE.PlaneGeometry(900, 900, 1, 1);
+    geo.rotateX(-Math.PI / 2);
+    this.waterMesh = new THREE.Mesh(geo,
+      new THREE.MeshLambertMaterial({ color: 0x0a2540, transparent: true, opacity: 0.82 }));
+    this.waterMesh.position.y = -2.2;
+    scene.add(this.waterMesh);
+  }
+
+  _trees() {
+    const trunkMat = new THREE.MeshLambertMaterial({ color: 0x4a2f1a });
+    for (let i = 0; i < 130; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const r = 18 + Math.random() * (ISLAND_R - 22);
+      if (r > TRACK_R - 18 && r < TRACK_R + 18) continue;
+      const x = Math.cos(a) * r, z = Math.sin(a) * r;
+      const y = th(x, z);
+      if (y < 0.5) continue;
+      const t = new THREE.Group();
+      t.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.48, 3, 6), trunkMat),
+        { position: { x: 0, y: 1.5, z: 0 } }));
+      const hue = 0.28 + Math.random() * 0.08;
+      t.add(Object.assign(new THREE.Mesh(
+        new THREE.ConeGeometry(2.2 + Math.random(), 4.5 + Math.random() * 2, 7),
+        new THREE.MeshLambertMaterial({ color: new THREE.Color().setHSL(hue, 0.55, 0.20) })),
+        { position: { x: 0, y: 5.5, z: 0 } }));
+      t.position.set(x, y, z);
+      scene.add(t);
+    }
+  }
+
+  _cabins() {
+    const baseMat  = new THREE.MeshLambertMaterial({ color: 0x6b4423 });
+    const roofMat  = new THREE.MeshLambertMaterial({ color: 0x8b1a1a });
+    const winMat   = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+    this.cabinDefs.forEach(def => {
+      const cp = curve.getPoint(def.t);
+      const tn = curve.getTangent(def.t);
+      const ri = new THREE.Vector3(tn.z, 0, -tn.x).normalize();
+      const cpos = cp.clone().addScaledVector(ri, 22);
+      cpos.y = th(cpos.x, cpos.z);
+
+      const cab = new THREE.Group();
+      cab.add(Object.assign(
+        new THREE.Mesh(new THREE.BoxGeometry(7, 5, 6), baseMat), { position: new THREE.Vector3(0, 2.5, 0) }));
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(5.5, 3.5, 4), roofMat);
+      roof.position.y = 6.8; roof.rotation.y = Math.PI / 4;
+      cab.add(roof);
+      const win = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 1.4), winMat);
+      win.position.set(0, 3.2, 3.05);
+      cab.add(win);
+      const lit = new THREE.PointLight(0xff6600, 2, 35);
+      lit.position.set(0, 4, 0);
+      cab.add(lit);
+      cab.position.copy(cpos);
+      scene.add(cab);
+      this.cabins.push({ mesh: cab, pos: cpos.clone(), def, used: false, light: lit });
+    });
+  }
+
+  update(dt) {
+    this.wt += dt;
+    if (this.waterMesh)
+      this.waterMesh.material.color.setHSL(0.58, 0.82, 0.07 + Math.sin(this.wt * 0.6) * 0.015);
+  }
+}
+
+// ================================================================
+// TrainPlayer
+// ================================================================
+class TrainPlayer {
+  constructor() {
+    this.t      = 0;
+    this.speed  = 0;
+    this.maxSpd = PL_MAXSPD;
+    this.hp     = PL_MAXHP;
+    this.maxHp  = PL_MAXHP;
+    this.dmg    = 18;
+    this.fr     = 2;      // fire rate shots/sec
+    this.fcd    = 0;      // fire cooldown
+    this.upgrades = {};
+    this.camH   = 0;
+    this.camV   = 0.32;
+    this.camD   = 20;
+    this.group  = new THREE.Group();
+    this._buildModel();
+    scene.add(this.group);
+  }
+
+  _buildModel() {
+    const blue  = new THREE.MeshLambertMaterial({ color: 0x1a3a99 });
+    const dkbl  = new THREE.MeshLambertMaterial({ color: 0x122268 });
+    const grey  = new THREE.MeshLambertMaterial({ color: 0x444444 });
+    const black = new THREE.MeshLambertMaterial({ color: 0x111111 });
+    const red   = new THREE.MeshLambertMaterial({ color: 0xcc2222 });
+
+    // Body
+    const body = new THREE.Mesh(new THREE.BoxGeometry(3.8, 2.8, 8), blue);
+    body.position.y = 1.8; body.castShadow = true;
+    this.group.add(body);
+
+    // Cab
+    const cab = new THREE.Mesh(new THREE.BoxGeometry(3.4, 2.4, 3.2), dkbl);
+    cab.position.set(0, 3.8, 2.4); cab.castShadow = true;
+    this.group.add(cab);
+
+    // Chimney
+    const chim = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.5, 2.2, 8), black);
+    chim.position.set(0, 4.6, -2.2);
+    this.group.add(chim);
+
+    // Wheels
+    const wg = new THREE.CylinderGeometry(0.75, 0.75, 0.35, 12);
+    wg.rotateZ(Math.PI / 2);
+    [[-2.1,0.75,-2.8],[2.1,0.75,-2.8],[-2.1,0.75,0],[2.1,0.75,0],[-2.1,0.75,2.8],[2.1,0.75,2.8]]
+      .forEach(([x,y,z]) => {
+        const w = new THREE.Mesh(wg, grey); w.position.set(x,y,z);
+        this.group.add(w);
+      });
+
+    // Gun pivot
+    this.gunPivot = new THREE.Group();
+    this.gunPivot.position.set(0, 3.4, 0.5);
+    this.group.add(this.gunPivot);
+    const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 4.5, 8), grey);
+    barrel.rotation.x = Math.PI / 2; barrel.position.z = -2.25;
+    this.gunPivot.add(barrel);
+
+    // Head light
+    const hl = new THREE.SpotLight(0xffddaa, 2.5, 70, Math.PI / 7, 0.3);
+    hl.position.set(0, 3.5, -4.2);
+    hl.target.position.set(0, 1, -25);
+    this.group.add(hl); this.group.add(hl.target);
+
+    // Muzzle flash
+    this.muzzleLight = new THREE.PointLight(0xffff44, 0, 10);
+    this.muzzleLight.position.set(0, 3.4, -4.8);
+    this.gunPivot.add(this.muzzleLight);
+  }
+
+  pos() { return this.group.position.clone(); }
+
+  update(dt, keys, charlesPos) {
+    // Speed
+    if (keys['KeyW'] || keys['ArrowUp'])
+      this.speed = Math.min(this.speed + 22 * dt, this.maxSpd);
+    else if (keys['KeyS'] || keys['ArrowDown'])
+      this.speed = Math.max(this.speed - 22 * dt, -7);
+    else
+      this.speed *= Math.pow(0.18, dt);
+
+    // Move on track
+    const len = curve.getLength();
+    this.t = ((this.t + this.speed * dt / len) % 1 + 1) % 1;
+    const p  = curve.getPoint(this.t);
+    const tn = curve.getTangent(this.t);
+    this.group.position.copy(p).setY(p.y + 0.35);
+
+    // Orient along track
+    const q = new THREE.Quaternion().setFromUnitVectors(
+      new THREE.Vector3(0, 0, 1), tn.clone().normalize());
+    this.group.quaternion.copy(q);
+
+    // Aim gun
+    if (charlesPos) {
+      const local = this.group.worldToLocal(charlesPos.clone());
+      this.gunPivot.rotation.y = Math.atan2(-local.x, -local.z);
+    }
+
+    // Fire cooldown
+    if (this.fcd > 0) this.fcd -= dt;
+    if (this.muzzleLight.intensity > 0) this.muzzleLight.intensity -= dt * 24;
+  }
+
+  shoot(charlesPos) {
+    if (this.fcd > 0) return null;
+    this.fcd = 1 / this.fr;
+    this.muzzleLight.intensity = 10;
+    const origin = this.group.localToWorld(new THREE.Vector3(0, 3.4, -5));
+    const dir    = charlesPos.clone().sub(origin).normalize();
+    return { pos: origin.clone(), vel: dir.multiplyScalar(BSPEED), life: 3.5, mesh: null };
+  }
+
+  hit(amt) {
+    if (this.upgrades.armor) amt = Math.ceil(amt * 0.55);
+    this.hp = Math.max(0, this.hp - amt);
+    return this.hp <= 0;
+  }
+}
+
+// ================================================================
+// Charles
+// ================================================================
+class Charles {
+  constructor() {
+    this.hp    = CH_MAXHP;
+    this.maxHp = CH_MAXHP;
+    this.pos   = new THREE.Vector3(90, 0, 75);
+    this.pos.y = th(this.pos.x, this.pos.z) + 4;
+    this.group = new THREE.Group();
+    this.atkCd = 3;
+    this.lt    = 0; // leg time
+    this.legs  = [];
+    this._buildModel();
+    this.group.position.copy(this.pos);
+    scene.add(this.group);
+  }
+
+  _buildModel() {
+    const rust  = new THREE.MeshLambertMaterial({ color: 0x8b2a00 });
+    const dkRst = new THREE.MeshLambertMaterial({ color: 0x6b1a00 });
+    const tooth = new THREE.MeshLambertMaterial({ color: 0xddddaa });
+
+    // Body
+    this.body = new THREE.Mesh(new THREE.BoxGeometry(5, 4, 11), rust.clone());
+    this.body.castShadow = true;
+    this.group.add(this.body);
+
+    // Face plate
+    const face = new THREE.Mesh(new THREE.BoxGeometry(5, 4, 0.8), dkRst);
+    face.position.z = -5.9;
+    this.group.add(face);
+
+    // Eyes
+    const eGeo = new THREE.SphereGeometry(0.55, 10, 10);
+    const eMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    this.eyeL = new THREE.Mesh(eGeo, eMat.clone());
+    this.eyeR = new THREE.Mesh(eGeo, eMat.clone());
+    this.eyeL.position.set(-1.3, 0.6, -6.4);
+    this.eyeR.position.set( 1.3, 0.6, -6.4);
+    this.group.add(this.eyeL, this.eyeR);
+
+    this.litL = new THREE.PointLight(0xff0000, 3, 25);
+    this.litL.position.copy(this.eyeL.position);
+    this.litR = new THREE.PointLight(0xff0000, 3, 25);
+    this.litR.position.copy(this.eyeR.position);
+    this.group.add(this.litL, this.litR);
+
+    // Teeth
+    for (let i = 0; i < 7; i++) {
+      const t = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.9, 0.3), tooth);
+      t.position.set(-1.5 + i * 0.5, -1.3, -6.3);
+      this.group.add(t);
+    }
+
+    // 8 Legs (4 per side)
+    for (let i = 0; i < 8; i++) {
+      const side = i < 4 ? -1 : 1;
+      const idx  = i % 4;
+      const lg   = new THREE.Group();
+      lg.position.set(side * 3, 0, -3.5 + idx * 2.3);
+
+      const upper = new THREE.Mesh(new THREE.BoxGeometry(0.55, 3.2, 0.55),
+        new THREE.MeshLambertMaterial({ color: i % 2 === 0 ? 0x7a2200 : 0x5a1800 }));
+      upper.position.set(side * 0.8, -1.2, 0);
+      upper.rotation.z = side * 0.5;
+      lg.add(upper);
+
+      const lower = new THREE.Mesh(new THREE.BoxGeometry(0.45, 3.0, 0.45),
+        new THREE.MeshLambertMaterial({ color: i % 2 === 0 ? 0x5a1800 : 0x3a0e00 }));
+      lower.position.set(side * 2.8, -3.0, 0);
+      lower.rotation.z = side * 0.8;
+      lg.add(lower);
+
+      this.group.add(lg);
+      this.legs.push({ g: lg, off: (i / 8) * Math.PI * 2, side });
+    }
+  }
+
+  update(dt, playerPos) {
+    this.lt     += dt;
+    this.atkCd  -= dt;
+
+    const dir  = playerPos.clone().sub(this.pos);
+    const dist = dir.length();
+    dir.normalize();
+
+    let spd = CH_SPEED;
+    const hp = this.hp / this.maxHp;
+    if (hp < 0.5) spd *= 1.35;
+    if (hp < 0.25) spd *= 1.5;
+
+    if (dist > ATK_DIST) {
+      this.pos.addScaledVector(dir, spd * dt);
+      this.pos.y = th(this.pos.x, this.pos.z) + 4;
+    }
+    this.group.position.copy(this.pos);
+
+    const look = playerPos.clone(); look.y = this.pos.y;
+    this.group.lookAt(look);
+    this.group.rotateY(Math.PI);
+
+    // Leg animation
+    this.legs.forEach(l => {
+      const sw = Math.sin(this.lt * 5.5 + l.off);
+      l.g.rotation.x = sw * 0.45;
+      l.g.rotation.z = l.side * (0.5 + sw * 0.25);
+    });
+
+    // Phase colours & lights
+    if (hp > 0.5) {
+      this.body.material.color.setHex(0x8b2a00);
+      this.litL.intensity = this.litR.intensity = 2.5;
+      this.eyeL.material.color.setHex(0xff0000);
+      this.eyeR.material.color.setHex(0xff0000);
+    } else if (hp > 0.25) {
+      this.body.material.color.setHex(0xff6600);
+      this.litL.intensity = this.litR.intensity = 4;
+      this.eyeL.material.color.setHex(0xff8800);
+      this.eyeR.material.color.setHex(0xff8800);
+    } else {
+      const pulse = 0.5 + 0.5 * Math.abs(Math.sin(this.lt * 5));
+      this.body.material.color.setRGB(pulse, 0.08, 0);
+      this.litL.intensity = this.litR.intensity = 3 + pulse * 5;
+      this.eyeL.material.color.setRGB(1, pulse * 0.3, 0);
+      this.eyeR.material.color.setRGB(1, pulse * 0.3, 0);
+    }
+
+    const attacking = dist < ATK_DIST && this.atkCd <= 0;
+    if (attacking) this.atkCd = ATK_CD;
+    return { attacking, dist };
+  }
+
+  hit(amt, explosive) {
+    this.hp = Math.max(0, this.hp - (explosive ? amt * 3 : amt));
+    return this.hp <= 0;
+  }
+}
+
+// ================================================================
+// Game state
+// ================================================================
+let world, player, charles;
+let bullets   = [];
+let sparks    = [];
+let gameState = 'menu';
+let flash     = 0;
+let camShake  = 0;
+let lastT     = 0;
+let msgTimer  = 0;
+
+const keys = {};
+let locked = false;
+
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (gameState !== 'playing') return;
+  if (e.code === 'Space') { e.preventDefault(); doShoot(); }
+  if (e.code === 'KeyE')  doUpgrade();
+});
+document.addEventListener('keyup', e => { delete keys[e.code]; });
+
+document.addEventListener('mousemove', e => {
+  if (gameState !== 'playing' || !locked) return;
+  player.camH -= e.movementX * 0.003;
+  player.camV  = Math.max(-0.05, Math.min(0.75, player.camV + e.movementY * 0.003));
+});
+canvas.addEventListener('click', () => {
+  if (gameState !== 'playing') return;
+  if (!locked) { canvas.requestPointerLock(); return; }
+  doShoot();
+});
+document.addEventListener('pointerlockchange', () => { locked = document.pointerLockElement === canvas; });
+
+// ---- bullets ----
+const bGeo = new THREE.SphereGeometry(0.22, 5, 5);
+const bMat = new THREE.MeshBasicMaterial({ color: 0xffee44 });
+const bTrail = new THREE.MeshBasicMaterial({ color: 0xff8800 });
+
+function doShoot() {
+  if (!player || !charles) return;
+  const b = player.shoot(charles.pos.clone());
+  if (!b) return;
+  b.mesh = new THREE.Mesh(bGeo, bMat);
+  b.mesh.position.copy(b.pos);
+  scene.add(b.mesh);
+  bullets.push(b);
+}
+
+// ---- sparks ----
+const skGeo = new THREE.SphereGeometry(0.14, 4, 4);
+function spawnSparks(pos) {
+  for (let i = 0; i < 10; i++) {
+    const m = new THREE.Mesh(skGeo,
+      new THREE.MeshBasicMaterial({ color: new THREE.Color().setHSL(0.09 + Math.random()*0.06, 1, 0.55) }));
+    m.position.copy(pos);
+    scene.add(m);
+    sparks.push({
+      mesh: m,
+      vel: new THREE.Vector3((Math.random()-0.5)*22, Math.random()*18+6, (Math.random()-0.5)*22),
+      life: 0.4 + Math.random() * 0.3
+    });
+  }
+}
+
+// ---- upgrade ----
+const upgNames = { fireRate:'🔫 Mitralieră rapidă', armor:'🛡 Blindaj', turbo:'⚡ Motor turbo', explosive:'💥 Muniție explozivă', radar:'📡 Radar' };
+
+function doUpgrade() {
+  if (!world || !player) return;
+  const pp = player.pos();
+  world.cabins.forEach(c => {
+    if (c.used) return;
+    if (c.pos.distanceTo(pp) > 26) return;
+    c.used = true;
+    c.light.intensity = 0.4;
+    const k = c.def.key;
+    player.upgrades[k] = true;
+    switch (k) {
+      case 'fireRate':  player.fr   *= 2;    break;
+      case 'armor':     player.maxHp += 50; player.hp = Math.min(player.hp + 35, player.maxHp); break;
+      case 'turbo':     player.maxSpd *= 1.3; break;
+      case 'explosive': /* handled at bullet hit */ break;
+      case 'radar':     /* handled in minimap */    break;
+    }
+    showMsg('✅ ' + c.def.name + ' activat!');
+  });
+}
+
+let msgEl, msgTm;
+function showMsg(txt) {
+  msgEl = document.getElementById('prmpt');
+  msgEl.textContent = txt;
+  msgEl.style.display = 'block';
+  msgEl.dataset.tmp = '1';
+  clearTimeout(msgTm);
+  msgTm = setTimeout(() => { delete msgEl.dataset.tmp; msgEl.style.display = 'none'; }, 2600);
+}
+
+// ---- minimap ----
+const mmC  = document.getElementById('mm');
+const mmX  = mmC.getContext('2d');
+const MMS  = 130;
+const MMSC = MMS / (ISLAND_R * 2.6);
+
+function drawMM() {
+  mmX.clearRect(0, 0, MMS, MMS);
+  mmX.fillStyle = 'rgba(0,0,0,0.82)';
+  mmX.fillRect(0, 0, MMS, MMS);
+
+  // Island circle
+  mmX.strokeStyle = '#2a7';
+  mmX.lineWidth = 1;
+  mmX.beginPath();
+  mmX.arc(MMS/2, MMS/2, ISLAND_R * MMSC, 0, Math.PI*2);
+  mmX.stroke();
+
+  // Track
+  mmX.strokeStyle = '#666'; mmX.lineWidth = 1;
+  mmX.beginPath();
+  curvePts.forEach((p, i) => {
+    const mx = MMS/2 + p.x*MMSC, my = MMS/2 + p.z*MMSC;
+    i === 0 ? mmX.moveTo(mx,my) : mmX.lineTo(mx,my);
+  });
+  mmX.closePath(); mmX.stroke();
+
+  // Cabins
+  world.cabins.forEach(c => {
+    mmX.fillStyle = c.used ? '#444' : '#fa0';
+    mmX.beginPath();
+    mmX.arc(MMS/2 + c.pos.x*MMSC, MMS/2 + c.pos.z*MMSC, 2.5, 0, Math.PI*2);
+    mmX.fill();
+  });
+
+  // Charles — show if radar or close
+  const pp = player.pos();
+  const showC = player.upgrades.radar || charles.pos.distanceTo(pp) < 65;
+  if (showC) {
+    mmX.fillStyle = '#f00';
+    mmX.beginPath();
+    mmX.arc(MMS/2 + charles.pos.x*MMSC, MMS/2 + charles.pos.z*MMSC, 4, 0, Math.PI*2);
+    mmX.fill();
+  }
+
+  // Player
+  mmX.fillStyle = '#fff';
+  mmX.beginPath();
+  mmX.arc(MMS/2 + pp.x*MMSC, MMS/2 + pp.z*MMSC, 3.5, 0, Math.PI*2);
+  mmX.fill();
+}
+
+// ---- camera ----
+function updateCam() {
+  const pp = player.pos();
+  const tn = curve.getTangent(player.t);
+  const ta = Math.atan2(tn.x, tn.z);
+
+  const sh = camShake > 0 ? new THREE.Vector3(
+    (Math.random()-0.5)*camShake, (Math.random()-0.5)*camShake*0.4, 0) : new THREE.Vector3();
+
+  const off = new THREE.Vector3(
+    Math.sin(player.camH) * Math.cos(player.camV) * player.camD,
+    Math.sin(player.camV) * player.camD,
+    Math.cos(player.camH) * Math.cos(player.camV) * player.camD
+  ).applyEuler(new THREE.Euler(0, ta + Math.PI, 0));
+
+  cam.position.copy(pp).add(off).add(sh);
+  cam.lookAt(pp.clone().setY(pp.y + 1.8));
+  if (camShake > 0) camShake = Math.max(0, camShake - 0.25);
+}
+
+// ---- HUD ----
+function updateHUD() {
+  document.getElementById('phpf').style.width = (player.hp / player.maxHp * 100) + '%';
+  document.getElementById('php').textContent  = Math.ceil(player.hp);
+  document.getElementById('chpf').style.width = (charles.hp / charles.maxHp * 100) + '%';
+  document.getElementById('spdt').textContent = Math.abs(Math.round(player.speed * 3.2));
+
+  // Upgrades list
+  document.getElementById('upl').innerHTML =
+    Object.keys(player.upgrades).map(k => upgNames[k]).join('<br>');
+
+  // Near cabin prompt (only if no temp message)
+  const pEl = document.getElementById('prmpt');
+  if (!pEl.dataset.tmp) {
+    const pp = player.pos();
+    const near = world.cabins.some(c => !c.used && c.pos.distanceTo(pp) < 26);
+    pEl.style.display = near ? 'block' : 'none';
+    if (near) pEl.textContent = 'Apasă E pentru upgrade';
+  }
+
+  // Screen flash
+  const fl = document.getElementById('fl');
+  if (flash > 0) {
+    fl.style.background = `rgba(255,0,0,${flash.toFixed(2)})`;
+    flash = Math.max(0, flash - 0.04);
+  } else {
+    fl.style.background = 'none';
+  }
+}
+
+// ---- init / loop ----
+function clearScene() {
+  const keep = [ambL, moonL];
+  while (scene.children.length) scene.remove(scene.children[0]);
+  keep.forEach(l => scene.add(l));
+}
+
+function initGame() {
+  clearScene();
+  bullets = []; sparks = [];
+  flash = 0; camShake = 0;
+  world   = new GameWorld();
+  player  = new TrainPlayer();
+  charles = new Charles();
+}
+
+function loop(ts) {
+  requestAnimationFrame(loop);
+  if (gameState !== 'playing') return;
+  const dt = Math.min((ts - lastT) / 1000, 0.05);
+  lastT = ts;
+
+  world.update(dt);
+  player.update(dt, keys, charles.pos.clone());
+
+  const pp = player.pos();
+  const { attacking } = charles.update(dt, pp);
+
+  if (attacking) {
+    if (player.hit(ATK_DMG)) return endGame(false);
+    flash = 0.55; camShake = 3.5;
+  }
+
+  // Bullets
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    b.pos.addScaledVector(b.vel, dt);
+    b.mesh.position.copy(b.pos);
+    b.life -= dt;
+
+    if (b.pos.distanceTo(charles.pos) < 6.5) {
+      spawnSparks(b.pos.clone());
+      scene.remove(b.mesh);
+      bullets.splice(i, 1);
+      if (charles.hit(player.dmg, player.upgrades.explosive)) return endGame(true);
+      continue;
+    }
+    if (b.life <= 0) { scene.remove(b.mesh); bullets.splice(i, 1); }
+  }
+
+  // Sparks
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    const s = sparks[i];
+    s.mesh.position.addScaledVector(s.vel, dt);
+    s.vel.y -= 18 * dt;
+    s.life  -= dt;
+    if (s.life <= 0) { scene.remove(s.mesh); sparks.splice(i, 1); }
+  }
+
+  updateCam();
+  drawMM();
+  updateHUD();
+  renderer.render(scene, cam);
+}
+
+function endGame(win) {
+  gameState = win ? 'victory' : 'gameover';
+  document.exitPointerLock();
+  document.getElementById(win ? 'vs' : 'go').classList.add('show');
+}
+
+function startGame() {
+  ['ss','go','vs'].forEach(id => document.getElementById(id).classList.remove('show'));
+  initGame();
+  gameState = 'playing';
+  lastT = performance.now();
+  requestAnimationFrame(loop);
+}
+
+document.getElementById('sb').addEventListener('click', startGame);
+document.getElementById('rb').addEventListener('click', startGame);
+document.getElementById('vb').addEventListener('click', startGame);
+</script>
 </body>
 </html>
