@@ -1,0 +1,13 @@
+name = "fps-gam"
+compatibility_date = "2024-01-27"
+pages_build_output_dir = "."
+
+# If you use Cloudflare Workers for the signaling server
+# [vars]
+# SERVER_URL = "https://your-worker-url"
+
+# Optimization for assets
+[site]
+bucket = "."
+include = ["*.html", "*.js", "*.css", "*.png", "*.command"]
+exclude = ["node_modules", ".git"]
