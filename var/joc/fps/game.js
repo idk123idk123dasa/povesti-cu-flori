@@ -310,6 +310,31 @@ function makePart(parent, x, y, z, w, h, d, mat, rx=0, ry=0, rz=0) {
 // AKM .obj model — loaded async, cached here
 let _akModelTemplate = null;
 
+// Karambit .obj model — loaded async
+let _karambitTemplate = null;
+
+function preloadKarambit() {
+    return new Promise(resolve => {
+        new OBJLoader().load('karambit.obj', obj => {
+            // Model: blade in XY plane, Y axis longest (~9.8 units), scale to hand size
+            const SCALE = 0.016;
+            // Center: X=2.399, Y=0.463, Z=-0.287
+            obj.traverse(child => {
+                if (child.isMesh) {
+                    child.castShadow = false;
+                    child.receiveShadow = false;
+                    // material applied at clone time based on skin
+                }
+            });
+            obj.scale.setScalar(SCALE);
+            // Offset to center grip in hand
+            obj.position.set(-2.399 * SCALE, -0.463 * SCALE, 0.287 * SCALE);
+            _karambitTemplate = obj;
+            resolve();
+        }, undefined, () => resolve());
+    });
+}
+
 const _akMats = [
     new THREE.MeshPhongMaterial({ color: 0x2e2e2e, specular: 0x888888, shininess: 60, side: THREE.DoubleSide }),
     new THREE.MeshPhongMaterial({ color: 0x1a1a1a, specular: 0x555555, shininess: 90, side: THREE.DoubleSide }),
@@ -412,50 +437,50 @@ function buildPistol() {
     return g;
 }
 
-// Karambit — skin-based, matches equipped knife from shop
+// Karambit — uses real OBJ model with skin color
 let knifeGroup;
 function buildKnife() {
     const skin = KNIFE_SHOP.find(k => k.id === equippedKnife) || KNIFE_SHOP[0];
     const bCol = skin.color  || 0xb0b8c8;
     const hCol = skin.hColor || 0x1a1a2e;
+
     const g = new THREE.Group();
 
-    const B  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
-    const B2 = new THREE.MeshPhongMaterial({ color: new THREE.Color(bCol).multiplyScalar(0.55), specular: 0xaaaaaa, shininess: 80, side: THREE.DoubleSide });
-    const H  = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
-    const Gm = new THREE.MeshPhongMaterial({ color: 0x555566, specular: 0xaaaacc, shininess: 100 });
-
-    // Curved blade
-    const segs = 12;
-    for (let i = 0; i < segs; i++) {
-        const t   = i / (segs - 1);
-        const a   = t * Math.PI * 0.82 - Math.PI * 0.06;
-        const r   = 0.085;
-        const w   = 0.006 + (1 - t) * 0.004;
-        const h   = 0.022 - t * 0.014;
-        const seg = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.022), t < 0.5 ? B : B2);
-        seg.position.set(Math.sin(a) * r - 0.025, 0, -Math.cos(a) * r + 0.005);
-        seg.rotation.y = -a;
-        g.add(seg);
+    if (_karambitTemplate) {
+        const clone = _karambitTemplate.clone(true);
+        const bladeMat   = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+        const handleMat  = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
+        let meshIdx = 0;
+        clone.traverse(child => {
+            if (child.isMesh) {
+                child.material = meshIdx % 2 === 0 ? bladeMat : handleMat;
+                meshIdx++;
+            }
+        });
+        // Rotate: blade in XY plane, rotate to point blade toward camera/up
+        clone.rotation.set(Math.PI / 2, 0, Math.PI);
+        g.add(clone);
+    } else {
+        // Fallback procedural if OBJ not loaded yet
+        const B  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+        const H  = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
+        const Gm = new THREE.MeshPhongMaterial({ color: 0x555566, specular: 0xaaaacc, shininess: 100 });
+        const segs = 12;
+        for (let i = 0; i < segs; i++) {
+            const t = i / (segs - 1), a = t * Math.PI * 0.82 - Math.PI * 0.06, r = 0.085;
+            const seg = new THREE.Mesh(new THREE.BoxGeometry(0.007, 0.02 - t*0.012, 0.022), B);
+            seg.position.set(Math.sin(a)*r - 0.025, 0, -Math.cos(a)*r + 0.005);
+            seg.rotation.y = -a; g.add(seg);
+        }
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.006, 10, 20), Gm);
+        ring.position.set(-0.002, 0, 0.100); ring.rotation.x = Math.PI / 2; g.add(ring);
+        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.020, 0.028, 0.076), H);
+        handle.position.set(-0.002, 0, 0.054); g.add(handle);
     }
-    // Guard
-    const guard = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.032, 0.012), Gm);
-    guard.position.set(-0.007, 0, 0.006); g.add(guard);
-    // Handle
-    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.020, 0.028, 0.076), H);
-    handle.position.set(-0.002, 0, 0.054); g.add(handle);
-    for (let i = 0; i < 3; i++) {
-        const strip = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.004, 0.004), Gm);
-        strip.position.set(-0.002, 0.016, 0.022 + i * 0.022); g.add(strip);
-    }
-    // Finger ring
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.006, 10, 20), Gm);
-    ring.position.set(-0.002, 0, 0.100); ring.rotation.x = Math.PI / 2; g.add(ring);
 
     knifeGroup = g;
-    g.scale.set(1.5, 1.5, 1.5);
-    g.position.set(0.13, -0.14, -0.20);
-    g.rotation.set(-0.35, -0.55, 0.30);
+    g.position.set(0.12, -0.14, -0.22);
+    g.rotation.set(0.0, 0.3, 0.1);
     return g;
 }
 
@@ -974,9 +999,8 @@ function toggleScope() {
 const INSPECT_DURATION = 1.8; // seconds
 
 function startInspect() {
-    if (inspecting) return;
+    if (inspecting || knifeFlipping) return;
     if (currentWeapon === 'knife') {
-        // Butterfly flip instead of normal inspect
         knifeFlipping = true;
         knifeAnim = 0;
         return;
@@ -1007,58 +1031,27 @@ function updateWeaponAnimations(dt) {
             knifeAnim = Math.min(1, knifeAnim + dt / BFLY_DURATION);
             const t = knifeAnim;
 
-            /* CS2-style butterfly flip phases:
-               0.00-0.12  safe handle opens  (swings back 180°)
-               0.12-0.30  knife drops/tilts  (wrist toss setup)
-               0.30-0.55  full spin          (group rotates 360° on Z)
-               0.55-0.68  knife returns      (lands back in hand)
-               0.68-0.82  bite handle closes (swings forward 180°)
-               0.82-1.00  settle back to rest
-            */
+            // Spin inspect animation
+            const spinPhase = ease(remap(t, 0.10, 0.70));
+            const catchDown = ease(remap(t, 0.65, 1.00));
 
-            // Safe handle (h1): opens from 0 → -π then stays open
-            const h1Open = ease(remap(t, 0.00, 0.12));
-            // Bite handle (h2): opens with delay → closes
-            const h2Open = ease(remap(t, 0.15, 0.30));
-            const h2Close= ease(remap(t, 0.68, 0.82));
-
-            if (knifeHandle1) knifeHandle1.rotation.z = -Math.PI * h1Open;
-            if (knifeHandle2) knifeHandle2.rotation.z =  Math.PI * Math.max(0, h2Open - h2Close);
-
-            // Whole knife group: toss into the air and spin
-            const tossDrop  = ease(remap(t, 0.12, 0.30)); // lift up
-            const spinPhase = ease(remap(t, 0.25, 0.60)); // full rotation
-            const catchDown = ease(remap(t, 0.55, 0.75)); // come back
-
-            const baseX = 0.1, baseY = -0.17, baseZ = -0.22;
-            weaponMesh.position.x = baseX + Math.sin(spinPhase * Math.PI) *  0.06;
-            weaponMesh.position.y = baseY + Math.sin(tossDrop  * Math.PI) *  0.12
-                                          - Math.sin(catchDown * Math.PI) *  0.08;
-            weaponMesh.position.z = baseZ;
-
-            // Spin: two full rotations on X during the toss
-            weaponMesh.rotation.x = 0.1  + spinPhase * Math.PI * 2;
-            // Side tilt during toss
-            weaponMesh.rotation.z = 0.08 + Math.sin(spinPhase * Math.PI) * 0.35;
-
-            // Settle back smoothly after catch
-            const settle = ease(remap(t, 0.80, 1.00));
-            if (settle > 0) {
-                weaponMesh.rotation.x += (0.1  - weaponMesh.rotation.x) * settle * 0.9;
-                weaponMesh.rotation.z += (0.08 - weaponMesh.rotation.z) * settle * 0.9;
-            }
+            weaponMesh.position.x = 0.12 + Math.sin(spinPhase * Math.PI) * 0.05;
+            weaponMesh.position.y = -0.14 + Math.sin(spinPhase * Math.PI) * 0.10;
+            weaponMesh.position.z = -0.22;
+            weaponMesh.rotation.x = spinPhase * Math.PI * 2;
+            weaponMesh.rotation.z = 0.1 + Math.sin(spinPhase * Math.PI) * 0.3;
 
             if (knifeAnim >= 1) {
                 knifeFlipping = false;
                 knifeAnim = 0;
-                weaponMesh.position.set(0.13, -0.14, -0.20);
-                weaponMesh.rotation.set(-0.35, -0.55, 0.30);
+                weaponMesh.position.set(0.12, -0.14, -0.22);
+                weaponMesh.rotation.set(0.0, 0.3, 0.1);
             }
         } else {
-            // Idle: subtle pendulum sway
-            const swing = Math.sin(now * 1.4) * 0.015;
-            const bob   = Math.cos(now * 2.1) * 0.004;
-            weaponMesh.rotation.set(-0.35 + bob, -0.55, 0.30 + swing);
+            // Idle: subtle sway
+            const swing = Math.sin(now * 1.4) * 0.012;
+            const bob   = Math.cos(now * 2.1) * 0.003;
+            weaponMesh.rotation.set(0.0 + bob, 0.3, 0.1 + swing);
             weaponMesh.position.y = -0.14 + Math.sin(now * 1.0) * 0.003;
         }
         return;
@@ -1980,11 +1973,30 @@ function _knifeThumb(id) {
     return _thumbCache[id];
 }
 
-/* ── Procedural karambit model for all skins ── */
+function _refreshThumbsIfLoaded() {
+    if (!_karambitTemplate) return;
+    Object.keys(_thumbCache).forEach(k => delete _thumbCache[k]);
+    const grid = document.getElementById('knife-shop-grid');
+    if (grid && grid.children.length > 0) renderKnifeShop();
+}
+
+/* ── Karambit model for shop preview ── */
 function _buildKnife3D(id) {
     const skin = KNIFE_SHOP.find(k => k.id === id) || KNIFE_SHOP[0];
     const bCol = skin.color  || 0xb0b8c8;
     const hCol = skin.hColor || 0x1a1a2e;
+
+    // Use real OBJ if available
+    if (_karambitTemplate) {
+        const clone = _karambitTemplate.clone(true);
+        const bladeMat  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+        const handleMat = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
+        let mi = 0;
+        clone.traverse(child => { if (child.isMesh) { child.material = mi++ % 2 === 0 ? bladeMat : handleMat; } });
+        clone.rotation.set(-0.35, -0.55, 0.30);
+        clone.position.set(0, 0, 0);
+        return clone;
+    }
     const g = new THREE.Group();
 
     const B  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
@@ -2110,7 +2122,8 @@ setupLobbyUI();
 setupBuyMenu();
 setupKnifeShop();
 updateGoldDisplay();
-preloadAK().then(() => {
+Promise.all([preloadAK(), preloadKarambit()]).then(() => {
     buildWeapon();
+    _refreshThumbsIfLoaded();
 });
 animate();
