@@ -1997,8 +1997,8 @@ function _initPvRenderer() {
     _pvScene.background = new THREE.Color(0x0a0f1a);
     // Camera mimics first-person hand view: slightly left, above, looking at knife
     _pvCam = new THREE.PerspectiveCamera(50, 1, 0.001, 20);
-    _pvCam.position.set(-0.18, 0.12, 0.30);
-    _pvCam.lookAt(0, -0.02, 0);
+    _pvCam.position.set(-0.05, 0.06, 0.32);
+    _pvCam.lookAt(0.04, -0.04, 0);
     _pvScene.add(new THREE.AmbientLight(0x223355, 1.2));
     const dl = new THREE.DirectionalLight(0xffffff, 4.5);
     dl.position.set(0.5, 1.5, 1.5); _pvScene.add(dl);
