@@ -322,7 +322,7 @@ let _karambitTemplate = null;
 function preloadKarambit() {
     return new Promise(resolve => {
         new OBJLoader().load('karambit.obj', obj => {
-            const SCALE = 0.016;
+            const SCALE = 0.020;
             obj.scale.setScalar(SCALE);
             obj.position.set(-2.399 * SCALE, -0.463 * SCALE, 0.287 * SCALE);
             obj.traverse(child => {
@@ -440,11 +440,11 @@ function buildKnife() {
         const clone = _karambitTemplate.clone(true);
         const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 160, side: THREE.DoubleSide });
         clone.traverse(child => { if (child.isMesh) child.material = mat; });
-        // Model face is in XY plane (+Z side). Rotate so blade faces player slightly
-        clone.rotation.set(0.2, Math.PI - 0.3, 0.1);
+        // Blade along Y axis. Tilt Z so blade points upper-left (CS2 hold style)
+        clone.rotation.set(0.25, Math.PI, -0.65);
         g.add(clone);
         knifeGroup = g;
-        g.position.set(0.12, -0.15, -0.22);
+        g.position.set(0.28, -0.20, -0.28);
         g.rotation.set(0, 0, 0);
         return g;
     }
