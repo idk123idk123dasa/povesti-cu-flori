@@ -317,28 +317,20 @@ const _akMats = [
     new THREE.MeshPhongMaterial({ color: 0x888888, specular: 0xaaaaaa, shininess: 120, side: THREE.DoubleSide }),
 ];
 
-// Karambit2 OBJ: flat in XZ plane (Y=0.02), separate Blade/Grip/Grip_Metal parts
+// Karambit OBJ: flat in XY plane, Y longest axis (~9.8 units)
 let _karambitTemplate = null;
 function preloadKarambit() {
     return new Promise(resolve => {
-        new OBJLoader().load('karambit2.obj', obj => {
-            const SCALE = 1.4;
+        new OBJLoader().load('karambit.obj', obj => {
+            const SCALE = 0.020;
             obj.scale.setScalar(SCALE);
+            obj.position.set(-2.399 * SCALE, -0.463 * SCALE, 0.287 * SCALE);
             obj.traverse(child => {
                 if (child.isMesh) { child.castShadow = false; child.receiveShadow = false; }
             });
             _karambitTemplate = obj;
             resolve();
-        }, undefined, () => {
-            // Fallback to old karambit
-            new OBJLoader().load('karambit.obj', obj => {
-                obj.scale.setScalar(0.020);
-                obj.position.set(-2.399*0.020, -0.463*0.020, 0.287*0.020);
-                obj.traverse(c => { if (c.isMesh) c.castShadow = false; });
-                _karambitTemplate = obj;
-                resolve();
-            }, undefined, () => resolve());
-        });
+        }, undefined, () => resolve());
     });
 }
 
@@ -476,11 +468,10 @@ function buildKnife() {
     if (_karambitTemplate) {
         const clone = _karambitTemplate.clone(true);
         _applyKarambitMaterials(clone, bCol);
-        // Model flat in XZ. Rotate X+90 to stand up, then tilt Z for CS2 hold
-        clone.rotation.set(Math.PI / 2, 0, -0.6);
+        clone.rotation.set(0.15, Math.PI, -0.75);
         g.add(clone);
         knifeGroup = g;
-        g.position.set(0.30, -0.12, -0.26);
+        g.position.set(0.38, -0.10, -0.28);
         g.rotation.set(0, 0, 0);
         return g;
     }
@@ -1079,8 +1070,8 @@ function updateWeaponAnimations(dt) {
     if (currentWeapon === 'knife') {
         const now    = performance.now();
         const nowSec = now * 0.001;
-        const BASE_POS = { x: 0.30, y: -0.12, z: -0.26 };
-        const BASE_ROT = { x: Math.PI / 2, y: 0, z: -0.6 };
+        const BASE_POS = { x: 0.38, y: -0.10, z: -0.28 };
+        const BASE_ROT = { x: 0.15, y: Math.PI, z: -0.75 };
 
         const elapsed = now - _knifeInspectStart;
         const inspecting_knife = elapsed < KNIFE_INSPECT_MS;
@@ -2038,7 +2029,7 @@ function _buildKnife3D(id) {
     if (_karambitTemplate) {
         const clone = _karambitTemplate.clone(true);
         _applyKarambitMaterials(clone, bCol);
-        clone.rotation.set(Math.PI / 2, 0, -0.6);
+        clone.rotation.set(0.15, Math.PI, -0.75);
         g.add(clone);
         return g;
     }
