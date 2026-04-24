@@ -884,6 +884,10 @@ window.TriplePixelData={TripleNume:"scrisoricupovesti.ro",ver:"2.16",plat:"SHOPI
   .story-single a img {
     border-radius: 18px;
   }
+  a[href*="/produse/"] img.gf_image,
+  a[href*="poveste="] img.gf_image {
+    border-radius: 18px !important;
+  }
   @media (max-width: 750px) {
 
 
@@ -1872,6 +1876,19 @@ if(typeof pageLibs === 'undefined' || pageLibs === null){	var pageLibs = [		"htt
 })();
 </script>
 </footer>
+<script>
+(function(){
+  function roundProductImages(){
+    document.querySelectorAll('a[href*="/produse/"] img.gf_image, a[href*="poveste="] img.gf_image').forEach(function(img){
+      img.style.setProperty('border-radius','18px','important');
+    });
+  }
+  document.addEventListener('DOMContentLoaded', roundProductImages);
+  window.addEventListener('load', roundProductImages);
+  setTimeout(roundProductImages, 800);
+  setTimeout(roundProductImages, 2000);
+})();
+</script>
 </body>
 </html>
 <style>
