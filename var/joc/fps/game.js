@@ -61,8 +61,8 @@ let deaths       = 0;
 let playerScore  = 0;
 let botScore     = 0;
 let playerGold   = parseInt(localStorage.getItem('fps_gold') || '0');
-let ownedKnives  = JSON.parse(localStorage.getItem('fps_knives') || '["butterfly"]');
-let equippedKnife = localStorage.getItem('fps_knife') || 'butterfly';
+let ownedKnives  = JSON.parse(localStorage.getItem('fps_knives') || '["k_plain"]');
+let equippedKnife = localStorage.getItem('fps_knife') || 'k_plain';
 let velY         = 0;
 let onGround     = false;
 let bots         = [];
@@ -1382,8 +1382,8 @@ function onAuthSuccess(data) {
 
     // Load player data from server
     playerGold    = data.gold || 0;
-    ownedKnives   = data.ownedKnives || ['butterfly'];
-    equippedKnife = data.equippedKnife || 'butterfly';
+    ownedKnives   = data.ownedKnives || ['k_plain'];
+    equippedKnife = data.equippedKnife || 'k_plain';
     localStorage.setItem('fps_gold',   playerGold);
     localStorage.setItem('fps_knives', JSON.stringify(ownedKnives));
     localStorage.setItem('fps_knife',  equippedKnife);
@@ -1951,14 +1951,14 @@ function setupBuyMenu() {
    KNIFE SHOP (LOBBY)
 ═══════════════════════════════════════════════ */
 const KNIFE_SHOP = [
-    { id: 'butterfly', name: 'Butterfly Knife', price: 0,   desc: 'Default — flip clasic' },
-    { id: 'gut',       name: 'Gut Knife',        price: 100, desc: 'Compact, clip point' },
-    { id: 'flip',      name: 'Flip Knife',        price: 100, desc: 'Lama subtire, spear point' },
-    { id: 'daggers',   name: 'Shadow Daggers',    price: 100, desc: 'Doua lame scurte' },
-    { id: 'm9',        name: 'M9 Bayonet',        price: 100, desc: 'Baioneta militara, saw back' },
-    { id: 'karambit',  name: 'Karambit',          price: 100, desc: 'Lama curbata, inel' },
-    { id: 'stiletto',  name: 'Stiletto',           price: 100, desc: 'Ac subtire, varf de ac' },
-    { id: 'talon',     name: 'Talon Knife',        price: 100, desc: 'Ghiara curbata' },
+    { id: 'k_plain',   name: 'Karambit',                price: 0,   color: 0xb0b8c8, hColor: 0x1a1a2e, desc: 'Gratuit — otel clasic' },
+    { id: 'k_bluegem', name: 'Karambit | Blue Gem',     price: 100, color: 0x0066ff, hColor: 0x001144, desc: 'Blue Gem Factory New' },
+    { id: 'k_fade',    name: 'Karambit | Fade',         price: 100, color: 0xff6600, hColor: 0x660099, desc: 'Full Fade' },
+    { id: 'k_tiger',   name: 'Karambit | Tiger Tooth',  price: 100, color: 0xd4a017, hColor: 0x2a1500, desc: 'Tiger Tooth FN' },
+    { id: 'k_doppler', name: 'Karambit | Doppler',      price: 100, color: 0x880011, hColor: 0x111111, desc: 'Phase 2' },
+    { id: 'k_marble',  name: 'Karambit | Marble Fade',  price: 100, color: 0xff4400, hColor: 0x001188, desc: 'Fire & Ice' },
+    { id: 'k_crimson', name: 'Karambit | Crimson Web',  price: 100, color: 0xaa0000, hColor: 0x330000, desc: 'Minimal Wear' },
+    { id: 'k_gamma',   name: 'Karambit | Gamma Doppler',price: 100, color: 0x00aa44, hColor: 0x001a0a, desc: 'Emerald' },
 ];
 
 /* ── Knife 3D preview renderer ── */
@@ -1968,14 +1968,14 @@ const _thumbCache = {};
 function _initPvRenderer() {
     _pvScene = new THREE.Scene();
     _pvScene.background = new THREE.Color(0x080c14);
-    _pvCam = new THREE.PerspectiveCamera(36, 1, 0.001, 20);
-    _pvCam.position.set(0.10, 0.05, 0.40);
-    _pvCam.lookAt(0, 0, 0);
-    _pvScene.add(new THREE.AmbientLight(0x334466, 1.2));
-    const dl = new THREE.DirectionalLight(0xffffff, 3.0);
-    dl.position.set(1, 2, 2); _pvScene.add(dl);
-    const dl2 = new THREE.DirectionalLight(0x4488ff, 1.2);
-    dl2.position.set(-2, -1, 0.5); _pvScene.add(dl2);
+    _pvCam = new THREE.PerspectiveCamera(42, 1, 0.001, 20);
+    _pvCam.position.set(0.08, -0.06, 0.28);
+    _pvCam.lookAt(0, 0.02, 0);
+    _pvScene.add(new THREE.AmbientLight(0x223355, 1.4));
+    const dl = new THREE.DirectionalLight(0xffffff, 4.0);
+    dl.position.set(0.5, 1.5, 1.5); _pvScene.add(dl);
+    const dl2 = new THREE.DirectionalLight(0x6699ff, 1.5);
+    dl2.position.set(-1.5, -0.5, 0.5); _pvScene.add(dl2);
     _pvR = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     _pvR.setSize(200, 200);
 }
@@ -1990,114 +1990,62 @@ function _knifeThumb(id) {
     return _thumbCache[id];
 }
 
-/* ── Procedural knife models for preview ── */
+/* ── Procedural karambit model for all skins ── */
 function _buildKnife3D(id) {
+    const skin = KNIFE_SHOP.find(k => k.id === id) || KNIFE_SHOP[0];
+    const bCol = skin.color  || 0xb0b8c8;
+    const hCol = skin.hColor || 0x1a1a2e;
     const g = new THREE.Group();
-    const B = new THREE.MeshPhongMaterial({ color: 0xc8d8e8, specular: 0xffffff, shininess: 140, side: THREE.DoubleSide });
-    const H = new THREE.MeshPhongMaterial({ color: 0x1a1a1a, specular: 0x333333, shininess: 30 });
-    const G = new THREE.MeshPhongMaterial({ color: 0x4a4a4a, specular: 0x999999, shininess: 80 });
-    const W = new THREE.MeshPhongMaterial({ color: 0x5a2e0a, specular: 0x220a00, shininess: 20 });
-    const R = new THREE.MeshPhongMaterial({ color: 0xaa1100, specular: 0x440000, shininess: 40 });
 
-    const mp = (x,y,z,w,h,d,mat,rx=0,ry=0,rz=0) => {
-        const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat);
-        m.position.set(x,y,z); m.rotation.set(rx,ry,rz); g.add(m);
-    };
+    const B  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+    const B2 = new THREE.MeshPhongMaterial({ color: new THREE.Color(bCol).multiplyScalar(0.55), specular: 0xaaaaaa, shininess: 80, side: THREE.DoubleSide });
+    const H  = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
+    const G  = new THREE.MeshPhongMaterial({ color: 0x555566, specular: 0xaaaacc, shininess: 100 });
 
-    switch (id) {
-        case 'butterfly': {
-            mp(0, 0, -0.07, 0.007, 0.005, 0.13, B);            // blade
-            mp(0, 0.004, -0.13, 0.005, 0.003, 0.015, B, 0,0,0.3); // tip
-            mp(-0.012, 0, 0.05, 0.016, 0.010, 0.085, H);        // handle 1
-            mp( 0.012, 0, 0.05, 0.016, 0.010, 0.085, H);        // handle 2
-            mp(0, 0, 0.004, 0.020, 0.006, 0.006, G);            // pivot
-            g.rotation.set(0.25, 0.5, 0.1);
-            break;
-        }
-        case 'gut': {
-            mp(0, 0.003, -0.055, 0.006, 0.022, 0.11, B);
-            mp(0, 0.016, -0.095, 0.005, 0.007, 0.025, B, 0,0,-0.25);
-            mp(0, 0, 0.007, 0.024, 0.016, 0.008, G);
-            mp(0, 0, 0.065, 0.018, 0.028, 0.095, H, 0,0,0.06);
-            mp(0, 0, 0.115, 0.020, 0.030, 0.010, G);
-            g.rotation.set(0.2, 0.5, 0.08);
-            break;
-        }
-        case 'flip': {
-            mp(0, 0, -0.075, 0.005, 0.016, 0.15, B);
-            const tip = new THREE.Mesh(new THREE.ConeGeometry(0.005, 0.022, 6), B);
-            tip.position.set(0,0,-0.155); tip.rotation.x=Math.PI/2; g.add(tip);
-            mp(0, 0, 0.010, 0.014, 0.010, 0.010, G);
-            mp(0, 0, 0.072, 0.015, 0.024, 0.105, H);
-            mp(0, 0, 0.126, 0.017, 0.026, 0.012, G);
-            g.rotation.set(0.2, 0.45, 0.0);
-            break;
-        }
-        case 'daggers': {
-            mp(-0.022, 0, -0.05, 0.005, 0.013, 0.10, B);
-            mp( 0.022, 0, -0.05, 0.005, 0.013, 0.10, B);
-            const t1 = new THREE.Mesh(new THREE.ConeGeometry(0.004,0.018,5), B);
-            t1.position.set(-0.022,0,-0.105); t1.rotation.x=Math.PI/2; g.add(t1);
-            const t2 = new THREE.Mesh(new THREE.ConeGeometry(0.004,0.018,5), B);
-            t2.position.set(0.022,0,-0.105); t2.rotation.x=Math.PI/2; g.add(t2);
-            mp(-0.022, 0, 0.008, 0.020, 0.013, 0.008, G);
-            mp( 0.022, 0, 0.008, 0.020, 0.013, 0.008, G);
-            mp(-0.022, 0, 0.065, 0.015, 0.022, 0.09, H);
-            mp( 0.022, 0, 0.065, 0.015, 0.022, 0.09, H);
-            g.rotation.set(0.3, 0.3, 0.08);
-            break;
-        }
-        case 'm9': {
-            mp(0, 0.004, -0.085, 0.006, 0.025, 0.17, B);
-            for (let i=0;i<4;i++) mp(0, 0.019, -0.025-i*0.032, 0.004, 0.009, 0.009, B, 0,0,0.45);
-            mp(0, 0, 0.010, 0.036, 0.014, 0.010, G);
-            mp(0, 0, 0.068, 0.018, 0.028, 0.100, W);
-            mp(0, 0, 0.038, 0.022, 0.032, 0.007, G);
-            mp(0, 0, 0.100, 0.022, 0.032, 0.007, G);
-            g.rotation.set(0.18, 0.5, 0.0);
-            break;
-        }
-        case 'karambit': {
-            const segs = 8;
-            for (let i=0;i<segs;i++) {
-                const a = (i/(segs-1))*Math.PI*0.75 - Math.PI*0.1;
-                const r = 0.072;
-                const seg = new THREE.Mesh(new THREE.BoxGeometry(0.007,0.015,0.026), B);
-                seg.position.set(Math.sin(a)*r - 0.02, 0, -Math.cos(a)*r - 0.01);
-                seg.rotation.y = -a; g.add(seg);
-            }
-            const ring = new THREE.Mesh(new THREE.TorusGeometry(0.020,0.005,8,16), G);
-            ring.position.set(0,0,0.085); ring.rotation.x=Math.PI/2; g.add(ring);
-            mp(-0.005, 0, 0.038, 0.018, 0.026, 0.065, H, 0,0,0.15);
-            g.rotation.set(0.15, 0.5, 0.25);
-            break;
-        }
-        case 'stiletto': {
-            const blade = new THREE.Mesh(new THREE.ConeGeometry(0.0045, 0.20, 6), B);
-            blade.position.z=-0.10; blade.rotation.x=Math.PI/2; g.add(blade);
-            mp(0, 0, 0.006, 0.030, 0.008, 0.008, G);
-            mp(0, 0, 0.068, 0.013, 0.018, 0.105, H);
-            const pom = new THREE.Mesh(new THREE.SphereGeometry(0.013,8,6), G);
-            pom.position.z=0.125; g.add(pom);
-            g.rotation.set(0.15, 0.42, 0.0);
-            break;
-        }
-        case 'talon': {
-            const segs2 = 6;
-            for (let i=0;i<segs2;i++) {
-                const a = (i/(segs2-1))*Math.PI*0.55 - Math.PI*0.08;
-                const r = 0.075;
-                const seg = new THREE.Mesh(new THREE.BoxGeometry(0.006,0.012,0.030), B);
-                seg.position.set(Math.sin(a)*r-0.02, 0, -Math.cos(a)*r);
-                seg.rotation.y=-a*0.85; g.add(seg);
-            }
-            mp(-0.018, 0, 0.010, 0.028, 0.012, 0.009, G);
-            mp(0, 0, 0.065, 0.016, 0.024, 0.095, H, 0,0,0.18);
-            mp(0, 0, 0.114, 0.018, 0.028, 0.010, G);
-            g.rotation.set(0.2, 0.42, 0.12);
-            break;
-        }
+    // Curved blade — karambit hook
+    const segs = 12;
+    for (let i = 0; i < segs; i++) {
+        const t  = i / (segs - 1);
+        const a  = t * Math.PI * 0.82 - Math.PI * 0.06;
+        const r  = 0.085;
+        const w  = 0.006 + (1 - t) * 0.004;
+        const h  = 0.022 - t * 0.014;
+        const seg = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.022), t < 0.5 ? B : B2);
+        seg.position.set(Math.sin(a) * r - 0.025, 0, -Math.cos(a) * r + 0.005);
+        seg.rotation.y = -a;
+        g.add(seg);
     }
+    // Spine detail
+    for (let i = 0; i < 4; i++) {
+        const t  = (i + 0.5) / 4;
+        const a  = t * Math.PI * 0.82 - Math.PI * 0.06;
+        const r  = 0.083;
+        const sp = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.003, 0.006), G);
+        sp.position.set(Math.sin(a) * r - 0.025, 0.012, -Math.cos(a) * r + 0.005);
+        sp.rotation.y = -a;
+        g.add(sp);
+    }
+    // Guard / bolster
+    const guard = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.032, 0.012), G);
+    guard.position.set(-0.007, 0, 0.006); g.add(guard);
+    // Handle
+    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.020, 0.028, 0.076), H);
+    handle.position.set(-0.002, 0, 0.054); g.add(handle);
+    // Handle texture strips
+    for (let i = 0; i < 3; i++) {
+        const strip = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.004, 0.004), G);
+        strip.position.set(-0.002, 0.016, 0.022 + i * 0.022); g.add(strip);
+    }
+    // Finger ring
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.006, 10, 20), G);
+    ring.position.set(-0.002, 0, 0.100); ring.rotation.x = Math.PI / 2; g.add(ring);
+    // Pommel
+    const pom = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.010, 0.010, 10), G);
+    pom.position.set(-0.002, 0, 0.090); pom.rotation.x = Math.PI / 2; g.add(pom);
+
+    // "In-hand" angle — blade pointing up-left, ring toward viewer
+    g.rotation.set(-0.35, -0.55, 0.30);
+    g.position.set(0.01, 0.01, 0);
     return g;
 }
 

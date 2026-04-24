@@ -261,6 +261,36 @@ export class GameRoomDO {
 // ============================================================
 // WORKER
 // ============================================================
+// AUTH HELPERS
+// ============================================================
+async function hashPassword(password, salt) {
+  const enc = new TextEncoder();
+  const buf = await crypto.subtle.digest('SHA-256', enc.encode(salt + password));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function genToken() {
+  return Array.from(crypto.getRandomValues(new Uint8Array(32))).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function genSalt() {
+  return Array.from(crypto.getRandomValues(new Uint8Array(16))).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function json(data, status=200, cors) {
+  return new Response(JSON.stringify(data), { status, headers: { 'Content-Type':'application/json', ...cors } });
+}
+
+async function getSession(env, request) {
+  const auth = request.headers.get('Authorization') || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) return null;
+  const username = await env.USERS.get('session:' + token);
+  if (!username) return null;
+  return { token, username };
+}
+
+// ============================================================
 export default {
   async fetch(request, env) {
     const cors = {
@@ -272,6 +302,76 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
 
     const url = new URL(request.url);
+
+    // ── AUTH: Register ──────────────────────────────────────
+    if (url.pathname === '/auth/register' && request.method === 'POST') {
+      let body; try { body = await request.json(); } catch { return json({ error: 'Bad JSON' }, 400, cors); }
+      const username = (body.username||'').trim().slice(0,20).replace(/[^a-zA-Z0-9_]/g,'');
+      const password = (body.password||'').slice(0,100);
+      if (username.length < 3) return json({ error: 'Numele trebuie sa aiba minim 3 caractere' }, 400, cors);
+      if (password.length < 4) return json({ error: 'Parola trebuie sa aiba minim 4 caractere' }, 400, cors);
+
+      const existing = await env.USERS.get('user:' + username.toLowerCase());
+      if (existing) return json({ error: 'Numele este deja luat' }, 409, cors);
+
+      const salt = genSalt();
+      const hash = await hashPassword(password, salt);
+      const userData = { username, salt, hash, gold: 0, ownedKnives: ['k_plain'], equippedKnife: 'k_plain', createdAt: Date.now() };
+      await env.USERS.put('user:' + username.toLowerCase(), JSON.stringify(userData));
+
+      const token = genToken();
+      await env.USERS.put('session:' + token, username.toLowerCase(), { expirationTtl: 60*60*24*30 });
+
+      return json({ token, username, gold: 0, ownedKnives: ['k_plain'], equippedKnife: 'k_plain' }, 200, cors);
+    }
+
+    // ── AUTH: Login ─────────────────────────────────────────
+    if (url.pathname === '/auth/login' && request.method === 'POST') {
+      let body; try { body = await request.json(); } catch { return json({ error: 'Bad JSON' }, 400, cors); }
+      const username = (body.username||'').trim().toLowerCase();
+      const password = (body.password||'');
+
+      const raw = await env.USERS.get('user:' + username);
+      if (!raw) return json({ error: 'Cont inexistent' }, 401, cors);
+      const userData = JSON.parse(raw);
+
+      const hash = await hashPassword(password, userData.salt);
+      if (hash !== userData.hash) return json({ error: 'Parola gresita' }, 401, cors);
+
+      const token = genToken();
+      await env.USERS.put('session:' + token, username, { expirationTtl: 60*60*24*30 });
+
+      return json({ token, username: userData.username, gold: userData.gold||0, ownedKnives: userData.ownedKnives||['k_plain'], equippedKnife: userData.equippedKnife||'k_plain' }, 200, cors);
+    }
+
+    // ── AUTH: Save profile ──────────────────────────────────
+    if (url.pathname === '/auth/save' && request.method === 'POST') {
+      const session = await getSession(env, request);
+      if (!session) return json({ error: 'Neautentificat' }, 401, cors);
+
+      let body; try { body = await request.json(); } catch { return json({ error: 'Bad JSON' }, 400, cors); }
+
+      const raw = await env.USERS.get('user:' + session.username);
+      if (!raw) return json({ error: 'User negasit' }, 404, cors);
+      const userData = JSON.parse(raw);
+
+      if (typeof body.gold === 'number') userData.gold = Math.max(0, body.gold);
+      if (Array.isArray(body.ownedKnives)) userData.ownedKnives = body.ownedKnives;
+      if (typeof body.equippedKnife === 'string') userData.equippedKnife = body.equippedKnife;
+
+      await env.USERS.put('user:' + session.username, JSON.stringify(userData));
+      return json({ ok: true }, 200, cors);
+    }
+
+    // ── AUTH: Get profile ───────────────────────────────────
+    if (url.pathname === '/auth/me' && request.method === 'GET') {
+      const session = await getSession(env, request);
+      if (!session) return json({ error: 'Neautentificat' }, 401, cors);
+      const raw = await env.USERS.get('user:' + session.username);
+      if (!raw) return json({ error: 'User negasit' }, 404, cors);
+      const u = JSON.parse(raw);
+      return json({ username: u.username, gold: u.gold||0, ownedKnives: u.ownedKnives||['k_plain'], equippedKnife: u.equippedKnife||'k_plain' }, 200, cors);
+    }
 
     if (url.pathname === '/matchmaking') {
       if (request.headers.get('Upgrade') !== 'websocket')
