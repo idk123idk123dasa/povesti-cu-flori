@@ -195,6 +195,12 @@ canvas{display:block;position:fixed;inset:0}
   </div>
 </div>
 
+<div class="screen hide" id="s-start" style="cursor:crosshair" onclick="onStartClick()">
+  <h1 style="color:#00d4ff;font-size:38px">PREGĂTIT!</h1>
+  <p style="font-size:18px;color:#aaa;margin-top:8px">Click oriunde pentru a începe</p>
+  <p style="font-size:13px;color:#555;margin-top:16px">WASD = mișcare &nbsp;|&nbsp; Mouse = vizare &nbsp;|&nbsp; Click = trage<br>1/2/3 = armă &nbsp;|&nbsp; R = reîncarcă &nbsp;|&nbsp; F = inspecție &nbsp;|&nbsp; Esc = cursor</p>
+</div>
+
 <div class="screen hide" id="s-queue">
   <h1 id="q-title">CĂUTARE...</h1>
   <p id="q-info">Cauți jucători pentru <span id="q-mode"></span></p>
@@ -986,7 +992,8 @@ function respawn(pos) {
   updateHPHUD();
   document.getElementById('s-dead').classList.add('hide');
   document.getElementById('spec-lbl').style.display = 'none';
-  canvas.requestPointerLock();
+  showScreen('s-start');
+  pendingGameStart = () => {}; // doar reactivează pointer lock
 }
 
 function flashDamage() {
@@ -1158,6 +1165,21 @@ function sendPositionUpdate() {
 // ═══════════════════════════════════════════════════════
 // GAME FLOW
 // ═══════════════════════════════════════════════════════
+let pendingGameStart = null; // funcție de apelat după pointer lock
+
+function onStartClick() {
+  document.getElementById('s-start').classList.add('hide');
+  canvas.requestPointerLock();
+}
+
+document.addEventListener('pointerlockchange', () => {
+  if(document.pointerLockElement === canvas && pendingGameStart) {
+    const fn = pendingGameStart;
+    pendingGameStart = null;
+    fn();
+  }
+});
+
 function beginPlay() {
   gameState = 'playing';
   hp = 100; armor = 0; alive = true;
@@ -1171,7 +1193,6 @@ function beginPlay() {
   showScreen(null);
   updateHPHUD(); updateAmmoHUD(); updateScoreHUD();
   document.getElementById('score-mode').textContent = selectedMode.toUpperCase() + ' • PRIMUL LA ' + maxKills;
-  canvas.requestPointerLock();
 }
 
 function startPractice() {
@@ -1181,8 +1202,12 @@ function startPractice() {
   camera.position.set(-24,1.7,0);
   yaw = 0; pitch = 0;
   spawnBots();
-  beginPlay();
-  document.getElementById('score-mode').textContent = 'PRACTICĂ';
+  // Arată ecranul "click pentru start" — pointer lock necesită click direct
+  showScreen('s-start');
+  pendingGameStart = () => {
+    beginPlay();
+    document.getElementById('score-mode').textContent = 'PRACTICĂ';
+  };
 }
 
 function startCountdown(sec, cb) {
@@ -1279,7 +1304,6 @@ function confirmName() {
   playerName = n;
   localStorage.setItem('fps_name', n);
   if(selectedMode === 'practice') {
-    showScreen(null);
     startPractice();
   } else {
     showScreen('s-queue');
