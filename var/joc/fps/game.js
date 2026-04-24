@@ -444,7 +444,7 @@ function buildKnife() {
         clone.rotation.set(0.25, Math.PI, -0.65);
         g.add(clone);
         knifeGroup = g;
-        g.position.set(0.25, -0.13, -0.28);
+        g.position.set(0.34, -0.13, -0.28);
         g.rotation.set(0, 0, 0);
         return g;
     }
