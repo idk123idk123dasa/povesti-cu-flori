@@ -25,26 +25,245 @@
         <p>CLICK to Shoot</p>
     </div>
 
-    <div id="lobby" style="display: none;">
-        <h1>Multiplayer 1v1</h1>
-        <p id="lobby-status">Connecting to server...</p>
-        <div id="connection-indicator" style="margin-top: 20px;">
-            <div style="width: 20px; height: 20px; background: yellow; border-radius: 50%; margin: 0 auto;"></div>
+    <div id="lobby-ui">
+        <nav class="top-nav">
+            <div class="nav-links">
+                <button class="nav-item active" id="nav-home">HOME</button>
+                <button class="nav-item" id="nav-play">PLAY</button>
+                <button class="nav-item" id="nav-collection">COLLECTION</button>
+                <button class="nav-item" id="nav-shop">SHOP</button>
+            </div>
+            <div class="user-info-container">
+                <button id="login-signup-btn" class="nav-item">LOGIN / SIGNUP</button>
+                <div class="user-info" style="display: none;">
+                    <span id="player-name">RECRUIT_V1</span>
+                    <div class="user-avatar"></div>
+                    <button id="logout-btn" class="nav-item logout-small">LOGOUT</button>
+                </div>
+            </div>
+        </nav>
+
+        <div id="character-preview-container">
+            <img src="character_lobby.png" alt="Character Preview" id="character-preview">
+        </div>
+
+        <div id="mode-selection-modal" class="modal">
+            <div class="modal-content">
+                <h2>SELECT GAME MODE</h2>
+                <div class="modes-grid">
+                    <button class="mode-card" data-mode="1v1">
+                        <span class="mode-title">1v1</span>
+                        <span class="mode-desc">Duel</span>
+                    </button>
+                    <button class="mode-card" data-mode="2v2">
+                        <span class="mode-title">2v2</span>
+                        <span class="mode-desc">Wingman</span>
+                    </button>
+                    <button class="mode-card" data-mode="3v3">
+                        <span class="mode-title">3v3</span>
+                        <span class="mode-desc">Team Deathmatch</span>
+                    </button>
+                    <button class="mode-card" data-mode="1vBot">
+                        <span class="mode-title">1vBOT</span>
+                        <span class="mode-desc">Training</span>
+                    </button>
+                </div>
+                <button id="close-modes" class="close-btn">BACK</button>
+            </div>
+        </div>
+        <div id="matchmaking-modal" class="modal">
+            <div class="modal-content matchmaking-content">
+                <div class="loader"></div>
+                <h2>SEARCHING FOR MATCH</h2>
+                <div class="matchmaking-details">
+                    <p>MODE: <span id="current-mode-display">1v1</span></p>
+                    <p>STATUS: <span id="matchmaking-status">Connecting...</span></p>
+                    <p id="players-found-container">PLAYERS FOUND: <span id="found-count">1</span>/<span
+                            id="required-count">2</span></p>
+                </div>
+                <button id="cancel-matchmaking" class="close-btn">CANCEL</button>
+            </div>
+        </div>
+
+        <div id="auth-modal" class="modal">
+            <div class="modal-content auth-content">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tab-login">LOGIN</button>
+                    <button class="auth-tab" id="tab-signup">SIGNUP</button>
+                </div>
+
+                <div id="auth-error" style="color: #ff4444; margin-bottom: 15px; font-size: 14px; display: none;"></div>
+
+                <form id="login-form" class="auth-form active">
+                    <div class="input-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" placeholder="Enter username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter password" required>
+                    </div>
+                    <div class="remember-me">
+                        <input type="checkbox" id="login-remember">
+                        <label for="login-remember">Remember Me</label>
+                    </div>
+                    <button type="submit" class="auth-submit">SIGN IN</button>
+                </form>
+
+                <form id="signup-form" class="auth-form">
+                    <div class="input-group">
+                        <label for="signup-username">Username</label>
+                        <input type="text" id="signup-username" placeholder="Choose username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" placeholder="Choose password" required>
+                    </div>
+                    <button type="submit" class="auth-submit">CREATE ACCOUNT</button>
+                </form>
+
+                <button id="close-auth" class="close-btn">BACK</button>
+            </div>
+        </div>
+
+        <div id="team-selection-modal" class="modal">
+            <div class="modal-content team-selection-content">
+                <h2>SELECT YOUR TEAM</h2>
+                <div class="teams-grid">
+                    <div class="team-card terrorist-card" data-team="T">
+                        <div class="team-icon">🔴</div>
+                        <h3>TERRORISTS</h3>
+                        <p>Attack • Plant the bomb</p>
+                        <button class="team-select-btn">SELECT T</button>
+                    </div>
+                    <div class="team-card ct-card" data-team="CT">
+                        <div class="team-icon">🔵</div>
+                        <h3>COUNTER-TERRORISTS</h3>
+                        <p>Defend • Defuse the bomb</p>
+                        <button class="team-select-btn">SELECT CT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="buy-menu-modal" class="modal">
+            <div class="modal-content buy-menu-content">
+                <div class="buy-header">
+                    <h2>BUY MENU</h2>
+                    <div class="buy-info">
+                        <span id="player-money">$800</span>
+                        <span id="buy-timer">15s</span>
+                    </div>
+                </div>
+                <div class="buy-categories">
+                    <button class="buy-tab active" data-category="pistols">PISTOLS</button>
+                    <button class="buy-tab" data-category="smgs">SMGs</button>
+                    <button class="buy-tab" data-category="rifles">RIFLES</button>
+                    <button class="buy-tab" data-category="heavy">HEAVY</button>
+                    <button class="buy-tab" data-category="equipment">EQUIPMENT</button>
+                    <button class="buy-tab" data-category="grenades">GRENADES</button>
+                </div>
+                <div id="buy-items-container" class="buy-items-grid">
+                    <!-- Weapon cards will be populated by JS -->
+                </div>
+                <button id="close-buy-menu" class="close-btn">CLOSE</button>
+            </div>
+        </div>
+
+        <!-- NEW LOBBY SHOP MODAL -->
+        <div id="lobby-shop-modal" class="modal">
+            <div class="modal-content shop-content" style="max-width: 900px; padding: 30px;">
+                <div class="shop-header"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="color: #ff00ff; margin: 0; font-family: 'Outfit', sans-serif;">MATA SKINS SHOP</h2>
+                    <div id="lobby-mata-display" style="color: #ff00ff; font-weight: bold; font-size: 24px;">MATA: 0
+                    </div>
+                </div>
+                <div id="shop-items-container" class="buy-items-grid">
+                    <!-- Skins will be populated by JS -->
+                </div>
+                <button id="close-shop" class="close-btn" style="margin-top: 20px;">BACK</button>
+            </div>
+        </div>
+
+        <!-- NEW COLLECTION MODAL -->
+        <div id="lobby-collection-modal" class="modal">
+            <div class="modal-content collection-content" style="max-width: 900px; padding: 30px;">
+                <h2 style="color: #00ffff; margin-bottom: 20px; font-family: 'Outfit', sans-serif;">YOUR COLLECTION</h2>
+                <div id="collection-items-container" class="buy-items-grid">
+                    <!-- Owned skins will be populated by JS -->
+                </div>
+                <button id="close-collection" class="close-btn" style="margin-top: 20px;">BACK</button>
+            </div>
         </div>
     </div>
 
     <div id="hud">
-        <div id="crosshair">+</div>
-        <div id="stats">
-            <div id="health">Health: 100</div>
-            <div id="score">Score: 0</div>
+        <div id="top-score-tile">0 - 0</div>
+        <div id="freeze-time-msg"
+            style="display: none; position: fixed; top: 15%; left: 50%; transform: translateX(-50%); color: #ffcc00; font-size: 32px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); z-index: 1001; font-family: 'Inter', sans-serif;">
+            FREEZE TIME</div>
+        <div id="crosshair">•</div>
+        <div id="pickup-hint"
+            style="display: none; position: fixed; top: 60%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.6); color: #00ffff; padding: 5px 15px; border-radius: 5px; font-family: 'Inter', sans-serif; font-size: 18px; border: 1px solid #00ffff; pointer-events: none; z-index: 1000;">
+            PRESS [E] TO PICK UP</div>
+        <div id="hud-left">
+            <div id="health">HP: 100</div>
+            <div id="armor-container" style="display: flex; align-items: center; gap: 5px;">
+                <div id="armor">AP: 0</div>
+                <div id="helmet-icon" style="display: none; font-size: 14px;">🪖</div>
+            </div>
+        </div>
+        <div id="hud-right">
+            <div id="money-display">$800</div>
+            <div id="mata-container"
+                style="display: flex; align-items: center; gap: 5px; color: #ff00ff; font-weight: bold; text-shadow: 0 0 5px rgba(255,0,255,0.5);">
+                <span id="mata-display">MATA: 0</span>
+                <span id="mata-error" style="display: none; color: #ff0000; margin-left: 10px; font-size: 14px;">NOT
+                    ENOUGH MATA</span>
+            </div>
+            <div id="kills-display">KILLS: 0</div>
+            <div id="ammo-display">30 / 120</div>
         </div>
     </div>
 
     <div id="game-over">
         <h1>GAME OVER</h1>
-        <p id="final-score">Score: 0</p>
-        <button onclick="location.reload()">Try Again</button>
+        <p id="final-score">Scoru: 0</p>
+        <button id="return-to-lobby-btn">RETURN TO LOBBY</button>
+    </div>
+
+    <div id="win-screen"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; pointer-events: none;">
+        <div
+            style="background: rgba(0, 255, 0, 0.1); border: 5px solid #00ff00; border-radius: 25px; padding: 40px 80px; box-shadow: 0 0 50px rgba(0, 255, 0, 0.3); backdrop-filter: blur(5px);">
+            <h1
+                style="color: #00ff00; font-size: 80px; margin: 0; text-shadow: 0 0 20px #00ff00; font-family: 'Outfit', sans-serif;">
+                YOU WIN</h1>
+        </div>
+    </div>
+
+    <div id="death-screen"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; pointer-events: none;">
+        <div
+            style="background: rgba(255, 0, 0, 0.1); border: 5px solid #ff0000; border-radius: 25px; padding: 40px 80px; box-shadow: 0 0 50px rgba(255, 0, 0, 0.3); backdrop-filter: blur(5px);">
+            <h1
+                style="color: #ff0000; font-size: 80px; margin: 0; text-shadow: 0 0 20px #ff0000; font-family: 'Outfit', sans-serif;">
+                WASTED</h1>
+            <button id="death-return-btn"
+                style="margin-top: 20px; padding: 10px 20px; background: rgba(255, 0, 0, 0.5); border: 2px solid #ff0000; color: white; cursor: pointer; display: none;">RETURN
+                TO LOBBY</button>
+        </div>
+    </div>
+
+    <div id="scope-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 500; pointer-events: none; background: radial-gradient(circle at center, transparent 30%, black 31%, black 100%);">
+        <div
+            style="position: absolute; top: 50%; left: 50%; width: 2px; height: 40px; background: red; transform: translate(-50%, -50%);">
+        </div>
+        <div
+            style="position: absolute; top: 50%; left: 50%; width: 40px; height: 2px; background: red; transform: translate(-50%, -50%);">
+        </div>
     </div>
 
     <script type="module" src="game.js"></script>
