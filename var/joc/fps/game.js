@@ -441,7 +441,7 @@ function buildKnife() {
         const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 160, side: THREE.DoubleSide });
         clone.traverse(child => { if (child.isMesh) child.material = mat; });
         // Model face is in XY plane (+Z side). Rotate so blade faces player slightly
-        clone.rotation.set(0.3, 0.2, -0.15);
+        clone.rotation.set(0.2, Math.PI - 0.3, 0.1);
         g.add(clone);
         knifeGroup = g;
         g.position.set(0.12, -0.15, -0.22);
