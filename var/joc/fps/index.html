@@ -570,11 +570,13 @@ document.addEventListener('mousemove', e => {
 });
 document.addEventListener('mousedown', e => {
   if(e.button !== 0) return;
-  if(gameState !== 'playing') { canvas.requestPointerLock(); return; }
+  if(gameState !== 'playing') return; // nu blocare pointer când ești în meniu
   if(!alive) return;
   tryShoot();
 });
-canvas.addEventListener('click', () => { if(gameState==='playing') canvas.requestPointerLock(); });
+canvas.addEventListener('click', () => {
+  if(gameState === 'playing') canvas.requestPointerLock();
+});
 
 function movePlayer(dt) {
   if(!alive) return;
