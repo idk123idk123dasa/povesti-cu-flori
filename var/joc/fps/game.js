@@ -317,20 +317,57 @@ const _akMats = [
     new THREE.MeshPhongMaterial({ color: 0x888888, specular: 0xaaaaaa, shininess: 120, side: THREE.DoubleSide }),
 ];
 
-// Karambit OBJ: flat in XY plane, Y longest axis (range ~9.8), center X=2.4 Y=0.46
+// Karambit2 OBJ: flat in XZ plane (Y=0.02), separate Blade/Grip/Grip_Metal parts
 let _karambitTemplate = null;
 function preloadKarambit() {
     return new Promise(resolve => {
-        new OBJLoader().load('karambit.obj', obj => {
-            const SCALE = 0.020;
+        new OBJLoader().load('karambit2.obj', obj => {
+            const SCALE = 1.4;
             obj.scale.setScalar(SCALE);
-            obj.position.set(-2.399 * SCALE, -0.463 * SCALE, 0.287 * SCALE);
             obj.traverse(child => {
                 if (child.isMesh) { child.castShadow = false; child.receiveShadow = false; }
             });
             _karambitTemplate = obj;
             resolve();
-        }, undefined, () => resolve());
+        }, undefined, () => {
+            // Fallback to old karambit
+            new OBJLoader().load('karambit.obj', obj => {
+                obj.scale.setScalar(0.020);
+                obj.position.set(-2.399*0.020, -0.463*0.020, 0.287*0.020);
+                obj.traverse(c => { if (c.isMesh) c.castShadow = false; });
+                _karambitTemplate = obj;
+                resolve();
+            }, undefined, () => resolve());
+        });
+    });
+}
+
+function _applyKarambitMaterials(obj, bCol) {
+    const bladeMat = new THREE.MeshPhongMaterial({
+        color: bCol,
+        specular: new THREE.Color(1, 1, 1),
+        shininess: 320,
+        emissive: new THREE.Color(bCol).multiplyScalar(0.15),
+        side: THREE.DoubleSide
+    });
+    const gripMat = new THREE.MeshPhongMaterial({
+        color: 0x111111,
+        specular: new THREE.Color(0.3, 0.3, 0.3),
+        shininess: 60,
+        side: THREE.DoubleSide
+    });
+    const metalMat = new THREE.MeshPhongMaterial({
+        color: 0x2a2a2a,
+        specular: new THREE.Color(0.8, 0.8, 0.8),
+        shininess: 200,
+        side: THREE.DoubleSide
+    });
+    obj.traverse(child => {
+        if (!child.isMesh) return;
+        const n = child.name.toLowerCase();
+        if (n.includes('blade')) child.material = bladeMat;
+        else if (n.includes('metal')) child.material = metalMat;
+        else child.material = gripMat;
     });
 }
 
@@ -438,13 +475,12 @@ function buildKnife() {
 
     if (_karambitTemplate) {
         const clone = _karambitTemplate.clone(true);
-        const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 160, side: THREE.DoubleSide });
-        clone.traverse(child => { if (child.isMesh) child.material = mat; });
-        // Blade along Y axis. Tilt Z so blade points upper-left (CS2 hold style)
-        clone.rotation.set(0.15, Math.PI, -0.75);
+        _applyKarambitMaterials(clone, bCol);
+        // Model flat in XZ. Rotate X+90 to stand up, then tilt Z for CS2 hold
+        clone.rotation.set(Math.PI / 2, 0, -0.6);
         g.add(clone);
         knifeGroup = g;
-        g.position.set(0.38, -0.10, -0.28);
+        g.position.set(0.30, -0.12, -0.26);
         g.rotation.set(0, 0, 0);
         return g;
     }
@@ -1012,9 +1048,15 @@ function toggleScope() {
 ═══════════════════════════════════════════════ */
 const INSPECT_DURATION = 1.8; // seconds
 
+let _knifeInspectStart = -9999;
+const KNIFE_INSPECT_MS = 1800;
+
 function startInspect() {
     if (inspecting) return;
-    if (currentWeapon === 'knife') return;
+    if (currentWeapon === 'knife') {
+        _knifeInspectStart = performance.now();
+        return;
+    }
     inspecting = true;
     inspectTime = 0;
 }
@@ -1033,70 +1075,37 @@ const BFLY_DURATION = 2.0; // seconds for full flip sequence
 function updateWeaponAnimations(dt) {
     if (!weaponMesh) return;
 
-    // ── Butterfly knife idle + flip ──────────────────
+    // ── Karambit idle + inspect (F) ──────────────────
     if (currentWeapon === 'knife') {
-        const now = performance.now() * 0.001;
+        const now    = performance.now();
+        const nowSec = now * 0.001;
+        const BASE_POS = { x: 0.30, y: -0.12, z: -0.26 };
+        const BASE_ROT = { x: Math.PI / 2, y: 0, z: -0.6 };
 
-        if (knifeFlipping) {
-            knifeAnim = Math.min(1, knifeAnim + dt / BFLY_DURATION);
-            const t = knifeAnim;
+        const elapsed = now - _knifeInspectStart;
+        const inspecting_knife = elapsed < KNIFE_INSPECT_MS;
 
-            /* CS2-style butterfly flip phases:
-               0.00-0.12  safe handle opens  (swings back 180°)
-               0.12-0.30  knife drops/tilts  (wrist toss setup)
-               0.30-0.55  full spin          (group rotates 360° on Z)
-               0.55-0.68  knife returns      (lands back in hand)
-               0.68-0.82  bite handle closes (swings forward 180°)
-               0.82-1.00  settle back to rest
-            */
-
-            // Safe handle (h1): opens from 0 → -π then stays open
-            const h1Open = ease(remap(t, 0.00, 0.12));
-            // Bite handle (h2): opens with delay → closes
-            const h2Open = ease(remap(t, 0.15, 0.30));
-            const h2Close= ease(remap(t, 0.68, 0.82));
-
-            if (knifeHandle1) knifeHandle1.rotation.z = -Math.PI * h1Open;
-            if (knifeHandle2) knifeHandle2.rotation.z =  Math.PI * Math.max(0, h2Open - h2Close);
-
-            // Whole knife group: toss into the air and spin
-            const tossDrop  = ease(remap(t, 0.12, 0.30)); // lift up
-            const spinPhase = ease(remap(t, 0.25, 0.60)); // full rotation
-            const catchDown = ease(remap(t, 0.55, 0.75)); // come back
-
-            const baseX = 0.1, baseY = -0.17, baseZ = -0.22;
-            weaponMesh.position.x = baseX + Math.sin(spinPhase * Math.PI) *  0.06;
-            weaponMesh.position.y = baseY + Math.sin(tossDrop  * Math.PI) *  0.12
-                                          - Math.sin(catchDown * Math.PI) *  0.08;
-            weaponMesh.position.z = baseZ;
-
-            // Spin: two full rotations on X during the toss
-            weaponMesh.rotation.x = 0.1  + spinPhase * Math.PI * 2;
-            // Side tilt during toss
-            weaponMesh.rotation.z = 0.08 + Math.sin(spinPhase * Math.PI) * 0.35;
-
-            // Settle back smoothly after catch
-            const settle = ease(remap(t, 0.80, 1.00));
-            if (settle > 0) {
-                weaponMesh.rotation.x += (0.1  - weaponMesh.rotation.x) * settle * 0.9;
-                weaponMesh.rotation.z += (0.08 - weaponMesh.rotation.z) * settle * 0.9;
-            }
-
-            if (knifeAnim >= 1) {
-                knifeFlipping = false;
-                knifeAnim = 0;
-                if (knifeHandle1) knifeHandle1.rotation.z = 0;
-                if (knifeHandle2) knifeHandle2.rotation.z = 0;
-                weaponMesh.position.set(baseX, baseY, baseZ);
-                weaponMesh.rotation.set(0.1, 0.05, 0.08);
-            }
+        if (inspecting_knife) {
+            const t = elapsed / KNIFE_INSPECT_MS;
+            const lift   = ease(remap(t, 0.05, 0.45));
+            const spin   = ease(remap(t, 0.15, 0.70));
+            const settle = ease(remap(t, 0.72, 1.00));
+            weaponMesh.position.x = BASE_POS.x - lift * 0.08;
+            weaponMesh.position.y = BASE_POS.y + lift * 0.10 - settle * 0.10;
+            weaponMesh.position.z = BASE_POS.z;
+            weaponMesh.rotation.x = BASE_ROT.x + spin * Math.PI * 1.5 - settle * Math.PI * 1.5;
+            weaponMesh.rotation.y = spin * 0.4 - settle * 0.4;
+            weaponMesh.rotation.z = BASE_ROT.z - lift * 0.3 + settle * 0.3;
         } else {
-            // Idle: subtle pendulum sway
-            const swing = Math.sin(now * 1.4) * 0.018;
-            const bob   = Math.cos(now * 2.1) * 0.005;
-            weaponMesh.rotation.z = 0.08 + swing;
-            weaponMesh.rotation.x = 0.10 + bob;
-            weaponMesh.position.y = -0.17 + Math.sin(now * 1.0) * 0.003;
+            // Idle sway
+            const swing = Math.sin(nowSec * 1.4) * 0.012;
+            const bob   = Math.cos(nowSec * 2.1) * 0.003;
+            weaponMesh.rotation.x = BASE_ROT.x + bob;
+            weaponMesh.rotation.y = BASE_ROT.y;
+            weaponMesh.rotation.z = BASE_ROT.z + swing;
+            weaponMesh.position.x = BASE_POS.x;
+            weaponMesh.position.y = BASE_POS.y + Math.sin(nowSec * 1.0) * 0.003;
+            weaponMesh.position.z = BASE_POS.z;
         }
         return;
     }
@@ -2028,10 +2037,8 @@ function _buildKnife3D(id) {
     // Use real OBJ if loaded
     if (_karambitTemplate) {
         const clone = _karambitTemplate.clone(true);
-        const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 160, side: THREE.DoubleSide });
-        clone.traverse(child => { if (child.isMesh) child.material = mat; });
-        // Same rotation as in-game hold
-        clone.rotation.set(0.15, Math.PI, -0.75);
+        _applyKarambitMaterials(clone, bCol);
+        clone.rotation.set(Math.PI / 2, 0, -0.6);
         g.add(clone);
         return g;
     }
