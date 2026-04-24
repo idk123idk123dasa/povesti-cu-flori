@@ -357,9 +357,9 @@ function _applyKarambitMaterials(obj, bCol) {
     obj.traverse(child => {
         if (!child.isMesh) return;
         const n = child.name.toLowerCase();
-        if (n.includes('blade')) child.material = bladeMat;
-        else if (n.includes('metal')) child.material = metalMat;
-        else child.material = gripMat;
+        if (n.includes('grip') || n.includes('handle') || n.includes('hilt')) child.material = gripMat;
+        else if (n.includes('metal') || n.includes('guard') || n.includes('bolster')) child.material = metalMat;
+        else child.material = bladeMat; // default = blade color
     });
 }
 
