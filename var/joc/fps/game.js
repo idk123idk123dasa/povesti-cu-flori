@@ -465,58 +465,36 @@ if (cancelMatchmakingBtn) {
 function setupControlsListeners() {
     if (controls) {
         controls.addEventListener('lock', () => {
-            console.log("[DEBUG] Controls LOCKED");
-            if (lobbyUI) lobbyUI.style.display = 'none';
-            controls.unlock();
-            if (instructionScreen) {
-                instructionScreen.style.display = 'none';
-                isInstructionsOpen = false; // CACHED update
-            }
+            if (instructionScreen) { instructionScreen.style.display = 'none'; isInstructionsOpen = false; }
+            if (lobbyUI) { lobbyUI.style.display = 'none'; isLobbyOpen = false; }
             if (hud) hud.style.display = 'block';
         });
 
         controls.addEventListener('unlock', () => {
-            console.log("[DEBUG] Controls UNLOCKED");
-            if (!isGameOver) {
-                if (roundActive) {
-                    if (instructionScreen) {
-                        instructionScreen.style.display = 'flex';
-                        isInstructionsOpen = true; // CACHED update
-                        instructionScreen.innerHTML = '<div id="instructions-content"><h1>GAME PAUSED</h1><p>Click to Resume</p></div>';
-                    }
-                    if (hud) hud.style.display = 'block';
-                    if (lobbyUI) lobbyUI.style.display = 'none';
-                } else {
-                    if (lobbyUI) lobbyUI.style.display = 'flex';
-                    if (hud) hud.style.display = 'none';
-                    if (instructionScreen) {
-                        instructionScreen.innerHTML = '<div id="instructions-content"><h1>CLICK TO START</h1><p>Move: W, A, S, D<br>Jump: SPACE<br>Shoot: LEFT CLICK<br>Scope: E<br>Reload: R<br>Buy Menu: B</p></div>';
-                    }
+            if (isGameOver) return;
+            if (roundActive) {
+                if (instructionScreen) {
+                    instructionScreen.style.display = 'flex';
+                    isInstructionsOpen = true;
+                    instructionScreen.innerHTML = '<div id="instructions-content"><h1>GAME PAUSED</h1><p>Click to Resume</p></div>';
                 }
             }
         });
     }
 
-    // Handle clicks specifically on the instruction screen to activate pointer lock
+    // Click anywhere on canvas/instruction screen to lock mouse
+    const lockTarget = document.getElementById('canvas') || document.querySelector('canvas');
+    if (lockTarget) {
+        lockTarget.addEventListener('click', () => {
+            if (roundActive && controls) controls.lock();
+        });
+    }
     if (instructionScreen) {
         instructionScreen.addEventListener('click', () => {
-            console.log("[DEBUG] Instruction screen clicked, attempting to start game...");
-
-            // IMMEDIATE FALLBACK: Hide overlay to reveal the game
-            instructionScreen.style.display = 'none';
-            isInstructionsOpen = false; // CACHED UPDATE
-            if (lobbyUI) {
-                lobbyUI.style.display = 'none';
-                isLobbyOpen = false; // CACHED UPDATE
-            }
+            if (instructionScreen) { instructionScreen.style.display = 'none'; isInstructionsOpen = false; }
+            if (lobbyUI) { lobbyUI.style.display = 'none'; isLobbyOpen = false; }
             if (hud) hud.style.display = 'block';
-
-            if (controls) {
-                console.log("[DEBUG] Requesting pointer lock...");
-                controls.lock();
-            } else {
-                console.error("[ERROR] Controls not initialized!");
-            }
+            if (controls && roundActive) controls.lock();
         });
     }
 
@@ -916,47 +894,15 @@ function init() {
 
 // --- Top-Level UI & Logic Functions ---
 
-function startBuyPhase(duration = 15) {
-    console.log(`[BUY_PHASE] Starting for ${duration}s`);
-
-    // Clear existing interval
-    if (buyTimerInterval) {
-        clearInterval(buyTimerInterval);
-        buyTimerInterval = null;
-    }
-
-    buyTimeRemaining = duration;
-    isBuyPhase = true;
-    updateBuyTimer();
-
-    buyTimerInterval = setInterval(() => {
-        buyTimeRemaining--;
-        updateBuyTimer();
-
-        if (buyTimeRemaining <= 0) {
-            endBuyPhase();
-        }
-    }, 1000);
-}
+function startBuyPhase(duration = 0) { endBuyPhase(); }
 
 function endBuyPhase() {
-    console.log("[BUY_PHASE] Ended");
     isBuyPhase = false;
-    if (buyTimerInterval) {
-        clearInterval(buyTimerInterval);
-        buyTimerInterval = null;
-    }
-
-    // Close Buy Menu if it was open
-    if (buyMenuModal && buyMenuModal.classList.contains('active')) {
-        closeBuyMenu();
-    }
-
-    updateBuyTimer();
+    buyTimeRemaining = 0;
+    if (buyTimerInterval) { clearInterval(buyTimerInterval); buyTimerInterval = null; }
+    if (buyMenuModal && buyMenuModal.classList.contains('active')) closeBuyMenu();
+    if (freezeTimeMsg) freezeTimeMsg.style.display = 'none';
     equipPurchasedWeapons();
-
-    // Lock controls for gameplay loop
-    if (controls) controls.lock();
 }
 
 function openBuyMenu() {
@@ -1154,18 +1100,8 @@ function clearDroppedWeapons() {
 }
 
 function updateBuyTimer() {
-    if (buyTimerDisplay) buyTimerDisplay.textContent = `${buyTimeRemaining}s`;
     if (playerMoneyDisplay) playerMoneyDisplay.textContent = `$${playerMoney}`;
-
-    // Update the HUD Freeze Time message
-    if (freezeTimeMsg) {
-        if (isBuyPhase) {
-            freezeTimeMsg.style.display = 'block';
-            freezeTimeMsg.textContent = `FREEZE TIME: ${buyTimeRemaining}s`;
-        } else {
-            freezeTimeMsg.style.display = 'none';
-        }
-    }
+    if (freezeTimeMsg) freezeTimeMsg.style.display = 'none';
 }
 
 function renderBuyItems(category) {
@@ -2884,12 +2820,6 @@ function updateEnemies(delta) {
 
     for (let i = 0; i < enemies.length; i++) {
         const e = enemies[i];
-        if (isBuyPhase) {
-            // During buy phase, bots stay idle/frozen
-            e.rotation.z = THREE.MathUtils.lerp(e.rotation.z, 0, 5 * delta);
-            e.position.y = THREE.MathUtils.lerp(e.position.y, 7.5, 5 * delta);
-            continue;
-        }
         const data = e.userData;
 
         // Fix: Ensure bot only rotates on Y axis to face player (no tilting up/down which causes flipping)
