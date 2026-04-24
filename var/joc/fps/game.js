@@ -2560,12 +2560,10 @@ function startRound() {
     }
 
     roundActive = true;
-    if (lobbyUI) {
-        lobbyUI.style.display = 'none';
-        isLobbyOpen = false; // CACHED UPDATE
-    }
-
-    isBuyPhase = true; // Ensure buy phase is ACTIVE at the start <!-- id: 28 -->
+    isBuyPhase = false;
+    if (lobbyUI) { lobbyUI.style.display = 'none'; isLobbyOpen = false; }
+    if (instructionScreen) { instructionScreen.style.display = 'none'; isInstructionsOpen = false; }
+    if (hud) hud.style.display = 'block';
     health = 100;
     healthDisplay.textContent = "Health: " + Math.floor(health);
     recoilCounter = 0;
@@ -3355,7 +3353,7 @@ function animate() {
     // --- In-Game Logic Check ---
     // --- In-Game Logic Check ---
     // Optimized: Use CACHED booleans instead of DOM style checks to avoid per-frame lag
-    const isPlaying = roundActive && !isInstructionsOpen && !isLobbyOpen;
+    const isPlaying = roundActive && !isGameOver && health > 0;
 
     if (isPlaying) {
 
