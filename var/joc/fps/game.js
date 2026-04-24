@@ -1994,12 +1994,13 @@ const _thumbCache = {};
 
 function _initPvRenderer() {
     _pvScene = new THREE.Scene();
-    _pvScene.background = new THREE.Color(0x080c14);
-    _pvCam = new THREE.PerspectiveCamera(42, 1, 0.001, 20);
-    _pvCam.position.set(0.08, -0.06, 0.28);
-    _pvCam.lookAt(0, 0.02, 0);
-    _pvScene.add(new THREE.AmbientLight(0x223355, 1.4));
-    const dl = new THREE.DirectionalLight(0xffffff, 4.0);
+    _pvScene.background = new THREE.Color(0x0a0f1a);
+    // Camera mimics first-person hand view: slightly left, above, looking at knife
+    _pvCam = new THREE.PerspectiveCamera(50, 1, 0.001, 20);
+    _pvCam.position.set(-0.18, 0.12, 0.30);
+    _pvCam.lookAt(0, -0.02, 0);
+    _pvScene.add(new THREE.AmbientLight(0x223355, 1.2));
+    const dl = new THREE.DirectionalLight(0xffffff, 4.5);
     dl.position.set(0.5, 1.5, 1.5); _pvScene.add(dl);
     const dl2 = new THREE.DirectionalLight(0x6699ff, 1.5);
     dl2.position.set(-1.5, -0.5, 0.5); _pvScene.add(dl2);
@@ -2029,7 +2030,8 @@ function _buildKnife3D(id) {
         const clone = _karambitTemplate.clone(true);
         const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 160, side: THREE.DoubleSide });
         clone.traverse(child => { if (child.isMesh) child.material = mat; });
-        clone.rotation.set(0.4, Math.PI + 0.3, -0.2);
+        // Same rotation as in-game hold
+        clone.rotation.set(0.15, Math.PI, -0.75);
         g.add(clone);
         return g;
     }
