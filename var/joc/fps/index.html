@@ -33,7 +33,8 @@
                 <button class="nav-item" id="nav-collection">COLLECTION</button>
                 <button class="nav-item" id="nav-shop">SHOP</button>
             </div>
-            <div class="user-info-container">
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="gold-display" style="color:#ffd700; font-weight:900; font-size:16px; letter-spacing:2px; text-shadow:0 0 10px rgba(255,215,0,0.4);">0 GOLD</div>
                 <button id="login-signup-btn" class="nav-item">LOGIN / SIGNUP</button>
                 <div class="user-info" style="display: none;">
                     <span id="player-name">RECRUIT_V1</span>
@@ -170,19 +171,18 @@
             </div>
         </div>
 
-        <!-- NEW LOBBY SHOP MODAL -->
+        <!-- KNIFE SHOP MODAL -->
         <div id="lobby-shop-modal" class="modal">
-            <div class="modal-content shop-content" style="max-width: 900px; padding: 30px;">
-                <div class="shop-header"
-                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="color: #ff00ff; margin: 0; font-family: 'Outfit', sans-serif;">MATA SKINS SHOP</h2>
-                    <div id="lobby-mata-display" style="color: #ff00ff; font-weight: bold; font-size: 24px;">MATA: 0
+            <div class="modal-content shop-content" style="max-width: 860px; padding: 30px;">
+                <div class="shop-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2 style="color:#ffd700; margin:0; letter-spacing:4px;">KNIFE SHOP</h2>
+                    <div style="text-align:right;">
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:2px;">BALANTA</div>
+                        <div class="gold-display" style="color:#ffd700; font-weight:900; font-size:26px; text-shadow:0 0 15px rgba(255,215,0,0.5);">0 GOLD</div>
                     </div>
                 </div>
-                <div id="shop-items-container" class="buy-items-grid">
-                    <!-- Skins will be populated by JS -->
-                </div>
-                <button id="close-shop" class="close-btn" style="margin-top: 20px;">BACK</button>
+                <div id="knife-shop-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:14px; max-height:440px; overflow-y:auto; padding:4px;"></div>
+                <button id="close-shop" class="close-btn" style="margin-top:20px;">INAPOI</button>
             </div>
         </div>
 
@@ -265,6 +265,41 @@
             style="position: absolute; top: 50%; left: 50%; width: 40px; height: 2px; background: red; transform: translate(-50%, -50%);">
         </div>
     </div>
+
+    <!-- IN-GAME BUY MENU -->
+    <div id="ingame-buy-menu">
+        <div class="buy-panel">
+            <div class="buy-panel-header">
+                <div>
+                    <div class="buy-hint-text">[ B ] INCHIDE</div>
+                    <div class="buy-title">BUY MENU</div>
+                </div>
+                <div style="display:flex; gap:30px; align-items:flex-end;">
+                    <div class="buy-budget-block">
+                        <div class="buy-budget-label">BUGET</div>
+                        <div id="ingame-money">$800</div>
+                    </div>
+                    <div class="buy-budget-block" style="text-align:right;">
+                        <div class="buy-budget-label">TIMP</div>
+                        <div id="buy-countdown" style="font-size:28px;font-weight:900;color:#fbbf24;letter-spacing:2px;">10s</div>
+                    </div>
+                </div>
+            </div>
+            <div id="buy-tabs">
+                <button class="ingame-tab active" data-cat="pistols">PISTOALE</button>
+                <button class="ingame-tab" data-cat="smgs">SMG</button>
+                <button class="ingame-tab" data-cat="rifles">PUSTI</button>
+                <button class="ingame-tab" data-cat="snipers">LUNETIST</button>
+                <button class="ingame-tab" data-cat="heavy">HEAVY</button>
+                <button class="ingame-tab" data-cat="equipment">ECHIPAMENT</button>
+                <button class="ingame-tab" data-cat="grenades">GRENADE</button>
+            </div>
+            <div id="ingame-buy-items"></div>
+        </div>
+    </div>
+
+    <!-- build: v19 -->
+    <div id="build-tag" style="position:fixed;bottom:10px;right:10px;color:rgba(255,255,255,0.5);font-family:monospace;font-size:13px;z-index:9999;pointer-events:none;text-shadow:0 0 4px #000;">v19</div>
 
     <script type="module" src="game.js"></script>
 </body>
