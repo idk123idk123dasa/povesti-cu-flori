@@ -448,17 +448,10 @@ function buildKnife() {
 
     if (_karambitTemplate) {
         const clone = _karambitTemplate.clone(true);
-        const bladeMat   = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
-        const handleMat  = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
-        let meshIdx = 0;
-        clone.traverse(child => {
-            if (child.isMesh) {
-                child.material = meshIdx % 2 === 0 ? bladeMat : handleMat;
-                meshIdx++;
-            }
-        });
-        // Rotate: blade in XY plane, rotate to point blade toward camera/up
-        clone.rotation.set(Math.PI / 2, 0, Math.PI);
+        const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+        clone.traverse(child => { if (child.isMesh) child.material = mat; });
+        // Model is flat in XY plane; rotate so blade faces camera
+        clone.rotation.set(0, Math.PI, 0);
         g.add(clone);
     } else {
         // Fallback procedural if OBJ not loaded yet
@@ -999,12 +992,8 @@ function toggleScope() {
 const INSPECT_DURATION = 1.8; // seconds
 
 function startInspect() {
-    if (inspecting || knifeFlipping) return;
-    if (currentWeapon === 'knife') {
-        knifeFlipping = true;
-        knifeAnim = 0;
-        return;
-    }
+    if (inspecting) return;
+    if (currentWeapon === 'knife') return; // no inspect animation for knife
     inspecting = true;
     inspectTime = 0;
 }
@@ -1989,11 +1978,9 @@ function _buildKnife3D(id) {
     // Use real OBJ if available
     if (_karambitTemplate) {
         const clone = _karambitTemplate.clone(true);
-        const bladeMat  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
-        const handleMat = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
-        let mi = 0;
-        clone.traverse(child => { if (child.isMesh) { child.material = mi++ % 2 === 0 ? bladeMat : handleMat; } });
-        clone.rotation.set(-0.35, -0.55, 0.30);
+        const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+        clone.traverse(child => { if (child.isMesh) child.material = mat; });
+        clone.rotation.set(0.3, Math.PI + 0.2, -0.3);
         clone.position.set(0, 0, 0);
         return clone;
     }
