@@ -441,10 +441,10 @@ function buildKnife() {
         const mat = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 160, side: THREE.DoubleSide });
         clone.traverse(child => { if (child.isMesh) child.material = mat; });
         // Blade along Y axis. Tilt Z so blade points upper-left (CS2 hold style)
-        clone.rotation.set(0.25, Math.PI, -0.65);
+        clone.rotation.set(0.15, Math.PI, -0.75);
         g.add(clone);
         knifeGroup = g;
-        g.position.set(0.34, -0.13, -0.28);
+        g.position.set(0.38, -0.10, -0.28);
         g.rotation.set(0, 0, 0);
         return g;
     }
