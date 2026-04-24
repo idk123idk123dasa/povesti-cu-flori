@@ -412,57 +412,50 @@ function buildPistol() {
     return g;
 }
 
-// Butterfly knife — two handles that flip open
-let knifeGroup, knifeBlade, knifeHandle1, knifeHandle2;
+// Karambit — skin-based, matches equipped knife from shop
+let knifeGroup;
 function buildKnife() {
+    const skin = KNIFE_SHOP.find(k => k.id === equippedKnife) || KNIFE_SHOP[0];
+    const bCol = skin.color  || 0xb0b8c8;
+    const hCol = skin.hColor || 0x1a1a2e;
     const g = new THREE.Group();
 
-    // Blade
-    knifeBlade = new THREE.Group();
-    const bladeMain = new THREE.Mesh(
-        new THREE.BoxGeometry(0.012, 0.008, 0.22), wMat.blade);
-    bladeMain.position.z = -0.09;
-    knifeBlade.add(bladeMain);
-    // Blade bevel
-    const bevel = new THREE.Mesh(
-        new THREE.BoxGeometry(0.004, 0.014, 0.20), wMat.silver);
-    bevel.position.set(0, -0.005, -0.09);
-    knifeBlade.add(bevel);
-    // Tip
-    const tip = new THREE.Mesh(
-        new THREE.BoxGeometry(0.008, 0.008, 0.03), wMat.silver);
-    tip.position.z = -0.205;
-    tip.rotation.x = 0.3;
-    knifeBlade.add(tip);
-    g.add(knifeBlade);
+    const B  = new THREE.MeshPhongMaterial({ color: bCol, specular: 0xffffff, shininess: 180, side: THREE.DoubleSide });
+    const B2 = new THREE.MeshPhongMaterial({ color: new THREE.Color(bCol).multiplyScalar(0.55), specular: 0xaaaaaa, shininess: 80, side: THREE.DoubleSide });
+    const H  = new THREE.MeshPhongMaterial({ color: hCol, specular: 0x555566, shininess: 50 });
+    const Gm = new THREE.MeshPhongMaterial({ color: 0x555566, specular: 0xaaaacc, shininess: 100 });
 
-    // Handle 1 (latch side)
-    knifeHandle1 = new THREE.Group();
-    const h1 = new THREE.Mesh(
-        new THREE.BoxGeometry(0.022, 0.014, 0.135), wMat.handle);
-    h1.position.z = 0.065;
-    knifeHandle1.add(h1);
-    const pin1 = new THREE.Mesh(
-        new THREE.BoxGeometry(0.028, 0.006, 0.006), wMat.silver);
-    pin1.position.z = -0.002;
-    knifeHandle1.add(pin1);
-    g.add(knifeHandle1);
-
-    // Handle 2 (safe side)
-    knifeHandle2 = new THREE.Group();
-    const h2 = new THREE.Mesh(
-        new THREE.BoxGeometry(0.022, 0.014, 0.135), wMat.handle);
-    h2.position.z = 0.065;
-    knifeHandle2.add(h2);
-    const pin2 = new THREE.Mesh(
-        new THREE.BoxGeometry(0.028, 0.006, 0.006), wMat.silver);
-    pin2.position.z = -0.002;
-    knifeHandle2.add(pin2);
-    g.add(knifeHandle2);
+    // Curved blade
+    const segs = 12;
+    for (let i = 0; i < segs; i++) {
+        const t   = i / (segs - 1);
+        const a   = t * Math.PI * 0.82 - Math.PI * 0.06;
+        const r   = 0.085;
+        const w   = 0.006 + (1 - t) * 0.004;
+        const h   = 0.022 - t * 0.014;
+        const seg = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.022), t < 0.5 ? B : B2);
+        seg.position.set(Math.sin(a) * r - 0.025, 0, -Math.cos(a) * r + 0.005);
+        seg.rotation.y = -a;
+        g.add(seg);
+    }
+    // Guard
+    const guard = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.032, 0.012), Gm);
+    guard.position.set(-0.007, 0, 0.006); g.add(guard);
+    // Handle
+    const handle = new THREE.Mesh(new THREE.BoxGeometry(0.020, 0.028, 0.076), H);
+    handle.position.set(-0.002, 0, 0.054); g.add(handle);
+    for (let i = 0; i < 3; i++) {
+        const strip = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.004, 0.004), Gm);
+        strip.position.set(-0.002, 0.016, 0.022 + i * 0.022); g.add(strip);
+    }
+    // Finger ring
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.006, 10, 20), Gm);
+    ring.position.set(-0.002, 0, 0.100); ring.rotation.x = Math.PI / 2; g.add(ring);
 
     knifeGroup = g;
-    g.position.set(0.14,-0.17,-0.22);
-    g.rotation.set(0.1, 0.05, 0.08);
+    g.scale.set(1.5, 1.5, 1.5);
+    g.position.set(0.13, -0.14, -0.20);
+    g.rotation.set(-0.35, -0.55, 0.30);
     return g;
 }
 
@@ -1058,18 +1051,15 @@ function updateWeaponAnimations(dt) {
             if (knifeAnim >= 1) {
                 knifeFlipping = false;
                 knifeAnim = 0;
-                if (knifeHandle1) knifeHandle1.rotation.z = 0;
-                if (knifeHandle2) knifeHandle2.rotation.z = 0;
-                weaponMesh.position.set(baseX, baseY, baseZ);
-                weaponMesh.rotation.set(0.1, 0.05, 0.08);
+                weaponMesh.position.set(0.13, -0.14, -0.20);
+                weaponMesh.rotation.set(-0.35, -0.55, 0.30);
             }
         } else {
             // Idle: subtle pendulum sway
-            const swing = Math.sin(now * 1.4) * 0.018;
-            const bob   = Math.cos(now * 2.1) * 0.005;
-            weaponMesh.rotation.z = 0.08 + swing;
-            weaponMesh.rotation.x = 0.10 + bob;
-            weaponMesh.position.y = -0.17 + Math.sin(now * 1.0) * 0.003;
+            const swing = Math.sin(now * 1.4) * 0.015;
+            const bob   = Math.cos(now * 2.1) * 0.004;
+            weaponMesh.rotation.set(-0.35 + bob, -0.55, 0.30 + swing);
+            weaponMesh.position.y = -0.14 + Math.sin(now * 1.0) * 0.003;
         }
         return;
     }
@@ -2100,6 +2090,7 @@ window._knifeAction = function(id, price) {
     updateGoldDisplay();
     saveProfileToServer();
     renderKnifeShop();
+    if (currentWeapon === 'knife') buildWeapon();
 };
 
 function setupKnifeShop() {
