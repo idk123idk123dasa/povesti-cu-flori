@@ -48,6 +48,10 @@ const clock = new THREE.Clock(false);
 ═══════════════════════════════════════════════ */
 let gameRunning  = false;
 let gameOver     = false;
+let roundFrozen  = false;   // freeze time la inceputul rundei
+let roundNumber  = 0;       // numarul rundei curente
+let playerRounds = 0;       // runde castigate jucator
+let botRounds    = 0;       // runde castigate boti
 let playerHP     = 100;
 let playerMoney  = 800;
 let buyMenuOpen  = false;
@@ -875,6 +879,7 @@ function hasLineOfSight(fromX, fromZ, toX, toZ) {
 }
 
 function updateBots(dt, now) {
+    if (roundFrozen) return; // boti ingheatati in freeze time
     const ppos = camera.position;
 
     bots.forEach(bot => {
@@ -946,6 +951,7 @@ const _shootDir  = new THREE.Vector3();
 const _shootOrigin = new THREE.Vector3();
 
 function tryShoot() {
+    if (roundFrozen) return;
     const now = performance.now();
     if (reloading || ammo <= 0) { if (!reloading) startReload(); return; }
     if (now - lastShot < FIRE_RATE_MS) return;
@@ -1041,19 +1047,11 @@ function killBot(bot) {
 
     setTimeout(() => { scene.remove(bot.mesh); }, 4000);
 
-    if (playerScore >= KILLS_TO_WIN) {
+    // Runda se termina cand toti botii sunt morti
+    const aliveBots = bots.filter(b => !b.dead);
+    if (aliveBots.length === 0) {
         endRound(true);
-        return;
     }
-
-    // Respawn bot + buy time pentru jucator
-    setTimeout(() => {
-        if (!gameRunning) return;
-        const idx = bots.indexOf(bot);
-        if (idx !== -1) bots.splice(idx, 1);
-        const botSpawns = (selectedTeam === 'CT') ? T_SPAWNS_POS : CT_SPAWNS_POS;
-        spawnBot(Math.floor(Math.random() * botSpawns.length));
-    }, 3000);
 
 }
 
@@ -1080,34 +1078,12 @@ function die() {
         return;
     }
 
-    // Bot mode: scor bot++, respawn dupa 3s
-    botScore++;
-    updateScore();
-
+    // Bot mode: jucatorul moare = runda pierduta
     isLocked = false;
     document.exitPointerLock();
     document.body.style.background = 'radial-gradient(circle, rgba(200,0,0,0.7) 0%, transparent 80%)';
-
-    if (botScore >= KILLS_TO_WIN) {
-        document.body.style.background = '';
-        endRound(false);
-        return;
-    }
-
-    // Respawn dupa 3 secunde
-    setTimeout(() => {
-        if (!gameRunning) return;
-        document.body.style.background = '';
-        playerHP = 100;
-        ammo = MAG_SIZE;
-        reloading = false;
-        const spawns = selectedTeam === 'T' ? T_SPAWNS_POS : CT_SPAWNS_POS;
-        const sp = spawns[Math.floor(Math.random() * spawns.length)];
-        camera.position.set(sp.x, EYE_HEIGHT, sp.z);
-        camera.rotation.set(0, sp.ry, 0);
-        updateHUD();
-        requestLock();
-    }, 3000);
+    setTimeout(() => { document.body.style.background = ''; }, 600);
+    endRound(false);
 }
 
 /* ═══════════════════════════════════════════════
@@ -1211,6 +1187,7 @@ const _fwd   = new THREE.Vector3();
 const _right = new THREE.Vector3();
 
 function updatePlayer(dt) {
+    if (roundFrozen) return; // nimeni nu se misca in freeze time
     const sprint = keys['ShiftLeft'] || keys['ShiftRight'];
     const speed  = sprint ? SPRINT_SPEED : MOVE_SPEED;
 
@@ -1444,25 +1421,23 @@ function updateWeaponAnimations(dt) {
 /* ═══════════════════════════════════════════════
    ROUND / GAME MANAGEMENT
 ═══════════════════════════════════════════════ */
-function startGame() {
-    kills       = 0;
-    deaths      = 0;
-    playerScore = 0;
-    botScore    = 0;
-    playerHP    = 100;
-    playerMoney = 800;
-    ammo        = MAG_SIZE;
-    reloading = false;
-    velY    = 0;
-    onGround = false;
-    gameOver = false;
-    gameRunning = true;
+const FREEZE_DURATION = 5; // secunde freeze la inceputul fiecarei runde
+const MAX_ROUNDS = 16;     // primul la 16 runde castiga meciul
 
-    // Spawn position
-    const spawns = selectedTeam === 'T' ? T_SPAWNS_POS : CT_SPAWNS_POS;
-    const sp = spawns[Math.floor(Math.random() * spawns.length)];
-    camera.position.set(sp.x, EYE_HEIGHT, sp.z);
-    camera.rotation.set(0, sp.ry, 0);
+function startGame() {
+    kills        = 0;
+    deaths       = 0;
+    playerScore  = 0;
+    botScore     = 0;
+    playerRounds = 0;
+    botRounds    = 0;
+    roundNumber  = 0;
+    playerHP     = 100;
+    playerMoney  = 800;
+    ammo         = MAG_SIZE;
+    reloading    = false;
+    gameOver     = false;
+    gameRunning  = true;
 
     // UI
     if ($lobby)    $lobby.style.display    = 'none';
@@ -1472,43 +1447,109 @@ function startGame() {
     if ($winScreen) $winScreen.style.display = 'none';
     if ($deathScr)  $deathScr.style.display  = 'none';
 
+    clock.start();
+    startRound();
+}
+
+function _teleportToSpawn() {
+    const spawns = selectedTeam === 'T' ? T_SPAWNS_POS : CT_SPAWNS_POS;
+    const sp = spawns[Math.floor(Math.random() * spawns.length)];
+    camera.position.set(sp.x, EYE_HEIGHT, sp.z);
+    camera.rotation.set(0, sp.ry, 0);
+    velY = 0;
+    onGround = false;
+}
+
+function startRound() {
+    roundNumber++;
+    playerHP    = 100;
+    ammo        = MAG_SIZE;
+    reloading   = false;
+    roundFrozen = true;
+    closeBuyMenu();
+
+    _teleportToSpawn();
     spawnBots();
     updateHUD();
     updateScore();
     requestLock();
-    clock.start();
-    // Apasa B pentru buy menu
+
+    // Arata mesaj FREEZE TIME si countdown
+    if ($freezeMsg) {
+        $freezeMsg.style.display = 'block';
+        let remaining = FREEZE_DURATION;
+        $freezeMsg.textContent = `FREEZE TIME  ${remaining}s`;
+        const freezeInterval = setInterval(() => {
+            remaining--;
+            if (remaining > 0) {
+                $freezeMsg.textContent = `FREEZE TIME  ${remaining}s`;
+            } else {
+                clearInterval(freezeInterval);
+                $freezeMsg.style.display = 'none';
+                roundFrozen = false;
+                closeBuyMenu();
+            }
+        }, 1000);
+    }
 }
 
-function endRound(won) {
-    gameRunning = false;
-    gameOver    = true;
-    isLocked    = false;
+function endRound(playerWon) {
+    if (gameOver) return;
     closeBuyMenu();
+    isLocked = false;
     document.exitPointerLock();
 
+    if (playerWon) playerRounds++;
+    else botRounds++;
+
+    updateScore();
+
     // Acorda gold
-    const goldEarned = won ? 10 : 5;
+    const goldEarned = playerWon ? 10 : 5;
     playerGold += goldEarned;
     localStorage.setItem('fps_gold', playerGold);
     updateGoldDisplay();
     saveProfileToServer();
 
-    if ($hud) $hud.style.display = 'none';
+    // Verifica daca s-a terminat meciul (max runde sau primul la MAX_ROUNDS/2+1)
+    const roundsToWin = Math.ceil(MAX_ROUNDS / 2);
+    const matchOver = playerRounds >= roundsToWin || botRounds >= roundsToWin;
 
-    if (won) {
-        if ($winScreen) {
-            $winScreen.style.display = 'block';
-            const h = $winScreen.querySelector('h1');
-            if (h) h.innerHTML = `YOU WIN<br><span style="font-size:36px;color:#ffd700;text-shadow:0 0 20px #ffd700;">+${goldEarned} GOLD</span>`;
+    // Arata ecran round win/lose
+    const overlay = document.getElementById('round-result-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.querySelector('.round-result-text').textContent = playerWon ? 'ROUND WIN' : 'ROUND LOSE';
+        overlay.style.color = playerWon ? '#00ff88' : '#ff4444';
+        overlay.querySelector('.round-score').textContent = `${playerRounds} - ${botRounds}`;
+    }
+
+    if (matchOver) {
+        gameOver = true;
+        gameRunning = false;
+        setTimeout(() => {
+            if (overlay) overlay.style.display = 'none';
+            if (playerRounds >= roundsToWin) {
+                if ($winScreen) {
+                    $winScreen.style.display = 'block';
+                    const h = $winScreen.querySelector('h1');
+                    if (h) h.innerHTML = `VICTORY<br><span style="font-size:36px;color:#ffd700;">+${goldEarned} GOLD</span>`;
+                }
+            } else {
+                if ($gameover) {
+                    $gameover.style.display = 'flex';
+                    const fs = document.getElementById('final-score');
+                    if (fs) fs.textContent = `${playerRounds} - ${botRounds}  |  +${goldEarned} GOLD`;
+                }
+            }
             setTimeout(() => returnToLobby(), 4000);
-        }
+        }, 3000);
     } else {
-        if ($gameover) {
-            $gameover.style.display = 'flex';
-            const fs = document.getElementById('final-score');
-            if (fs) fs.textContent = `${playerScore} - ${botScore}  |  +${goldEarned} GOLD`;
-        }
+        // Urmatoarea runda dupa 3 secunde
+        setTimeout(() => {
+            if (overlay) overlay.style.display = 'none';
+            startRound();
+        }, 3000);
     }
 }
 
@@ -1555,7 +1596,7 @@ function updateHUD() {
 
 function updateScore() {
     const el = document.getElementById('top-score-tile');
-    if (el) el.textContent = `${playerScore} - ${botScore}`;
+    if (el) el.textContent = `${playerRounds} - ${botRounds}`;
 }
 
 function updateGoldDisplay() {
