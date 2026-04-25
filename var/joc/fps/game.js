@@ -603,13 +603,19 @@ function buildPistol() {
     const g = new THREE.Group();
     if (_deagleTemplate) {
         const clone = _deagleTemplate.clone(true);
-        // Barrel runs along +X; rotate so barrel points toward -Z (into screen)
         clone.rotation.set(0, -Math.PI / 2, 0);
-        // Center offset: model X center ≈ 0.24 * scale, Y bottom of grip ~= -0.69 * scale
         clone.position.set(0, 0.09, 0.175);
         g.add(clone);
+    } else {
+        // Fallback cuburi cand modelul nu e incarcat
+        const p = (x,y,z,w,h,d,mat,rx=0) => makePart(g,x,y,z,w,h,d,mat,rx);
+        p(0, 0.01, -0.02,  0.042, 0.065, 0.2,  wMat.pistolB);
+        p(0,-0.025,-0.005, 0.038, 0.045, 0.16, wMat.black);
+        p(0, 0.01,-0.155,  0.018, 0.018, 0.09, wMat.dark);
+        p(0,-0.07, 0.055,  0.036, 0.085, 0.055,wMat.pistolB, 0.12);
+        p(0,-0.055,0.048,  0.032, 0.065, 0.042,wMat.metal);
+        p(0, 0.046,-0.11,  0.004, 0.012, 0.004,wMat.silver);
     }
-    // Position group at bottom-right of view, barrel pointing forward
     g.position.set(0.17, -0.32, -0.30);
     g.rotation.set(0, 0.05, 0);
     return g;
@@ -1632,6 +1638,16 @@ function setupLobbyUI() {
         if ($modeModal) $modeModal.classList.add('active');
     };
 
+    // COLLECTION button
+    const navCollection = document.getElementById('nav-collection');
+    const collectionModal = document.getElementById('lobby-collection-modal');
+    const closeCollection = document.getElementById('close-collection');
+    if (navCollection && collectionModal) navCollection.onclick = () => {
+        renderCollection();
+        collectionModal.classList.add('active');
+    };
+    if (closeCollection && collectionModal) closeCollection.onclick = () => collectionModal.classList.remove('active');
+
     // Close modes
     const closeModes = document.getElementById('close-modes');
     if (closeModes) closeModes.onclick = () => {
@@ -1784,8 +1800,12 @@ function onAuthSuccess(data) {
     if (authModal) authModal.classList.remove('active');
     const nameEl = document.getElementById('player-name');
     if (nameEl) nameEl.textContent = data.username.toUpperCase();
-    document.querySelector('.user-info').style.display = 'flex';
-    document.getElementById('login-signup-btn').style.display = 'none';
+    const userInfo = document.querySelector('.user-info');
+    if (userInfo) userInfo.style.display = 'flex';
+    const loginBtn2 = document.getElementById('login-signup-btn');
+    if (loginBtn2) loginBtn2.style.display = 'none';
+    // Refresh shop/collection if open
+    if (document.getElementById('knife-shop-grid')?.children.length > 0) renderKnifeShop();
 }
 
 async function saveProfileToServer() {
@@ -2500,6 +2520,30 @@ function _buildButterfly3D(id) {
     g.rotation.set(-0.3, -0.5, 0.2);
     g.position.set(0.01, 0.01, 0);
     return g;
+}
+
+function renderCollection() {
+    const container = document.getElementById('collection-items-container');
+    if (!container) return;
+    const allSkins = [...KNIFE_SHOP, ...BUTTERFLY_SHOP];
+    const owned = allSkins.filter(k => ownedKnives.includes(k.id));
+    if (owned.length === 0) {
+        container.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-family:Inter,sans-serif;">Nu ai skinuri inca.</p>';
+        return;
+    }
+    container.innerHTML = owned.map(k => {
+        const equipped = equippedKnife === k.id;
+        const thumb = _knifeThumb(k.id);
+        const border = equipped ? '2px solid rgba(255,215,0,0.7)' : '1px solid rgba(255,255,255,0.08)';
+        const btnStyle = equipped
+            ? 'background:rgba(0,255,150,0.2);border-color:#00ff96;color:#00ff96;'
+            : 'background:rgba(0,210,255,0.15);border-color:#00d2ff;color:#00d2ff;';
+        return `<div style="background:rgba(255,255,255,0.03);border:${border};border-radius:10px;padding:12px 10px;text-align:center;transition:all 0.2s;">
+            <img src="${thumb}" style="width:100%;border-radius:6px;margin-bottom:8px;display:block;" alt="${k.name}">
+            <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:3px;">${k.name}</div>
+            <button onclick="_knifeAction('${k.id}',0)" style="width:100%;padding:7px 0;border-radius:5px;border:1px solid;font-size:10px;font-weight:800;letter-spacing:1px;cursor:pointer;${btnStyle}">${equipped ? 'ECHIPAT ✓' : 'ECHIPEAZA'}</button>
+        </div>`;
+    }).join('');
 }
 
 function renderKnifeShop() {
