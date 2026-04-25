@@ -815,3 +815,108 @@ button:hover {
     background: rgba(255, 68, 68, 0.8);
     border-color: #ff4444;
 }
+#ingame-buy-menu {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 800;
+    padding: 0 20px 20px;
+}
+
+#ingame-buy-menu.open {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.buy-panel {
+    background: rgba(10, 14, 22, 0.97);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 24px 16px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 -4px 40px rgba(0,0,0,0.7);
+}
+
+.buy-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 14px;
+}
+
+.buy-hint-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+}
+
+.buy-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #ffd700;
+    letter-spacing: 4px;
+}
+
+.buy-budget-block {
+    text-align: left;
+}
+
+.buy-budget-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+}
+
+#ingame-money {
+    font-size: 28px;
+    font-weight: 900;
+    color: #4ade80;
+    letter-spacing: 2px;
+}
+
+#buy-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.ingame-tab {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.ingame-tab:hover {
+    background: rgba(255,215,0,0.1);
+    border-color: rgba(255,215,0,0.4);
+    color: #ffd700;
+}
+
+.ingame-tab.active {
+    background: rgba(255,215,0,0.15);
+    border-color: #ffd700;
+    color: #ffd700;
+}
+
+#ingame-buy-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+}

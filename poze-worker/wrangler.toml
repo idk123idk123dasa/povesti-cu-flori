@@ -7,5 +7,3 @@ account_id = "641cf08cdd9060470052c8887e987a60"
 binding = "POZE"
 id = "2bbf1dae6f394cfb932685ec2ab95b00"
 
-[triggers]
-crons = ["0 3 * * *"]
