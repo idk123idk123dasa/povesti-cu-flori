@@ -888,9 +888,31 @@ function _segHitsBox(ax, az, bx, bz, box) {
     return tmax > 0.01 && tmin < 0.99; // avoid self-hit at endpoints
 }
 
+const _losRC = new THREE.Raycaster();
+_losRC.near = 0.1;
+const _losFrom = new THREE.Vector3();
+const _losTo   = new THREE.Vector3();
+const _losDir  = new THREE.Vector3();
+
 function hasLineOfSight(fromX, fromZ, toX, toZ) {
+    // First fast check: 2D AABB segment test against manually-placed boxes
     for (const box of colBoxes) {
         if (_segHitsBox(fromX, fromZ, toX, toZ, box)) return false;
+    }
+    // Then precise check: 3D raycaster against the actual map mesh
+    if (_mapMeshes.length > 0) {
+        const fromY = 1.0; // chest height
+        _losFrom.set(fromX, fromY, fromZ);
+        _losTo.set(toX, fromY, toZ);
+        _losDir.subVectors(_losTo, _losFrom);
+        const dist = _losDir.length();
+        if (dist > 0.1) {
+            _losDir.normalize();
+            _losRC.set(_losFrom, _losDir);
+            _losRC.far = dist - 0.1;
+            const hits = _losRC.intersectObjects(_mapMeshes, false);
+            if (hits.length > 0) return false;
+        }
     }
     return true;
 }
@@ -1130,10 +1152,10 @@ function resolveMapMeshCollision() {
         const hits = _mapRC.intersectObjects(_mapMeshes, false);
         if (hits.length > 0 && hits[0].distance < P_RADIUS) {
             const hit = hits[0];
-            // If the hit face normal points significantly upward it's a slope/floor — allow walking onto it
+            // Only skip if the surface is nearly horizontal (floor/ceiling) — vertical walls always block
             if (hit.face) {
                 const wn = hit.face.normal.clone().applyEuler(hit.object.rotation);
-                if (Math.abs(wn.y) > 0.45) continue;
+                if (wn.y > 0.7) continue; // clearly a floor — allow stepping down
             }
             const push = P_RADIUS - hit.distance + 0.01;
             camera.position.x -= dir.x * push;
