@@ -991,7 +991,11 @@ function tryShoot() {
     const wallDist   = wallHits.length > 0 ? wallHits[0].distance : Infinity;
 
     // Wall impact marker
-    if (wallHits.length > 0) spawnImpact(wallHits[0].point);
+    if (wallHits.length > 0) {
+        const wh = wallHits[0];
+        const normal = wh.face ? wh.face.normal.clone().applyEuler(wh.object.rotation).normalize() : new THREE.Vector3(0,1,0);
+        spawnImpact(wh.point, normal);
+    }
 
     // Check bots — only hit if no wall is between player and bot
     const botMeshes = bots.filter(b => !b.dead).flatMap(b => [b.bodyMesh, b.headMesh]);
@@ -1025,12 +1029,15 @@ function showHitMarker(headshot) {
 }
 
 const impacts = [];
-function spawnImpact(pos) {
+function spawnImpact(pos, normal) {
     const m = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.12, 0.12),
-        new THREE.MeshBasicMaterial({ color: 0x333333, depthWrite: false })
+        new THREE.CircleGeometry(0.06, 8),
+        new THREE.MeshBasicMaterial({ color: 0x222222, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 })
     );
-    m.position.copy(pos).addScalar(0.005);
+    // Offset slightly along the surface normal to avoid z-fighting
+    m.position.copy(pos).addScaledVector(normal, 0.02);
+    // Orient the plane to face along the normal
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
     scene.add(m);
     impacts.push({ mesh: m, born: performance.now() });
     if (impacts.length > 60) {
