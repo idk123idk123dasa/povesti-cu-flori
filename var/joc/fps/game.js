@@ -155,6 +155,8 @@ function setupPointerLock() {
 
     document.addEventListener('mousedown', e => {
         if (e.button === 0) {
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON' || tag === 'A') return;
             e.preventDefault();
             mouseHeld = true;
             // Single-shot weapons fire on click
