@@ -515,8 +515,8 @@ let _deagleTemplate = null;
 function preloadDeagle() {
     return new Promise(resolve => {
         new OBJLoader().load('deagle.obj', obj => {
-            // Model: barrel runs along X axis (-3.14 to 3.62), height Y (-0.69 to 3.21), thickness Z (±0.45)
-            const SCALE = 0.048;
+            // Model: barrel tip at X=-3.14 (front), hammer at X=3.62 (back), height Y -0.52..3.21
+            const SCALE = 0.035;
             const matSlide  = new THREE.MeshLambertMaterial({ color: 0x1a1a22 });
             const matFrame  = new THREE.MeshLambertMaterial({ color: 0x222228 });
             const matGrip   = new THREE.MeshLambertMaterial({ color: 0x111115 });
@@ -614,7 +614,7 @@ function buildPistol() {
     if (_deagleTemplate) {
         const clone = _deagleTemplate.clone(true);
         clone.rotation.set(0, -Math.PI / 2, 0);
-        clone.position.set(0, 0.09, 0.175);
+        clone.position.set(0, -0.088, 0);
         g.add(clone);
     } else {
         // Fallback cuburi cand modelul nu e incarcat
@@ -626,7 +626,7 @@ function buildPistol() {
         p(0,-0.055,0.048,  0.032, 0.065, 0.042,wMat.metal);
         p(0, 0.046,-0.11,  0.004, 0.012, 0.004,wMat.silver);
     }
-    g.position.set(0.17, -0.32, -0.30);
+    g.position.set(0.17, -0.20, -0.45);
     g.rotation.set(0, 0.05, 0);
     return g;
 }
