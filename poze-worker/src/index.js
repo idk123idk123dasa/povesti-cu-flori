@@ -3,7 +3,7 @@ const HTML = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Încarcă poze – Scrisori cu Povești</title>
+<title>Încarcă fișiere – Scrisori cu Povești</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -69,7 +69,7 @@ body{
   background:repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 0 0/16px 16px;
   aspect-ratio:1;
 }
-.preview-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.preview-item img,.preview-item video{width:100%;height:100%;object-fit:cover;display:block;}
 .preview-item .remove-btn{
   position:absolute;top:4px;right:4px;
   background:rgba(0,0,0,0.55);color:#fff;
@@ -95,6 +95,12 @@ body{
 .preview-item.error .item-overlay{display:flex;background:rgba(180,30,30,0.55);}
 .item-status{font-size:1.5rem;}
 .item-pct{color:#fff;font-size:0.72rem;}
+.video-badge{
+  position:absolute;top:4px;left:4px;
+  background:rgba(0,0,0,0.6);color:#fff;
+  font-size:0.6rem;padding:2px 5px;border-radius:4px;
+  pointer-events:none;
+}
 
 .btn{
   display:block;width:100%;
@@ -169,25 +175,25 @@ body{
 <body>
 <div class="card">
   <div class="card-head">
-    <h1>📷 Încarcă poze</h1>
-    <p>Trage mai multe poze simultan</p>
+    <h1>📁 Încarcă fișiere</h1>
+    <p>Poze și videoclipuri simultan</p>
   </div>
   <div class="card-body">
     <div class="drop-zone" id="dropZone">
-      <input type="file" id="fileInput" accept="image/*" multiple onchange="addFiles(this.files)"/>
-      <div class="drop-icon">🖼️</div>
-      <div class="drop-text"><strong>Trage pozele aici</strong><br>sau apasă să alegi fișiere</div>
-      <div class="drop-hint">PNG, JPG, GIF, WebP · max 200 MB per poză · multiple fișiere odată</div>
+      <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="addFiles(this.files)"/>
+      <div class="drop-icon">🖼️🎬</div>
+      <div class="drop-text"><strong>Trage fișierele aici</strong><br>sau apasă să alegi</div>
+      <div class="drop-hint">Poze: PNG, JPG, GIF, WebP · Video: MP4, MOV, AVI, WebM · max 200 MB</div>
     </div>
 
     <div class="preview-grid" id="previewGrid"></div>
 
     <div class="err-global" id="errGlobal"></div>
 
-    <button class="btn" id="uploadBtn" onclick="uploadAll()" disabled>Încarcă pozele →</button>
+    <button class="btn" id="uploadBtn" onclick="uploadAll()" disabled>Încarcă →</button>
 
     <div class="gallery-result" id="galleryResult">
-      <div class="gl-label">🔗 Link unic pentru toate pozele</div>
+      <div class="gl-label">🔗 Link unic pentru toate fișierele</div>
       <div class="gl-url" id="galleryUrl"></div>
       <button class="gl-copy-btn" id="glCopyBtn" onclick="copyGallery()">Copiază linkul</button>
     </div>
@@ -198,7 +204,7 @@ body{
 
 <script>
 var files = [];
-var uploadedUrls = [];
+var uploadedItems = []; // {url, contentType}
 
 var dz = document.getElementById('dropZone');
 dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('over'); });
@@ -208,15 +214,19 @@ dz.addEventListener('drop', function(e){
   addFiles(e.dataTransfer.files);
 });
 
+function isAccepted(f) {
+  return f.type.startsWith('image/') || f.type.startsWith('video/');
+}
+
 function addFiles(fileList) {
   for (var i = 0; i < fileList.length; i++) {
     var f = fileList[i];
-    if (!f.type.startsWith('image/')) continue;
+    if (!isAccepted(f)) { showErr('„' + f.name + '" nu e o poză sau video.'); continue; }
     if (f.size > 200*1024*1024) { showErr('„' + f.name + '" e prea mare (max 200 MB).'); continue; }
     var dup = files.some(function(x){ return x && x.name===f.name && x.size===f.size; });
     if (!dup) { files.push(f); renderPreview(f, files.length-1); }
   }
-  if (files.length > 0) document.getElementById('uploadBtn').disabled = false;
+  if (files.filter(Boolean).length > 0) document.getElementById('uploadBtn').disabled = false;
   document.getElementById('errGlobal').style.display = 'none';
 }
 
@@ -227,10 +237,27 @@ function renderPreview(file, idx) {
   item.className = 'preview-item';
   item.id = 'item-' + idx;
 
-  var img = document.createElement('img');
-  var reader = new FileReader();
-  reader.onload = function(e){ img.src = e.target.result; };
-  reader.readAsDataURL(file);
+  var isVideo = file.type.startsWith('video/');
+  var media;
+  var url = URL.createObjectURL(file);
+
+  if (isVideo) {
+    media = document.createElement('video');
+    media.src = url;
+    media.muted = true;
+    media.loop = true;
+    media.autoplay = true;
+    media.playsInline = true;
+    var badge = document.createElement('div');
+    badge.className = 'video-badge';
+    badge.textContent = '▶ video';
+    item.appendChild(badge);
+  } else {
+    media = document.createElement('img');
+    var reader = new FileReader();
+    reader.onload = function(e){ media.src = e.target.result; };
+    reader.readAsDataURL(file);
+  }
 
   var rm = document.createElement('button');
   rm.className = 'remove-btn';
@@ -246,7 +273,7 @@ function renderPreview(file, idx) {
   overlay.className = 'item-overlay';
   overlay.innerHTML = '<span class="item-status">⏳</span><span class="item-pct" id="pct-'+idx+'">0%</span>';
 
-  item.appendChild(img);
+  item.appendChild(media);
   item.appendChild(rm);
   item.appendChild(name);
   item.appendChild(overlay);
@@ -269,19 +296,19 @@ function uploadAll() {
   btn.disabled = true;
   document.getElementById('errGlobal').style.display = 'none';
   document.getElementById('galleryResult').style.display = 'none';
-  uploadedUrls = [];
+  uploadedItems = [];
 
   var toUpload = files.map(function(f,i){ return {file:f,idx:i}; }).filter(function(x){ return x.file !== null; });
   if (!toUpload.length) return;
 
   var done = 0;
   toUpload.forEach(function(entry){
-    uploadOne(entry.file, entry.idx, function(url){
-      if (url) uploadedUrls.push(url);
+    uploadOne(entry.file, entry.idx, function(item){
+      if (item) uploadedItems.push(item);
       done++;
       if (done === toUpload.length) {
         btn.disabled = false;
-        if (uploadedUrls.length > 0) createGallery(uploadedUrls);
+        if (uploadedItems.length > 0) createGallery(uploadedItems);
       }
     });
   });
@@ -308,8 +335,8 @@ function uploadOne(file, idx, onDone) {
       var d = JSON.parse(xhr.responseText);
       if (d.url) {
         if (item) { item.classList.add('done'); item.querySelector('.item-status').textContent = '✓'; }
-        addResult(file.name, d.url);
-        onDone(d.url);
+        addResult(file.name, d.url, d.contentType);
+        onDone({ url: d.url, contentType: d.contentType });
       } else {
         if (item) { item.classList.add('error'); item.querySelector('.item-status').textContent = '✗'; }
         onDone(null);
@@ -330,7 +357,7 @@ function uploadOne(file, idx, onDone) {
   xhr.send(fd);
 }
 
-function createGallery(urls) {
+function createGallery(items) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', '/gallery');
   xhr.setRequestHeader('Content-Type', 'application/json');
@@ -340,7 +367,7 @@ function createGallery(urls) {
       if (d.url) showGallery(d.url);
     } catch(e){}
   };
-  xhr.send(JSON.stringify({ urls: urls }));
+  xhr.send(JSON.stringify({ items: items }));
 }
 
 function showGallery(url) {
@@ -354,11 +381,11 @@ function copyGallery() {
   var btn = document.getElementById('glCopyBtn');
   navigator.clipboard.writeText(url).then(function(){
     btn.textContent = 'Copiat ✓'; btn.classList.add('copied');
-    setTimeout(function(){ btn.textContent='Copiază linkul'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(function(){ btn.textContent='Copiează linkul'; btn.classList.remove('copied'); }, 2000);
   });
 }
 
-function addResult(name, url) {
+function addResult(name, url, contentType) {
   var results = document.getElementById('results');
   var div = document.createElement('div');
   div.className = 'result-item';
@@ -395,22 +422,29 @@ function showErr(msg){
 </body>
 </html>`;
 
-function galleryHTML(urls) {
-  const items = urls.map((u, i) => `
-    <div class="img-item">
-      <div class="img-wrap">
-        <img src="${u}" alt="Poza ${i+1}" loading="lazy"/>
-      </div>
-      <div class="img-url">${u}</div>
+function galleryHTML(items) {
+  const mediaItems = items.map((item, i) => {
+    const u = typeof item === 'string' ? item : item.url;
+    const ct = typeof item === 'string' ? 'image/jpeg' : (item.contentType || 'image/jpeg');
+    const isVideo = ct.startsWith('video/');
+    const mediaEl = isVideo
+      ? `<video src="${u}" controls playsinline style="width:100%;display:block;max-height:200px;background:#000;"></video>`
+      : `<img src="${u}" alt="Fișier ${i+1}" loading="lazy"/>`;
+    return `
+    <div class="media-item">
+      <div class="media-wrap">${mediaEl}</div>
+      <div class="media-url">${u}</div>
       <button class="copy-btn" onclick="copyUrl(this,'${u}')">Copiază linkul</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
+  const count = items.length;
   return `<!DOCTYPE html>
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galerie poze – Scrisori cu Povești</title>
+<title>Galerie – Scrisori cu Povești</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{min-height:100vh;background-color:#7D1E2A;background-image:url('https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Red-FloralBG-Square-2.jpg?v=1774999232');background-size:400px;font-family:'Georgia',serif;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;}
@@ -420,11 +454,11 @@ body{min-height:100vh;background-color:#7D1E2A;background-image:url('https://cdn
 .card-head h1{color:#fff;font-size:1.4rem;font-weight:600;margin-bottom:4px;}
 .card-head p{color:rgba(255,255,255,0.7);font-size:0.88rem;}
 .card-body{padding:28px;}
-.img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;}
-.img-item{background:#faf9f7;border:1px solid #e0d5c8;border-radius:10px;overflow:hidden;padding:10px;}
-.img-wrap{background:repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/16px 16px;border-radius:6px;overflow:hidden;margin-bottom:8px;}
-.img-wrap img{width:100%;display:block;object-fit:contain;max-height:160px;}
-.img-url{font-size:0.68rem;color:#888;font-family:monospace;word-break:break-all;margin-bottom:8px;line-height:1.4;}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;}
+.media-item{background:#faf9f7;border:1px solid #e0d5c8;border-radius:10px;overflow:hidden;padding:10px;}
+.media-wrap{background:repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/16px 16px;border-radius:6px;overflow:hidden;margin-bottom:8px;}
+.media-wrap img{width:100%;display:block;object-fit:contain;max-height:160px;}
+.media-url{font-size:0.68rem;color:#888;font-family:monospace;word-break:break-all;margin-bottom:8px;line-height:1.4;}
 .copy-btn{width:100%;background:#388e3c;color:#fff;border:none;border-radius:5px;padding:6px;font-size:0.8rem;cursor:pointer;}
 .copy-btn:hover{background:#2e7d32;}
 .copy-btn.copied{background:#1b5e20;}
@@ -433,18 +467,18 @@ body{min-height:100vh;background-color:#7D1E2A;background-image:url('https://cdn
 <body>
 <div class="card">
   <div class="card-head">
-    <h1>📷 ${urls.length} ${urls.length === 1 ? 'poză' : 'poze'}</h1>
-    <p>Apasă pe „Copiază linkul" pentru fiecare poză</p>
+    <h1>📁 ${count} ${count === 1 ? 'fișier' : 'fișiere'}</h1>
+    <p>Apasă pe „Copiază linkul" pentru fiecare fișier</p>
   </div>
   <div class="card-body">
-    <div class="img-grid">${items}</div>
+    <div class="media-grid">${mediaItems}</div>
   </div>
 </div>
 <script>
 function copyUrl(btn, url){
   navigator.clipboard.writeText(url).then(function(){
     btn.textContent='Copiat ✓';btn.classList.add('copied');
-    setTimeout(function(){btn.textContent='Copiază linkul';btn.classList.remove('copied');},2000);
+    setTimeout(function(){btn.textContent='Copiează linkul';btn.classList.remove('copied');},2000);
   });
 }
 </script>
@@ -452,32 +486,7 @@ function copyUrl(btn, url){
 </html>`;
 }
 
-async function deleteOldImages(env) {
-  const oneDayMs = 24 * 60 * 60 * 1000;
-  const cutoff = Date.now() - oneDayMs;
-  let cursor = undefined;
-  let deleted = 0;
-
-  do {
-    const result = await env.POZE.list({ cursor, limit: 1000 });
-    for (const key of result.keys) {
-      const ts = parseInt(key.name.split('-')[0], 10);
-      if (!isNaN(ts) && ts < cutoff) {
-        await env.POZE.delete(key.name);
-        deleted++;
-      }
-    }
-    cursor = result.list_complete ? undefined : result.cursor;
-  } while (cursor);
-
-  return deleted;
-}
-
 export default {
-  async scheduled(event, env) {
-    const deleted = await deleteOldImages(env);
-    console.log(`Cron: deleted ${deleted} images older than 24h`);
-  },
 
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -494,15 +503,15 @@ export default {
         const formData = await request.formData();
         const file = formData.get('file');
 
-        if (!file || !file.type.startsWith('image/')) {
-          return Response.json({ error: 'Fișier invalid.' }, { status: 400 });
+        if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) {
+          return Response.json({ error: 'Fișier invalid. Sunt acceptate poze și videoclipuri.' }, { status: 400 });
         }
 
         if (file.size > 200 * 1024 * 1024) {
           return Response.json({ error: 'Fișierul e prea mare (max 200 MB).' }, { status: 400 });
         }
 
-        const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
         const key = Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
 
         const buffer = await file.arrayBuffer();
@@ -518,7 +527,10 @@ export default {
           metadata: { contentType: file.type, name: file.name }
         });
 
-        return Response.json({ url: 'https://' + url.hostname + '/' + key });
+        return Response.json({
+          url: 'https://' + url.hostname + '/' + key,
+          contentType: file.type
+        });
 
       } catch (e) {
         return Response.json({ error: 'Eroare server: ' + e.message }, { status: 500 });
@@ -528,15 +540,16 @@ export default {
     if (request.method === 'POST' && path === '/gallery') {
       try {
         const body = await request.json();
-        const urls = body.urls;
-        if (!Array.isArray(urls) || urls.length === 0) {
-          return Response.json({ error: 'Lista de URL-uri e goală.' }, { status: 400 });
+        // Support both old format (urls array) and new format (items array)
+        const items = body.items || (body.urls ? body.urls.map(u => ({ url: u, contentType: 'image/jpeg' })) : null);
+        if (!Array.isArray(items) || items.length === 0) {
+          return Response.json({ error: 'Lista de fișiere e goală.' }, { status: 400 });
         }
 
         const galleryId = Date.now() + '-' + Math.random().toString(36).slice(2, 8);
         const galleryKey = 'gallery-' + galleryId;
 
-        await env.POZE.put(galleryKey, JSON.stringify(urls), {
+        await env.POZE.put(galleryKey, JSON.stringify(items), {
           metadata: { type: 'gallery' }
         });
 
@@ -554,8 +567,8 @@ export default {
 
       if (!value) return new Response('Galerie negăsită.', { status: 404 });
 
-      const urls = JSON.parse(value);
-      return new Response(galleryHTML(urls), {
+      const items = JSON.parse(value);
+      return new Response(galleryHTML(items), {
         headers: { 'Content-Type': 'text/html;charset=UTF-8' }
       });
     }
@@ -570,7 +583,7 @@ export default {
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
 
-      const ct = metadata?.contentType || 'image/jpeg';
+      const ct = metadata?.contentType || 'application/octet-stream';
       return new Response(bytes, {
         headers: {
           'Content-Type': ct,
