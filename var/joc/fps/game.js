@@ -94,6 +94,10 @@ let knifeFlipping = false;
 ═══════════════════════════════════════════════ */
 const keys = {};
 document.addEventListener('keydown', e => {
+    // Nu intercepta tastatura cand e focusat un input/textarea
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
     keys[e.code] = true;
     if (!gameRunning) return;
     if (e.code === 'KeyB') { buyMenuOpen ? closeBuyMenu() : openBuyMenu(); return; }
@@ -111,7 +115,11 @@ document.addEventListener('keydown', e => {
     }
     e.preventDefault();
 }, { passive: false });
-document.addEventListener('keyup', e => { keys[e.code] = false; });
+document.addEventListener('keyup', e => {
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    keys[e.code] = false;
+});
 
 /* ═══════════════════════════════════════════════
    POINTER LOCK (manual — no PointerLockControls)
