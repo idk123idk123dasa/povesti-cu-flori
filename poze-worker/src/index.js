@@ -515,15 +515,8 @@ export default {
         const key = Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
 
         const buffer = await file.arrayBuffer();
-        const bytes = new Uint8Array(buffer);
-        let binary = '';
-        const chunk = 8192;
-        for (let i = 0; i < bytes.length; i += chunk) {
-          binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
-        }
-        const base64 = btoa(binary);
 
-        await env.POZE.put(key, base64, {
+        await env.POZE.put(key, buffer, {
           metadata: { contentType: file.type, name: file.name }
         });
 
@@ -575,16 +568,12 @@ export default {
 
     if (request.method === 'GET' && path.length > 1) {
       const key = path.slice(1);
-      const { value, metadata } = await env.POZE.getWithMetadata(key);
+      const { value, metadata } = await env.POZE.getWithMetadata(key, { type: 'arrayBuffer' });
 
       if (!value) return new Response('Nu a fost găsit.', { status: 404 });
 
-      const binary = atob(value);
-      const bytes = new Uint8Array(binary.length);
-      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-
       const ct = metadata?.contentType || 'application/octet-stream';
-      return new Response(bytes, {
+      return new Response(value, {
         headers: {
           'Content-Type': ct,
           'Cache-Control': 'public, max-age=31536000, no-transform',
