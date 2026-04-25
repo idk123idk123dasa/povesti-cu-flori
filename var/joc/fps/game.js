@@ -49,6 +49,7 @@ const clock = new THREE.Clock(false);
 let gameRunning  = false;
 let gameOver     = false;
 let roundFrozen  = false;   // freeze time la inceputul rundei
+let roundEnding  = false;   // previne multiple endRound() simultan
 let roundNumber  = 0;       // numarul rundei curente
 let playerRounds = 0;       // runde castigate jucator
 let botRounds    = 0;       // runde castigate boti
@@ -609,7 +610,7 @@ function buildPistol() {
         g.add(clone);
     }
     // Position group at bottom-right of view, barrel pointing forward
-    g.position.set(0.17, -0.20, -0.30);
+    g.position.set(0.17, -0.32, -0.30);
     g.rotation.set(0, 0.05, 0);
     return g;
 }
@@ -959,16 +960,9 @@ function tryShoot() {
     ammo--;
     if (ammo === 0) startReload();
 
-    // Recoil — camera kick + weapon kick
+    // Recoil — doar spread glont, arma sta pe loc
     recoilShots++;
-    const recoilMag = Math.min(0.012 + recoilShots * 0.003, 0.030); // builds up, caps
-    recoilPitch -= recoilMag;                                         // kick up
-    recoilYaw   += (Math.random() - 0.5) * recoilMag * 0.6;          // random side
-    if (weaponMesh) {
-        weaponMesh.position.z += 0.06;
-        weaponMesh.rotation.x -= 0.12;
-        weaponMesh.rotation.z += (Math.random() - 0.5) * 0.04;
-    }
+    const recoilMag = Math.min(0.012 + recoilShots * 0.003, 0.030);
 
     camera.getWorldDirection(_shootDir);
     _shootOrigin.copy(camera.position);
@@ -1254,12 +1248,6 @@ function updatePlayer(dt) {
         weaponMesh.position.x += (0.22  - weaponMesh.position.x) * 0.12;
     }
 
-    // Weapon recoil return
-    if (weaponMesh) {
-        weaponMesh.position.z  += (-.35 - weaponMesh.position.z)  * 0.18;
-        weaponMesh.rotation.x  += (0    - weaponMesh.rotation.x)  * 0.18;
-        weaponMesh.rotation.z  += (0    - weaponMesh.rotation.z)  * 0.18;
-    }
     // Camera recoil apply + recovery
     if (recoilPitch !== 0 || recoilYaw !== 0) {
         camera.rotation.x = Math.max(-1.4, Math.min(1.4, camera.rotation.x + recoilPitch));
@@ -1466,6 +1454,7 @@ function startRound() {
     ammo        = MAG_SIZE;
     reloading   = false;
     roundFrozen = true;
+    roundEnding = false;
     closeBuyMenu();
 
     _teleportToSpawn();
@@ -1494,7 +1483,8 @@ function startRound() {
 }
 
 function endRound(playerWon) {
-    if (gameOver) return;
+    if (gameOver || roundEnding) return;
+    roundEnding = true;
     closeBuyMenu();
     isLocked = false;
     document.exitPointerLock();
