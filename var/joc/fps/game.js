@@ -1122,7 +1122,13 @@ function resolveMapMeshCollision() {
         _mapRC.far = P_RADIUS + 0.05;
         const hits = _mapRC.intersectObjects(_mapMeshes, false);
         if (hits.length > 0 && hits[0].distance < P_RADIUS) {
-            const push = P_RADIUS - hits[0].distance + 0.01;
+            const hit = hits[0];
+            // If the hit face normal points significantly upward it's a slope/floor — allow walking onto it
+            if (hit.face) {
+                const wn = hit.face.normal.clone().applyEuler(hit.object.rotation);
+                if (Math.abs(wn.y) > 0.45) continue;
+            }
+            const push = P_RADIUS - hit.distance + 0.01;
             camera.position.x -= dir.x * push;
             camera.position.z -= dir.z * push;
         }
@@ -1132,10 +1138,20 @@ function resolveMapMeshCollision() {
     _mapRC.set(camera.position, _downDir);
     _mapRC.far = 60;
     const floorHits = _mapRC.intersectObjects(_mapMeshes, false);
-    // Only accept a hit whose surface Y is at or below the player's feet (+ small margin)
-    // This prevents snapping UP onto elevated props/meshes that are above the real floor
     const feetY = camera.position.y - EYE_HEIGHT;
-    const validFloor = floorHits.find(h => h.point.y <= feetY + 0.15);
+    // Among all hits below the player, take the one closest to feet (highest Y <= feetY+0.15)
+    // But if that hit is a ceiling/overhang (face normal pointing DOWN), skip it and go deeper
+    let validFloor = null;
+    for (const h of floorHits) {
+        if (h.point.y > feetY + 0.15) continue; // above feet — skip
+        // Accept only faces with upward-pointing normal (actual floor surfaces)
+        if (h.face) {
+            const wn = h.face.normal.clone().applyEuler(h.object.rotation);
+            if (wn.y < -0.1) continue; // face points downward = ceiling/underside — skip
+        }
+        validFloor = h;
+        break; // hits are sorted closest-first; first valid floor is the one to stand on
+    }
     if (validFloor) {
         const floorSurfaceY = validFloor.point.y;
         if (camera.position.y < floorSurfaceY + EYE_HEIGHT + 0.02) {
