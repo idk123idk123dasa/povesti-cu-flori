@@ -496,6 +496,38 @@ function _applyKarambitMaterials(obj, bCol) {
     return mat;
 }
 
+let _deagleTemplate = null;
+function preloadDeagle() {
+    return new Promise(resolve => {
+        new OBJLoader().load('deagle.obj', obj => {
+            // Model: barrel runs along X axis (-3.14 to 3.62), height Y (-0.69 to 3.21), thickness Z (±0.45)
+            const SCALE = 0.048;
+            const matSlide  = new THREE.MeshLambertMaterial({ color: 0x1a1a22 });
+            const matFrame  = new THREE.MeshLambertMaterial({ color: 0x222228 });
+            const matGrip   = new THREE.MeshLambertMaterial({ color: 0x111115 });
+            const matMetal  = new THREE.MeshLambertMaterial({ color: 0x2a2a32 });
+            const matBullet = new THREE.MeshLambertMaterial({ color: 0xb8860b });
+            const partMats = { slide: matSlide, bolt: matFrame, safety: matMetal,
+                               bolt_holder: matFrame, trigger: matMetal, hammer: matMetal,
+                               bullet: matBullet, mag: matGrip };
+            obj.scale.setScalar(SCALE);
+            obj.traverse(child => {
+                if (!child.isMesh) return;
+                child.castShadow = false;
+                child.receiveShadow = false;
+                const n = (child.name || child.parent?.name || '').toLowerCase();
+                if (n.includes('bullet')) child.material = matBullet;
+                else if (n.includes('mag')) child.material = matGrip;
+                else if (n.includes('trigger') || n.includes('hammer') || n.includes('safety')) child.material = matMetal;
+                else if (n.includes('bolt')) child.material = matFrame;
+                else child.material = matSlide;
+            });
+            _deagleTemplate = obj;
+            resolve();
+        }, undefined, () => resolve());
+    });
+}
+
 function preloadAK() {
     return new Promise(resolve => {
         new OBJLoader().load('ak47.obj', obj => {
@@ -564,30 +596,17 @@ function buildRifle() {
 
 function buildPistol() {
     const g = new THREE.Group();
-    const p = (x,y,z,w,h,d,mat,rx=0,ry=0,rz=0) => makePart(g,x,y,z,w,h,d,mat,rx,ry,rz);
-    // Slide
-    p(0, 0.01, -0.02,  0.042, 0.065, 0.2,  wMat.pistolB);
-    // Frame / lower
-    p(0,-0.025,-0.005, 0.038, 0.045, 0.16, wMat.black);
-    // Barrel
-    p(0, 0.01,-0.155,  0.018, 0.018, 0.09, wMat.dark);
-    // Grip
-    p(0,-0.07, 0.055,  0.036, 0.085, 0.055,wMat.pistolB,0.12);
-    p(0,-0.09, 0.068,  0.032, 0.035, 0.038,wMat.black, 0.25);
-    // Trigger + guard
-    p(0,-0.03, 0.045,  0.007, 0.025, 0.01, wMat.dark,  0.2);
-    p(0,-0.045,0.04,   0.008, 0.006, 0.055,wMat.black);
-    // Magazine
-    p(0,-0.055,0.048,  0.032, 0.065, 0.042,wMat.metal,-0.05);
-    // Slide serrations
-    p(0.022,0.01,-0.06,0.003, 0.065, 0.008,wMat.grey);
-    p(0.022,0.01,-0.04,0.003, 0.065, 0.008,wMat.grey);
-    p(0.022,0.01,-0.02,0.003, 0.065, 0.008,wMat.grey);
-    // Sights
-    p(0, 0.046,-0.11,  0.004, 0.012, 0.004,wMat.silver);
-    p(0, 0.046, 0.045, 0.016, 0.008, 0.005,wMat.silver);
-    g.position.set(0.19,-0.20,-0.28);
-    g.rotation.y = 0.03;
+    if (_deagleTemplate) {
+        const clone = _deagleTemplate.clone(true);
+        // Barrel runs along +X; rotate so barrel points toward -Z (into screen)
+        clone.rotation.set(0, -Math.PI / 2, 0);
+        // Center offset: model X center ≈ 0.24 * scale, Y bottom of grip ~= -0.69 * scale
+        clone.position.set(0, 0.09, 0.175);
+        g.add(clone);
+    }
+    // Position group at bottom-right of view, barrel pointing forward
+    g.position.set(0.17, -0.20, -0.30);
+    g.rotation.set(0, 0.05, 0);
     return g;
 }
 
@@ -2535,7 +2554,7 @@ setupLobbyUI();
 setupBuyMenu();
 setupKnifeShop();
 updateGoldDisplay();
-Promise.all([preloadAK(), preloadKarambit(), preloadButterfly(), preloadMap()]).then(() => {
+Promise.all([preloadAK(), preloadKarambit(), preloadButterfly(), preloadMap(), preloadDeagle()]).then(() => {
     buildWeapon();
     // Refresh shop thumbnails with real OBJ if shop is open
     if (document.getElementById('knife-shop-grid')?.children.length > 0) {
