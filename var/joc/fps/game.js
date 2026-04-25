@@ -1125,13 +1125,17 @@ function resolveMapMeshCollision() {
 
     // ── Floor collision (ray downward) ──
     _mapRC.set(camera.position, _downDir);
-    _mapRC.far = EYE_HEIGHT + 0.6;
+    _mapRC.far = 60;
     const floorHits = _mapRC.intersectObjects(_mapMeshes, false);
-    if (floorHits.length > 0) {
-        const floorY = camera.position.y - floorHits[0].distance;
-        if (camera.position.y < floorY + EYE_HEIGHT + 0.02) {
-            camera.position.y = floorY + EYE_HEIGHT;
-            if (velY < 0) { velY = 0; onGround = true; }
+    // Only accept a hit whose surface Y is at or below the player's feet (+ small margin)
+    // This prevents snapping UP onto elevated props/meshes that are above the real floor
+    const feetY = camera.position.y - EYE_HEIGHT;
+    const validFloor = floorHits.find(h => h.point.y <= feetY + 0.15);
+    if (validFloor) {
+        const floorSurfaceY = validFloor.point.y;
+        if (camera.position.y < floorSurfaceY + EYE_HEIGHT + 0.02) {
+            camera.position.y = floorSurfaceY + EYE_HEIGHT;
+            if (velY <= 0) { velY = 0; onGround = true; }
         }
     }
 }
