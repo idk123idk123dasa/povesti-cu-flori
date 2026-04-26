@@ -2040,7 +2040,7 @@ document.querySelectorAll('#tfl-camellia .tfl-card').forEach((card, i) => {
 <style> #notification-wrapper {display: none !important;} .flare-cal-brand {display: none !important;} </style>
 <style>html,body{margin:0!important;padding:0!important;}footer{display:block;width:100%;}</style>
 <footer style="margin:0;padding:0;position:relative;line-height:0;overflow:hidden;">
-<video class="footer-video" data-src="/assets/footer-flowers.mp4" muted loop playsinline style="width:100%;display:block;min-height:120px;object-fit:cover;"></video>
+<video class="footer-video" data-src="/assets/footer-flowers.mp4" muted playsinline style="width:100%;display:block;min-height:120px;object-fit:cover;"></video>
 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
   <div style="line-height:0;background:rgba(0,0,0,0.38);padding:28px 40px;border-radius:12px;backdrop-filter:blur(2px);">
     <p style="color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.22em;margin:0 0 16px;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.8);">Mai multe informații</p>
@@ -2054,19 +2054,7 @@ document.querySelectorAll('#tfl-camellia .tfl-card').forEach((card, i) => {
 (function(){
   var v=document.querySelector('.footer-video');
   if(!v)return;
-  if('IntersectionObserver' in window){
-    var obs=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          if(!v.src){v.src=v.getAttribute('data-src');v.load();}
-          v.play();
-        } else {
-          v.pause();
-        }
-      });
-    },{threshold:0.1});
-    obs.observe(v);
-  } else {
+  if('IntersectionObserver' in window){var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){if(!v.src){v.src=v.getAttribute('data-src');v.load();}v.play();obs.unobserve(v);}});},{threshold:0.1});obs.observe(v);} else {
     v.src=v.getAttribute('data-src');
     v.load();v.play();
   }
