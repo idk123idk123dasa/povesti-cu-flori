@@ -182,7 +182,7 @@ body{
     <div class="drop-zone" id="dropZone">
       <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="addFiles(this.files)"/>
       <div class="drop-icon">🖼️🎬</div>
-      <div class="drop-text"><strong>Trage fișierele aici</strong><br>sau apasă să alegi</div>
+      <div class="drop-text"><strong>Trage fișierele aici</strong><br>sau apasă să alegi · sau Ctrl+V</div>
       <div class="drop-hint">Poze: PNG, JPG, GIF, WebP · Video: MP4, MOV, AVI, WebM · max 200 MB</div>
     </div>
 
@@ -212,6 +212,19 @@ dz.addEventListener('dragleave', function(){ dz.classList.remove('over'); });
 dz.addEventListener('drop', function(e){
   e.preventDefault(); dz.classList.remove('over');
   addFiles(e.dataTransfer.files);
+});
+window.addEventListener('paste', function(e){
+  var items = (e.clipboardData || window.clipboardData) && e.clipboardData.items;
+  if (!items) return;
+  var pasted = [];
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    if (it.kind === 'file') {
+      var f = it.getAsFile();
+      if (f) pasted.push(f);
+    }
+  }
+  if (pasted.length) { e.preventDefault(); addFiles(pasted); }
 });
 
 function isAccepted(f) {

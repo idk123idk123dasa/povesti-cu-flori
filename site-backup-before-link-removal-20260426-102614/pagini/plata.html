@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalii plată – Scrisori cu Povești</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="shortcut icon" type="image/x-icon" href="/assets/favicon-round.ico"/><link rel="icon" type="image/png" sizes="256x256" href="/assets/favicon-round.png"/>
+
+
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'EB Garamond',serif;-webkit-font-smoothing:antialiased;}
+body{
+  background-color:#7D1E2A;
+  background-image:url('/assets/stories-bg-v4.png');
+  background-size:400px;background-repeat:repeat;
+  padding:40px 16px 0;
+}
+.body-inner{
+  max-width:600px;
+  margin:0 auto 60px;
+}
+
+.pbar{position:fixed;top:0;left:0;width:100%;height:4px;background:rgba(0,0,0,0.2);z-index:1000;}
+.pfill{height:100%;background:linear-gradient(90deg,#D4B060,#E8CC80);}
+
+.card{
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 12px 50px rgba(0,0,0,0.3);
+  overflow:hidden;
+  width:100%;
+  max-width:520px;
+}
+
+/* Header */
+.card-header{
+  background:linear-gradient(135deg,#7D1E2A 0%,#9E2535 100%);
+  padding:28px 28px 24px;
+  text-align:center;
+  position:relative;
+}
+.card-header::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;left:0;right:0;
+  height:20px;
+  background:#fff;
+  border-radius:50% 50% 0 0 / 20px 20px 0 0;
+}
+.checkmark{
+  width:52px;height:52px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  border:2px solid rgba(255,255,255,0.4);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+  font-size:22px;
+}
+.card-header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.7rem;
+  font-weight:800;
+  color:#fff;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+.card-header p{
+  font-size:0.95rem;
+  color:rgba(255,255,255,0.75);
+  line-height:1.5;
+}
+
+/* Body */
+.card-body{padding:30px 28px 32px;}
+
+/* Summary box */
+.summary{
+  background:#faf9f7;
+  border:1px solid #ece7df;
+  border-radius:10px;
+  padding:14px 18px;
+  margin-bottom:22px;
+}
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:0.9rem;
+  color:#444;
+  padding:4px 0;
+}
+.summary-row:not(:last-child){border-bottom:1px solid #ece7df;padding-bottom:8px;margin-bottom:8px;}
+.summary-row .lbl{color:#888;font-size:0.82rem;}
+.summary-row .val{font-weight:800;color:#111;text-align:right;}
+.summary-row .val.gold{color:#B8913A;}
+
+/* Bank details */
+.bank-title{
+  font-size:0.65rem;
+  text-transform:uppercase;
+  letter-spacing:0.13em;
+  color:#B8913A;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.bank-card{
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+  border-radius:12px;
+  padding:22px 22px 18px;
+  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
+}
+.bank-card::before{
+  content:'';
+  position:absolute;
+  top:-30px;right:-30px;
+  width:120px;height:120px;
+  border-radius:50%;
+  background:rgba(212,176,96,0.08);
+}
+.bank-name{
+  font-size:0.7rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:rgba(255,255,255,0.45);
+  margin-bottom:4px;
+}
+.bank-titular{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem;
+  font-weight:800;
+  color:#fff;
+  margin-bottom:16px;
+}
+.iban-label{
+  font-size:0.62rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:rgba(255,255,255,0.4);
+  margin-bottom:4px;
+}
+.iban{
+  font-family:'EB Garamond',serif;
+  font-size:1.05rem;
+  font-weight:800;
+  color:#D4B060;
+  letter-spacing:0.05em;
+  word-break:break-all;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.copy-btn{
+  background:rgba(212,176,96,0.15);
+  border:1px solid rgba(212,176,96,0.3);
+  border-radius:4px;
+  padding:2px 8px;
+  font-size:0.62rem;
+  color:#D4B060;
+  cursor:pointer;
+  white-space:nowrap;
+  font-family:'EB Garamond',serif;
+  transition:background 0.15s;
+  flex-shrink:0;
+}
+.copy-btn:hover{background:rgba(212,176,96,0.25);}
+.copy-btn.copied{color:#7fc47f;border-color:rgba(127,196,127,0.4);}
+.bank-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.bank-info-col{font-size:0.72rem;color:rgba(255,255,255,0.5);}
+.bank-info-col span{display:block;color:rgba(255,255,255,0.8);font-size:0.8rem;margin-top:1px;}
+.suma-col{text-align:right;}
+.suma-label{font-size:0.62rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.08em;}
+.suma-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.7rem;
+  font-weight:700;
+  color:#D4B060;
+  line-height:1;
+}
+.suma-per{font-size:0.7rem;color:rgba(212,176,96,0.6);}
+
+/* Instructions */
+.instructions{
+  background:#fff8f0;
+  border:1px solid #f0e4d0;
+  border-radius:10px;
+  padding:16px 18px;
+  margin-bottom:18px;
+}
+.instructions-title{
+  font-size:0.78rem;
+  font-weight:700;
+  color:#7D1E2A;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.instructions ol{
+  padding-left:18px;
+}
+.instructions li{
+  font-size:0.88rem;
+  color:#444;
+  line-height:1.6;
+  margin-bottom:5px;
+}
+.instructions li:last-child{margin-bottom:0;}
+.instructions li strong{color:#111;}
+
+.note{
+  font-size:0.8rem;
+  color:#888;
+  text-align:center;
+  line-height:1.5;
+}
+
+@media(max-width:500px){
+  .card-body{padding:22px 18px 26px;}
+  .card-header{padding:22px 18px 20px;}
+  .bank-card{padding:18px 16px 14px;}
+  .suma-val{font-size:1.4rem;}
+}
+</style>
+<style>
+  body .site-header__logo { margin: 0 0 5px 0 !important; }
+  body .site-header__logo a.site-header__logo-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  body .site-header__logo a.site-header__logo-image img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100px !important;
+    width: 100px !important;
+  }
+  @media only screen and (max-width: 749px) {
+    body .grid__item:has(.site-header__logo) { flex-shrink: 0; }
+    body .site-header__logo a.site-header__logo-image img {
+      max-width: 100px !important;
+      width: 100px !important;
+    }
+  }
+</style>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,800;1,800&family=Playfair+Display:wght@900&display=swap"><style>body,html{background-image:url("/assets/stories-bg-v4.png")!important;background-size:50% auto!important;background-repeat:repeat!important;background-position:center center!important;}</style></head>
+<body>
+<div class="pbar"><div class="pfill" style="width:100%"></div></div>
+<div class="body-inner">
+<div class="card">
+
+  <div class="card-header">
+    <div class="checkmark">✉</div>
+    <h1>Aproape gata!</h1>
+    <p>Finalizează comanda prin virament bancar.<br>Scrisorile pleacă joi după confirmarea plății.</p>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Order summary -->
+    <div class="summary">
+      <div class="summary-row">
+        <span class="lbl">Poveste</span>
+        <span class="val" id="sumStory">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl">Abonament</span>
+        <span class="val" id="sumPlan">—</span>
+      </div>
+      <div class="summary-row" id="sumEpRow" style="display:none">
+        <span class="lbl">Începe de la episodul</span>
+        <span class="val" id="sumEp">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl">Destinatar</span>
+        <span class="val" id="sumName">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="lbl">Total de plată</span>
+        <span class="val gold" id="sumTotal">—</span>
+      </div>
+    </div>
+
+    <!-- Bank card -->
+    <div class="bank-title">Detalii virament bancar</div>
+    <div class="bank-card">
+      <div class="bank-name">Banca Transilvania</div>
+      <div class="bank-titular">Scrisori Cu Povesti SRL</div>
+      <div class="iban-label">IBAN</div>
+      <div class="iban" id="ibanWrap">
+        <span id="ibanText">RO49 BTRL RONCR T001 7304 8401</span>
+        <span class="copy-btn" id="copyBtn" onclick="copyIban()">Copiază</span>
+      </div>
+      <div class="bank-row">
+        <div class="bank-info-col">
+          Monedă<span>RON</span>
+        </div>
+        <div class="suma-col">
+          <div class="suma-label">Suma de plată</div>
+          <div class="suma-val" id="sumaVal">—</div>
+          <div class="suma-per" id="sumaPer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <div class="instructions-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7D1E2A" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Cum funcționează
+      </div>
+      <ol>
+        <li>Virează suma de mai sus la contul bancar indicat.</li>
+        <li>La descrierea transferului menționează <strong id="refText">numele tău + povestea aleasă</strong>.</li>
+        <li>Trimite dovada plății pe <strong>suport@scrisoricupovesti.ro</strong>.</li>
+        <li>Confirmăm comanda în 24h și prima scrisoare pleacă joi.</li>
+      </ol>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  var storyNames = {
+    'camellia-grace':    'Ecaterina Adela Letters',
+    'audrey-rose':       'Camelia Sofia Letters',
+    'adelaide-magnolia': 'Andra Elena Letters',
+    'lily-clara':        'Teodora Mara Letters',
+    'orchid-mae':        'Elvira Natalia Letters',
+    'norah-aven':        'Daria Serafina Chronicles'
+  };
+
+  var params  = new URLSearchParams(window.location.search);
+  var storyId = params.get('poveste') || '';
+  var plan    = params.get('plan')  || 'lunar';
+  var ep      = parseInt(params.get('ep')) || 1;
+
+  var recipient = null;
+  try { recipient = JSON.parse(sessionStorage.getItem('recipient')); } catch(e){}
+
+  // Story
+  document.getElementById('sumStory').textContent = storyNames[storyId] || storyId;
+
+  // Plan + amount
+  var isAnual = plan === 'anual';
+  var suma    = isAnual ? 499 : 60;
+  var planLabel = isAnual ? 'Anual (500 lei)' : 'Lunar (60 lei/lună)';
+  document.getElementById('sumPlan').textContent  = planLabel;
+  document.getElementById('sumaVal').textContent  = suma + ' lei';
+  document.getElementById('sumaPer').textContent  = isAnual ? 'pentru 12 luni' : 'prima lună';
+  document.getElementById('sumTotal').textContent = suma + ' lei';
+
+  // Episode (lunar only)
+  if(!isAnual){
+    document.getElementById('sumEpRow').style.display = '';
+    document.getElementById('sumEp').textContent = ep + '–' + (ep+1);
+    if(recipient && recipient.startEpisode) {
+      var e2 = recipient.startEpisode;
+      document.getElementById('sumEp').textContent = e2 + '–' + (e2+1);
+    }
+  }
+
+  // Recipient name
+  if(recipient){
+    var name = [recipient.firstName, recipient.lastName].filter(Boolean).join(' ');
+    if(name) document.getElementById('sumName').textContent = name;
+  }
+
+  // Reference
+  var storyLabel = (storyNames[storyId] || storyId || '').replace(/_/g, ' ');
+  var ref = (recipient ? [recipient.firstName, recipient.lastName].filter(Boolean).join(' ') : '') + (storyId ? ' · ' + storyLabel : '');
+  if(ref.trim()) document.getElementById('refText').textContent = '"' + ref.trim() + '"';
+
+  // Page title
+  document.title = 'Plată – ' + (storyNames[storyId]||'Scrisori cu Povești');
+
+  // Discord webhook notification
+  (function(){
+    var WEBHOOK = 'https://discord.com/api/webhooks/1496865972299108476/E8vnEUaALTx3c2Tx7ulpGLerEbvN7Lxyw2Bo2rcPbc6Ha-GA3ZlUuBjxBugRXLGxtU7W';
+    var startEp = recipient && recipient.startEpisode ? recipient.startEpisode : ep;
+    var planText = isAnual ? 'Anual — 499 lei' : 'Lunar — 60 lei/lună (ep. ' + startEp + ')';
+    var adresa = recipient ? [
+      recipient.address,
+      recipient.address2,
+      recipient.city,
+      recipient.county,
+      recipient.postal
+    ].filter(Boolean).join(', ') : '—';
+    var numeDest = recipient ? [recipient.firstName, recipient.lastName].filter(Boolean).join(' ') : '—';
+    var embed = {
+      title: '📬 Comandă nouă — Scrisori cu Povești',
+      color: 0xC0392B,
+      fields: [
+        { name: '👤 Destinatar',  value: numeDest || '—',                         inline: true },
+        { name: '📖 Poveste',     value: storyNames[storyId] || storyId || '—',   inline: true },
+        { name: '💳 Abonament',   value: planText,                                 inline: true },
+        { name: '🏠 Adresă',      value: adresa || '—',                            inline: false }
+      ],
+      footer: { text: 'scrisoricupovesti.ro' },
+      timestamp: new Date().toISOString()
+    };
+    fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ embeds: [embed] })
+    }).catch(function(){});
+  })();
+
+  // Copy IBAN
+  window.copyIban = function(){
+    var iban = document.getElementById('ibanText').textContent.replace(/\s/g,'');
+    navigator.clipboard.writeText(iban).then(function(){
+      var btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copiat ✓';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent='Copiază'; btn.classList.remove('copied'); }, 2000);
+    });
+  };
+})();
+</script>
+</div>
+
+
+<script>
+/* Force nav links to navigate before GemPage can intercept */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    if (!a.closest('#AccessibleNav, #custom-nav, #MobileNav, .nav-bottom-cta, .announcement-bar')) return;
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    e.stopImmediatePropagation();
+    window.location.href = href;
+  }, true);
+})();
+</script>
+<style>body,body *{font-weight:800!important}</style><style>html,body{margin:0!important;padding:0!important;}footer{display:block;width:100%;}</style>
+<footer style="margin:0;padding:0;position:relative;line-height:0;overflow:hidden;">
+<video class="footer-video" data-src="/assets/footer-flowers.mp4" muted loop playsinline style="width:100%;display:block;min-height:120px;object-fit:cover;"></video>
+<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
+  <div style="line-height:0;background:rgba(0,0,0,0.38);padding:28px 40px;border-radius:12px;backdrop-filter:blur(2px);">
+    <p style="color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.22em;margin:0 0 16px;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.8);">Mai multe informații</p>
+    <a href="/pagini/terms-and-conditions" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:10px;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Termeni și condiții</a>
+    <a href="/pagini/privacy-policy" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:10px;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Politica de confidențialitate</a>
+    <a href="/pagini/refund-policy" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:10px;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Returnări și rambursări</a>
+    <a href="/politici/politica-livrare" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Politica de expediere</a>
+  </div>
+</div>
+<script>
+(function(){
+  var v=document.querySelector('.footer-video');
+  if(!v)return;
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          if(!v.src){v.src=v.getAttribute('data-src');v.load();}
+          v.play();
+        } else {
+          v.pause();
+        }
+      });
+    },{threshold:0.1});
+    obs.observe(v);
+  } else {
+    v.src=v.getAttribute('data-src');
+    v.load();v.play();
+  }
+})();
+</script>
+</footer>
+</body>
+</html>

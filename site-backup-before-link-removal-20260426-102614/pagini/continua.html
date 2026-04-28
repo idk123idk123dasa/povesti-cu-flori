@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Începe acum – Scrisori cu Povești</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="shortcut icon" type="image/x-icon" href="/assets/favicon-round.ico"/><link rel="icon" type="image/png" sizes="256x256" href="/assets/favicon-round.png"/>
+
+
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;font-family:'EB Garamond',serif;-webkit-font-smoothing:antialiased;}
+body{
+  background-color:#7D1E2A;
+  background-image:url('/assets/stories-bg-v4.png');
+  background-size:400px;background-repeat:repeat;
+  padding:32px 16px 60px;
+}
+
+/* Progress bar */
+.pbar{position:fixed;top:0;left:0;width:100%;height:4px;background:rgba(0,0,0,0.2);z-index:1000;}
+.pfill{height:100%;background:linear-gradient(90deg,#D4B060,#E8CC80);}
+
+/* Layout */
+.page-wrap{
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:16px;
+  max-width:900px;
+  margin:0 auto;
+}
+
+/* Main form card */
+.main-card{
+  flex:1;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.25);
+  overflow:hidden;
+  min-width:0;
+}
+
+/* Story panel */
+.story-panel{
+  width:190px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.story-panel img{
+  width:100%;
+  border-radius:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  display:block;
+}
+.story-panel .story-name{
+  margin-top:10px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.9rem;
+  font-weight:800;
+  color:#fff;
+  text-align:center;
+  line-height:1.3;
+  text-shadow:0 1px 3px rgba(0,0,0,0.4);
+}
+.story-panel .story-tag{
+  margin-top:4px;
+  font-size:0.7rem;
+  color:#fff;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:16px;
+}
+
+/* ═══════════════════════════════
+   PLAN SELECTION
+═══════════════════════════════ */
+.plan-section{
+  background:rgba(255,255,255,0.92);
+  border-radius:10px;
+  padding:12px;
+  border:1px solid rgba(0,0,0,0.1);
+}
+.plan-title{
+  font-size:0.65rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:#7D1E2A;
+  font-weight:800;
+  margin-bottom:8px;
+  text-align:center;
+}
+.plan-card{
+  background:#fff;
+  border:1.5px solid #e0d5c8;
+  border-radius:8px;
+  padding:10px 10px 10px 8px;
+  margin-bottom:7px;
+  cursor:pointer;
+  transition:all 0.18s ease;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.plan-card:last-child{margin-bottom:0}
+.plan-card:hover{background:#fdf8f0;border-color:#D4B060;}
+.plan-card.selected{
+  background:#fdf5e4;
+  border-color:#D4B060;
+  border-width:2px;
+}
+.plan-radio{
+  width:15px;height:15px;
+  border-radius:50%;
+  border:2px solid #ccc;
+  flex-shrink:0;
+  position:relative;
+  transition:border-color 0.18s;
+}
+.plan-card.selected .plan-radio{
+  border-color:#D4B060;
+}
+.plan-card.selected .plan-radio::after{
+  content:'';
+  position:absolute;
+  inset:3px;
+  border-radius:50%;
+  background:#D4B060;
+}
+.plan-info{flex:1;min-width:0;}
+.plan-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.85rem;
+  font-weight:800;
+  color:#1a1a1a;
+  line-height:1.2;
+}
+.plan-desc{
+  font-size:0.62rem;
+  color:#555;
+  line-height:1.3;
+  margin-top:1px;
+}
+.plan-price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;
+  font-weight:700;
+  color:#D4B060;
+  text-align:right;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.plan-price span{
+  font-size:0.62rem;
+  font-weight:800;
+  color:#D4B060;
+  display:block;
+  text-align:right;
+}
+.plan-badge{
+  display:inline-block;
+  background:#D4B060;
+  color:#fff;
+  font-size:0.52rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.07em;
+  padding:1px 5px;
+  border-radius:3px;
+  margin-left:4px;
+  vertical-align:middle;
+}
+
+/* ═══════════════════════════════
+   ENVELOPE (PNG-based)
+═══════════════════════════════ */
+.envelope-wrap{
+  background:#f4ede3;
+  padding:20px 24px 16px;
+  border-bottom:1px solid #e8ddd3;
+}
+.envelope-img-wrap{
+  position:relative;
+  width:100%;
+  line-height:0;
+  border-radius:4px;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.13);
+}
+.envelope-img{
+  width:100%;
+  display:block;
+  border-radius:4px;
+}
+
+/* Text overlaid on the envelope PNG */
+.env-name{
+  position:absolute;
+  top:51%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Pinyon Script','Dancing Script',cursive;
+  font-size:clamp(22px,5.5vw,38px);
+  color:#2C2418;
+  white-space:nowrap;
+  pointer-events:none;
+  line-height:1;
+  text-align:center;
+}
+.env-name.empty{
+  font-family:'EB Garamond',serif;
+  font-style:italic;
+  font-size:clamp(13px,2.2vw,16px);
+  color:#777;
+  top:55%;
+}
+.env-addr{
+  position:absolute;
+  top:63%;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'EB Garamond',serif;
+  font-size:clamp(12px,2.1vw,16px);
+  color:#2C2418;
+  line-height:1.5;
+  text-align:center;
+  pointer-events:none;
+  white-space:nowrap;
+}
+.env-addr.empty{
+  color:#777;
+  font-style:italic;
+  font-size:clamp(10px,1.8vw,13px);
+}
+
+/* ═══════════════════════════════
+   FORM BODY
+═══════════════════════════════ */
+.form-body{
+  padding:22px 24px 26px;
+}
+
+.section-heading{
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:#B8913A;
+  font-weight:800;
+  margin-bottom:10px;
+  margin-top:18px;
+  padding-bottom:5px;
+  border-bottom:1px solid #ece7df;
+}
+.section-heading:first-child{margin-top:0}
+
+.field-row{display:flex;gap:10px;margin-bottom:10px;}
+.field{display:flex;flex-direction:column;flex:1;margin-bottom:10px;}
+.field:last-child{margin-bottom:0}
+.field label{font-size:0.75rem;color:#333;margin-bottom:3px;font-weight:900;}
+.field input,.field select{
+  font-family:'EB Garamond',serif;
+  font-size:0.97rem;
+  border:1.5px solid #d8d0c8;
+  border-radius:6px;
+  padding:9px 11px;
+  color:#1a1a1a;
+  background:#fff;
+  width:100%;outline:none;
+  transition:border-color 0.15s;
+}
+.field input:focus,.field select:focus{border-color:#B8913A;}
+.field input::placeholder{color:#bbb;}
+.field select{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;
+  padding-right:28px;
+}
+
+
+.btn-submit{
+  display:block;width:100%;margin-top:20px;
+  padding:14px 24px;
+  background:linear-gradient(135deg,#7D1E2A 0%,#A0263A 100%);
+  color:#fff;font-family:'EB Garamond',serif;
+  font-size:1.1rem;font-weight:900;
+  border:none;border-radius:8px;cursor:pointer;
+  letter-spacing:0.04em;transition:opacity 0.2s;
+  box-shadow:0 3px 12px rgba(125,30,42,0.35);
+}
+.btn-submit:hover{opacity:0.88}
+
+.guarantee{
+  margin-top:10px;text-align:center;font-size:0.77rem;color:#555;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.guarantee svg{color:#B8913A;flex-shrink:0}
+
+/* Toast notification */
+.toast{
+  position:fixed;
+  top:20px;left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:#2c1a1a;
+  color:#fff;
+  padding:16px 26px;
+  border-radius:10px;
+  font-size:1.08rem;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.22s,transform 0.22s;
+  max-width:92vw;
+  border-left:5px solid #C0392B;
+  display:flex;align-items:center;gap:11px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Episode selector */
+.ep-section{
+  margin-top:8px;
+  background:#f8f4ee;
+  border:1px solid #e0d5c8;
+  border-radius:8px;
+  padding:10px;
+  display:none;
+}
+.ep-section.visible{display:block;}
+.ep-title{
+  font-size:0.6rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:#7D1E2A;
+  font-weight:800;
+  margin-bottom:7px;
+  text-align:center;
+}
+.ep-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+}
+.ep-btn{
+  background:#fff;
+  border:1.5px solid #d8d0c8;
+  border-radius:6px;
+  padding:6px 4px;
+  text-align:center;
+  cursor:pointer;
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.78rem;
+  font-weight:800;
+  color:#1a1a1a;
+  transition:all 0.15s;
+  line-height:1.2;
+}
+.ep-btn:hover{background:#fdf8f0;border-color:#D4B060;color:#7D1E2A;}
+.ep-btn.sel{background:#fdf5e4;border-color:#D4B060;color:#7D1E2A;border-width:2px;}
+.ep-btn .ep-sub{font-size:0.52rem;color:#666;font-family:'EB Garamond',serif;font-weight:900;display:block;margin-top:1px;}
+.ep-btn.sel .ep-sub{color:#B8913A;}
+
+/* Responsive */
+@media(max-width:700px){
+  body{padding:12px 10px 40px;}
+
+  .page-wrap{flex-direction:column;align-items:stretch;gap:10px;}
+
+  /* Story panel: horizontal strip at top */
+  .story-panel{
+    width:100%;
+    flex-direction:column;
+    order:-1;
+  }
+  .story-panel img{display:none;}
+  .story-panel .story-name{
+    font-size:1rem;margin-top:0;text-align:center;
+  }
+  .story-panel .story-tag{
+    text-align:center;margin-bottom:10px;
+  }
+
+  /* Plan section full width */
+  .plan-section{width:100%;margin-top:0;}
+  .plan-card{padding:10px 10px 10px 10px;}
+  .plan-name{font-size:0.9rem;}
+  .plan-price{font-size:1rem;}
+
+  /* Episode grid 4 cols on phone */
+  .ep-grid{grid-template-columns:repeat(4,1fr);gap:4px;}
+  .ep-btn{padding:5px 2px;font-size:0.72rem;}
+
+  /* Main card */
+  .main-card{border-radius:10px;}
+  .envelope-wrap{padding:12px 12px 10px;}
+  .form-body{padding:14px 14px 18px;}
+
+  /* Form rows stack */
+  .field-row{flex-direction:column;gap:0;}
+  .field{margin-bottom:8px;}
+  .field:last-child{margin-bottom:0;}
+
+  /* County + postal stay side by side */
+  .field-row .field[style*="max-width:160px"],
+  .field-row .field[style*="max-width:100px"]{
+    max-width:none!important;
+  }
+
+  .btn-submit{font-size:1rem;padding:13px;}
+
+  .section-heading{font-size:0.65rem;margin-top:14px;}
+}
+</style>
+<style>
+  body .site-header__logo { margin: 0 0 5px 0 !important; }
+  body .site-header__logo a.site-header__logo-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  body .site-header__logo a.site-header__logo-image img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100px !important;
+    width: 100px !important;
+  }
+  @media only screen and (max-width: 749px) {
+    body .grid__item:has(.site-header__logo) { flex-shrink: 0; }
+    body .site-header__logo a.site-header__logo-image img {
+      max-width: 100px !important;
+      width: 100px !important;
+    }
+  }
+</style>
+  <link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,800;1,800&family=Playfair+Display:wght@900&display=swap"><style>body,html{background-image:url("/assets/stories-bg-v4.png")!important;background-size:50% auto!important;background-repeat:repeat!important;background-position:center center!important;}</style></head>
+<body>
+<div style="position:fixed;top:12px;left:14px;z-index:99999;"><a href="https://scrisoricupovesti.ro/"><img src="/assets/emblema-v2.png" alt="Scrisori Cu Povești" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;display:block;"></a></div>
+
+<header style="text-align:center;padding:10px 0 0;">
+  <a href="/"><img src="/assets/emblema-v2.png" alt="Scrisori Cu Povești" style="max-width:100px;border:3px solid #000;border-radius:50%;padding:3px;"></a>
+</header>
+
+<div class="pbar"><div class="pfill" style="width:66%"></div></div>
+<div class="toast" id="toast">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E74C3C" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<div class="page-wrap">
+
+  <!-- MAIN CARD -->
+  <div class="main-card">
+
+    <!-- ENVELOPE PNG -->
+    <div class="envelope-wrap">
+      <div class="envelope-img-wrap">
+        <img loading="lazy" id="envImg" src="" alt="plic" class="envelope-img"/>
+        <div class="env-name empty" id="envName">Numele destinatarului</div>
+        <div class="env-addr empty" id="envAddr">Strada, numărul · Orașul</div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-body">
+      <div class="section-heading">Destinatar</div>
+      <div class="field-row">
+        <div class="field">
+          <label for="firstName">Prenume</label>
+          <input type="text" id="firstName" placeholder="ex. Maria" autocomplete="given-name"/>
+        </div>
+        <div class="field">
+          <label for="lastName">Nume</label>
+          <input type="text" id="lastName" placeholder="ex. Ionescu" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <div class="section-heading">Adresă de livrare</div>
+      <div class="field">
+        <label for="address">Strada și numărul</label>
+        <input type="text" id="address" placeholder="ex. Str. Florilor nr. 12" autocomplete="street-address"/>
+      </div>
+      <div class="field">
+        <label for="address2">Bloc, scară, apart. <span style="color:#bbb;font-weight:800">(opțional)</span></label>
+        <input type="text" id="address2" placeholder="ex. Bl. A2, Sc. 1, Ap. 5"/>
+      </div>
+      <div class="field">
+        <label for="city">Oraș</label>
+        <input type="text" id="city" placeholder="ex. Cluj-Napoca" autocomplete="address-level2"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="county">Județ</label>
+          <select id="county">
+            <option value="">Selectează</option>
+            <option>Alba</option><option>Arad</option><option>Argeș</option><option>Bacău</option>
+            <option>Bihor</option><option>Bistrița-Năsăud</option><option>Botoșani</option><option>Brăila</option>
+            <option>Brașov</option><option>București</option><option>Buzău</option><option>Călărași</option>
+            <option>Caraș-Severin</option><option>Cluj</option><option>Constanța</option><option>Covasna</option>
+            <option>Dâmbovița</option><option>Dolj</option><option>Galați</option><option>Giurgiu</option>
+            <option>Gorj</option><option>Harghita</option><option>Hunedoara</option><option>Ialomița</option>
+            <option>Iași</option><option>Ilfov</option><option>Maramureș</option><option>Mehedinți</option>
+            <option>Mureș</option><option>Neamț</option><option>Olt</option><option>Prahova</option>
+            <option>Sălaj</option><option>Satu Mare</option><option>Sibiu</option><option>Suceava</option>
+            <option>Teleorman</option><option>Timiș</option><option>Tulcea</option><option>Vâlcea</option>
+            <option>Vaslui</option><option>Vrancea</option>
+          </select>
+        </div>
+        <div class="field" style="max-width:120px;flex-shrink:0">
+          <label for="postal">Cod poștal</label>
+          <input type="text" id="postal" placeholder="000000" maxlength="6" autocomplete="postal-code"/>
+        </div>
+      </div>
+
+      <button class="btn-submit" onclick="continua()">Continuă acum →</button>
+      <p class="guarantee">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        30 de zile garanție de returnare a banilor
+      </p>
+    </div>
+  </div>
+
+  <!-- STORY PANEL + PLANS -->
+  <div class="story-panel">
+    <img loading="lazy" id="storyImg" src="" alt=""/>
+    <div class="story-name" id="storyName"></div>
+    <div class="story-tag" id="storyTag"></div>
+
+    <!-- PLAN SELECTION -->
+    <div class="plan-section">
+      <div class="plan-title">Alege planul</div>
+
+      <div class="plan-card selected" id="plan-lunar" onclick="selectPlan('lunar')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Lunar</div>
+          <div class="plan-desc">O scrisoare pe lună</div>
+        </div>
+        <div class="plan-price">60 lei<span>/lună</span></div>
+      </div>
+
+      <div class="plan-card" id="plan-anual" onclick="selectPlan('anual')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Anual <span class="plan-badge">-38%</span></div>
+          <div class="plan-desc">12 scrisori · Economisești 300 lei</div>
+        </div>
+        <div class="plan-price">500 lei<span>/an</span></div>
+      </div>
+
+      <!-- EPISODE SELECTOR (lunar only) -->
+      <div class="ep-section visible" id="epSection">
+        <div class="ep-title">Începe de la episodul</div>
+        <div class="ep-grid" id="epGrid"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var stories = {
+    'camellia-grace':    {
+      title:'Ecaterina Adela',
+      tag:'Romantism și revoluție',
+      img:'/assets/Story_Photos_wLogo_2_v2.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Kindly_Delivery_Into_the_Care_of_-2.png?v=1774892928'
+    },
+    'audrey-rose':       {
+      title:'Camelia Sofia',
+      tag:'Dramă romantică în înalta societate',
+      img:'/assets/Copy_of_ARProductPage-5v2.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Audrey_ae839634-176a-428f-8bd8-20f0c3bb98ba.png?v=1774749077'
+    },
+    'adelaide-magnolia': {
+      title:'Andra Elena',
+      tag:'Dragoste și război',
+      img:'/assets/Copy_of_AMProductPage-5v2.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Adelade.png?v=1774749077'
+    },
+    'lily-clara':        {
+      title:'Teodora Mara',
+      tag:'Aventură de frontieră',
+      img:'/assets/Copy_of_LCProductPage-5v3.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Lily.png?v=1774749077'
+    },
+    'orchid-mae':        {
+      title:'Elvira Natalia',
+      tag:'Mister și descoperiri dacice',
+      img:'/assets/Copy_of_OMProductPage-5v2.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Orchid.png?v=1774749077'
+    },
+    'norah-aven':        {
+      title:'Daria Serafina',
+      tag:'Folclor românesc din folclor românesc',
+      img:'/assets/Copy_of_NAProductPage-5v2.jpg',
+      env:'https://cdn.shopify.com/s/files/1/0419/4517/0084/files/Norah_ebe11c07-c84b-4eba-b920-2411baf132c6.png?v=1774749076'
+    }
+  };
+
+  var storyId  = (new URLSearchParams(window.location.search).get('poveste')||new URLSearchParams(window.location.search).get('story'));
+  var _sid=storyId?(storyId.replace(/_/g,' ')):storyId;
+  var story    = stories[storyId] || Object.values(stories).find(function(s){return s.title===_sid||s.title===storyId;}) || null;
+  var selPlan  = 'lunar';
+  var selEp    = 1; // starting episode (1, 3, 5, ... 23)
+
+  if(story){
+    document.getElementById('storyImg').src  = story.img;
+    document.getElementById('storyImg').alt  = story.title;
+    document.getElementById('storyName').textContent = story.title + ' Letters';
+    document.getElementById('storyTag').textContent  = story.tag;
+    document.getElementById('envImg').src = story.env;
+    document.title = 'Continuă cu ' + story.title + ' – Scrisori cu Povești';
+  }
+
+  /* Build episode grid */
+  (function(){
+    var grid = document.getElementById('epGrid');
+    for(var i = 1; i <= 23; i += 2){
+      var btn = document.createElement('div');
+      btn.className = 'ep-btn' + (i === 1 ? ' sel' : '');
+      btn.setAttribute('data-ep', i);
+      var epEnd = i + 1;
+      btn.innerHTML = i + '–' + epEnd + '<span class="ep-sub">scrisori</span>';
+      btn.onclick = (function(ep){ return function(){ pickEp(ep); }; })(i);
+      grid.appendChild(btn);
+    }
+  })();
+
+  function pickEp(ep){
+    selEp = ep;
+    document.querySelectorAll('.ep-btn').forEach(function(b){
+      b.classList.toggle('sel', parseInt(b.getAttribute('data-ep')) === ep);
+    });
+  }
+
+  /* Plan selection */
+  window.selectPlan = function(plan){
+    selPlan = plan;
+    document.getElementById('plan-lunar').classList.toggle('selected', plan==='lunar');
+    document.getElementById('plan-anual').classList.toggle('selected', plan==='anual');
+    document.getElementById('epSection').classList.toggle('visible', plan==='lunar');
+  };
+
+  /* Live envelope update */
+  function updateEnvelope(){
+    var fn = document.getElementById('firstName').value.trim();
+    var ln = document.getElementById('lastName').value.trim();
+    var ad = document.getElementById('address').value.trim();
+    var a2 = document.getElementById('address2').value.trim();
+    var ct = document.getElementById('city').value.trim();
+    var co = document.getElementById('county').value;
+
+    var nameEl = document.getElementById('envName');
+    var addrEl = document.getElementById('envAddr');
+
+    if(fn || ln){
+      nameEl.textContent = [fn, ln].filter(Boolean).join(' ');
+      nameEl.classList.remove('empty');
+    } else {
+      nameEl.textContent = 'Numele destinatarului';
+      nameEl.classList.add('empty');
+    }
+
+    var addrParts = [];
+    if(ad) addrParts.push(a2 ? ad + ', ' + a2 : ad);
+    if(ct || co) addrParts.push([ct, co].filter(Boolean).join(', '));
+
+    if(addrParts.length){
+      addrEl.innerHTML = addrParts.join('<br>');
+      addrEl.classList.remove('empty');
+    } else {
+      addrEl.textContent = 'Strada, numărul · Orașul';
+      addrEl.classList.add('empty');
+    }
+  }
+
+  ['firstName','lastName','address','address2','city','county'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', updateEnvelope);
+    document.getElementById(id).addEventListener('change', updateEnvelope);
+  });
+
+
+  /* Submit */
+  window.continua = function(){
+    var firstName = document.getElementById('firstName').value.trim();
+    var lastName  = document.getElementById('lastName').value.trim();
+    var address   = document.getElementById('address').value.trim();
+    var city      = document.getElementById('city').value.trim();
+    var county    = document.getElementById('county').value;
+
+    if(!firstName || !lastName){
+      showToast('Te rugăm să completezi prenumele și numele destinatarului.');
+      return;
+    }
+    if(!address || !city || !county){
+      showToast('Te rugăm să completezi adresa, orașul și județul.');
+      return;
+    }
+
+    sessionStorage.setItem('recipient', JSON.stringify({
+      firstName, lastName,
+      address: address,
+      address2: document.getElementById('address2').value.trim(),
+      city, county,
+      postal: document.getElementById('postal').value.trim(),
+      storyId,
+      plan: selPlan,
+      startEpisode: selPlan === 'lunar' ? selEp : null
+    }));
+
+    window.location.href = '/pages/plata?poveste=' + (storyId||'') + '&plan=' + selPlan + (selPlan==='lunar'?'&ep='+selEp:'');
+  };
+
+  var _toastTimer = null;
+  function showToast(msg){
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3500);
+  }
+})();
+</script>
+
+
+<script>
+/* Force nav links to navigate before GemPage can intercept */
+(function(){
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    if (!a.closest('#AccessibleNav, #custom-nav, #MobileNav, .nav-bottom-cta, .announcement-bar')) return;
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    e.stopImmediatePropagation();
+    window.location.href = href;
+  }, true);
+})();
+</script>
+<style>body,body *{font-weight:800!important}</style><style>html,body{margin:0!important;padding:0!important;}footer{display:block;width:100%;}</style>
+<footer style="margin:0;padding:0;position:relative;line-height:0;overflow:hidden;">
+<video class="footer-video" data-src="/assets/footer-flowers.mp4" muted loop playsinline style="width:100%;display:block;min-height:120px;object-fit:cover;"></video>
+<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
+  <div style="line-height:0;background:rgba(0,0,0,0.38);padding:28px 40px;border-radius:12px;backdrop-filter:blur(2px);">
+    <p style="color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.22em;margin:0 0 16px;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.8);">Mai multe informații</p>
+    <a href="/pagini/terms-and-conditions" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:10px;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Termeni și condiții</a>
+    <a href="/pagini/privacy-policy" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:10px;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Politica de confidențialitate</a>
+    <a href="/pagini/refund-policy" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;margin-bottom:10px;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Returnări și rambursări</a>
+    <a href="/politici/politica-livrare" style="display:block;color:#fff;font-family:'EB Garamond',Georgia,serif;font-size:17px;font-weight:700;text-decoration:none;line-height:1.3;text-shadow:0 2px 8px rgba(0,0,0,.8);">Politica de expediere</a>
+  </div>
+</div>
+<script>
+(function(){
+  var v=document.querySelector('.footer-video');
+  if(!v)return;
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          if(!v.src){v.src=v.getAttribute('data-src');v.load();}
+          v.play();
+        } else {
+          v.pause();
+        }
+      });
+    },{threshold:0.1});
+    obs.observe(v);
+  } else {
+    v.src=v.getAttribute('data-src');
+    v.load();v.play();
+  }
+})();
+</script>
+</footer>
+</body>
+</html>
