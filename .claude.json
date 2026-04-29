@@ -4,7 +4,7 @@
   "autoUpdates": false,
   "tipsHistory": {
     "new-user-warmup": 9,
-    "plan-mode-for-complex-tasks": 127,
+    "plan-mode-for-complex-tasks": 132,
     "terminal-setup": 127,
     "memory-command": 125,
     "theme-command": 123,
@@ -16,9 +16,9 @@
     "install-github-app": 130,
     "install-slack-app": 130,
     "double-esc-code-restore": 130,
-    "continue": 121,
+    "continue": 132,
     "color-when-multi-clauding": 123,
-    "shift-tab": 122,
+    "shift-tab": 132,
     "image-paste": 127,
     "custom-agents": 127,
     "agent-flag": 127,
@@ -32,7 +32,7 @@
     "custom-commands": 119,
     "guest-passes": 130,
     "git-worktrees": 131,
-    "remote-control": 117
+    "remote-control": 132
   },
   "promptQueueUseCount": 94,
   "cachedGrowthBookFeatures": {
