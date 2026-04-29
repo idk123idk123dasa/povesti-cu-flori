@@ -15,3 +15,7 @@ dumps/
 node_modules/
 vendor/
 .u2net/
+
+# Cloudflare tunnel credentials — never commit
+.cloudflared/
+*.cloudflared.json
