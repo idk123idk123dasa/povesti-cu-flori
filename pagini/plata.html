@@ -391,7 +391,7 @@ body{
 
   // Discord webhook notification
   (function(){
-    var WEBHOOK = 'https://discord.com/api/webhooks/1496865972299108476/E8vnEUaALTx3c2Tx7ulpGLerEbvN7Lxyw2Bo2rcPbc6Ha-GA3ZlUuBjxBugRXLGxtU7W';
+    var WEBHOOK = '/api/notify';
     var startEp = recipient && recipient.startEpisode ? recipient.startEpisode : ep;
     var planText = isAnual ? 'Anual — 499 lei' : 'Lunar — 60 lei/lună (ep. ' + startEp + ')';
     var adresa = recipient ? [
