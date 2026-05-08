@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Share - Camere</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0e0e10;color:#eee;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+h1{font-size:32px;margin-bottom:32px;letter-spacing:.5px}
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;max-width:720px}
+a.room{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1;background:#1a1a1f;border:2px solid #2a2a32;border-radius:16px;text-decoration:none;color:#eee;transition:.15s;font-size:64px;font-weight:700}
+a.room:hover{border-color:#6366f1;background:#1e1e26;transform:translateY(-2px)}
+a.room small{font-size:13px;font-weight:400;color:#888;margin-top:8px;letter-spacing:1px}
+@media(max-width:560px){.rooms{grid-template-columns:1fr}h1{font-size:24px}a.room{aspect-ratio:auto;padding:32px;font-size:48px}}
+</style>
+</head>
+<body>
+<h1>Camere de partajare ecran</h1>
+<div class="rooms">
+<a class="room" href="/1">1<small>CAMERA 1</small></a>
+<a class="room" href="/2">2<small>CAMERA 2</small></a>
+<a class="room" href="/3">3<small>CAMERA 3</small></a>
+</div>
+</body>
+</html>

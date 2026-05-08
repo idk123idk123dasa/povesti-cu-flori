@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nisip - Falling Sand</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  body {
+    color: #fff;
+    font-family: -apple-system, system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  #canvas {
+    flex: 1;
+    display: block;
+    cursor: crosshair;
+    touch-action: none;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  .toolbar {
+    background: #111;
+    border-top: 1px solid #222;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .tool {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    border: 2px solid #333;
+    cursor: pointer;
+    font-size: 11px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: #1a1a1a;
+    transition: all 0.15s;
+  }
+  .tool:hover { border-color: #666; }
+  .tool.active { border-color: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.3); }
+  .tool .dot {
+    width: 18px; height: 18px; border-radius: 50%; margin-bottom: 2px;
+  }
+  .tool .lbl { font-size: 9px; opacity: 0.7; }
+  .slider-wrap {
+    display: flex; align-items: center; gap: 8px; color: #888; font-size: 12px;
+    margin-left: 8px;
+  }
+  input[type=range] { width: 100px; }
+  button.action {
+    background: #333; color: #fff; border: 1px solid #555;
+    padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  button.action:hover { background: #444; }
+</style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div class="toolbar" id="toolbar">
+    <div class="tool active" data-mat="sand"><div class="dot" style="background:#e6c068"></div><div class="lbl">Nisip</div></div>
+    <div class="tool" data-mat="water"><div class="dot" style="background:#3a8ed6"></div><div class="lbl">Apă</div></div>
+    <div class="tool" data-mat="stone"><div class="dot" style="background:#888"></div><div class="lbl">Piatră</div></div>
+    <div class="tool" data-mat="wood"><div class="dot" style="background:#8b5a2b"></div><div class="lbl">Lemn</div></div>
+    <div class="tool" data-mat="fire"><div class="dot" style="background:#ff5020"></div><div class="lbl">Foc</div></div>
+    <div class="tool" data-mat="oil"><div class="dot" style="background:#5a3a1a"></div><div class="lbl">Ulei</div></div>
+    <div class="tool" data-mat="acid"><div class="dot" style="background:#a0ff20"></div><div class="lbl">Acid</div></div>
+    <div class="tool" data-mat="salt"><div class="dot" style="background:#f0f0f0"></div><div class="lbl">Sare</div></div>
+    <div class="tool" data-mat="steam"><div class="dot" style="background:#cce"></div><div class="lbl">Abur</div></div>
+    <div class="tool" data-mat="erase"><div class="dot" style="background:#000;border:1px solid #555"></div><div class="lbl">Șterge</div></div>
+    <div class="slider-wrap">
+      Pensulă <input type="range" id="brush" min="1" max="20" value="5"><span id="brushVal">5</span>
+    </div>
+    <button class="action" id="clearBtn">Curăță</button>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const SCALE = 3;
+let W, H;
+let grid, next;
+
+const EMPTY = 0, SAND = 1, WATER = 2, STONE = 3, WOOD = 4, FIRE = 5, OIL = 6, ACID = 7, SALT = 8, STEAM = 9, SMOKE = 10, SALTWATER = 11;
+
+const COLORS = {
+  [EMPTY]: [0, 0, 0],
+  [SAND]: [230, 192, 104],
+  [WATER]: [58, 142, 214],
+  [STONE]: [136, 136, 136],
+  [WOOD]: [139, 90, 43],
+  [FIRE]: [255, 80, 32],
+  [OIL]: [90, 58, 26],
+  [ACID]: [160, 255, 32],
+  [SALT]: [240, 240, 240],
+  [STEAM]: [200, 200, 230],
+  [SMOKE]: [60, 60, 60],
+  [SALTWATER]: [80, 160, 200]
+};
+
+const MAT_MAP = {
+  sand: SAND, water: WATER, stone: STONE, wood: WOOD,
+  fire: FIRE, oil: OIL, acid: ACID, salt: SALT, steam: STEAM, erase: EMPTY
+};
+
+let imageData, pixels;
+
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.floor(rect.width / SCALE);
+  canvas.height = Math.floor(rect.height / SCALE);
+  W = canvas.width;
+  H = canvas.height;
+  const newGrid = new Uint8Array(W * H);
+  const newExtra = new Uint8Array(W * H);
+  if (grid) {
+    const oldW = grid._w, oldH = grid._h;
+    for (let y = 0; y < Math.min(H, oldH); y++) {
+      for (let x = 0; x < Math.min(W, oldW); x++) {
+        newGrid[y*W+x] = grid[y*oldW+x];
+        newExtra[y*W+x] = extra[y*oldW+x];
+      }
+    }
+  }
+  grid = newGrid;
+  grid._w = W; grid._h = H;
+  extra = newExtra;
+  imageData = ctx.createImageData(W, H);
+  pixels = imageData.data;
+  for (let i = 3; i < pixels.length; i += 4) pixels[i] = 255;
+}
+
+let extra;
+
+function idx(x, y) { return y * W + x; }
+function inBounds(x, y) { return x >= 0 && x < W && y >= 0 && y < H; }
+function get(x, y) { return inBounds(x, y) ? grid[idx(x, y)] : -1; }
+function set(x, y, v) { if (inBounds(x, y)) grid[idx(x, y)] = v; }
+
+function swap(x1, y1, x2, y2) {
+  const a = grid[idx(x1, y1)];
+  grid[idx(x1, y1)] = grid[idx(x2, y2)];
+  grid[idx(x2, y2)] = a;
+  const e = extra[idx(x1, y1)];
+  extra[idx(x1, y1)] = extra[idx(x2, y2)];
+  extra[idx(x2, y2)] = e;
+}
+
+const isLiquid = v => v === WATER || v === OIL || v === ACID || v === SALTWATER;
+const isGas = v => v === STEAM || v === SMOKE;
+const isPowder = v => v === SAND || v === SALT;
+const isFlammable = v => v === WOOD || v === OIL;
+
+function update() {
+  // bottom-up, alternating left/right scan to reduce bias
+  for (let y = H - 1; y >= 0; y--) {
+    const lr = (y + frame) & 1;
+    for (let i = 0; i < W; i++) {
+      const x = lr ? i : W - 1 - i;
+      const v = grid[idx(x, y)];
+      if (v === EMPTY || v === STONE || v === WOOD) continue;
+
+      // FIRE: lifetime + spread
+      if (v === FIRE) {
+        let life = extra[idx(x, y)];
+        if (life === 0) life = 40 + (Math.random() * 30) | 0;
+        // spread to flammable neighbors
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const nx = x+dx, ny = y+dy;
+            const n = get(nx, ny);
+            if (isFlammable(n) && Math.random() < 0.08) {
+              grid[idx(nx, ny)] = FIRE;
+              extra[idx(nx, ny)] = 60 + (Math.random()*40)|0;
+            }
+            // water extinguishes
+            if (n === WATER && Math.random() < 0.5) {
+              grid[idx(x, y)] = SMOKE;
+              extra[idx(x, y)] = 80;
+              grid[idx(nx, ny)] = STEAM;
+              extra[idx(nx, ny)] = 100;
+            }
+          }
+        }
+        life--;
+        if (life <= 0) {
+          if (Math.random() < 0.6) { grid[idx(x, y)] = SMOKE; extra[idx(x, y)] = 60 + (Math.random()*40)|0; }
+          else { grid[idx(x, y)] = EMPTY; extra[idx(x, y)] = 0; }
+        } else {
+          extra[idx(x, y)] = life;
+          // rise
+          if (get(x, y-1) === EMPTY && Math.random() < 0.7) swap(x, y, x, y-1);
+          else {
+            const d = Math.random() < 0.5 ? -1 : 1;
+            if (get(x+d, y-1) === EMPTY) swap(x, y, x+d, y-1);
+          }
+        }
+        continue;
+      }
+
+      // ACID: dissolves wood/stone/sand below/sides
+      if (v === ACID) {
+        const targets = [[0,1],[-1,0],[1,0],[0,-1]];
+        for (const [dx, dy] of targets) {
+          const n = get(x+dx, y+dy);
+          if ((n === STONE || n === WOOD || n === SAND || n === SALT) && Math.random() < 0.15) {
+            grid[idx(x+dx, y+dy)] = EMPTY;
+            if (Math.random() < 0.4) { grid[idx(x, y)] = EMPTY; break; }
+          }
+        }
+        // then flow like liquid (fall through)
+      }
+
+      // STEAM/SMOKE: rise, dissipate
+      if (isGas(v)) {
+        let life = extra[idx(x, y)];
+        if (life > 0) {
+          life--;
+          if (life === 0) { grid[idx(x, y)] = (v === STEAM && Math.random() < 0.3) ? WATER : EMPTY; extra[idx(x, y)] = 0; continue; }
+          extra[idx(x, y)] = life;
+        }
+        const up = get(x, y-1);
+        if (up === EMPTY) { swap(x, y, x, y-1); continue; }
+        const d = Math.random() < 0.5 ? -1 : 1;
+        if (get(x+d, y-1) === EMPTY) { swap(x, y, x+d, y-1); continue; }
+        if (get(x-d, y-1) === EMPTY) { swap(x, y, x-d, y-1); continue; }
+        if (get(x+d, y) === EMPTY) { swap(x, y, x+d, y); continue; }
+        continue;
+      }
+
+      // POWDERS (sand, salt)
+      if (isPowder(v)) {
+        // salt + water -> saltwater
+        if (v === SALT) {
+          for (const [dx, dy] of [[0,1],[-1,0],[1,0]]) {
+            if (get(x+dx, y+dy) === WATER && Math.random() < 0.3) {
+              grid[idx(x+dx, y+dy)] = SALTWATER;
+              grid[idx(x, y)] = EMPTY;
+              break;
+            }
+          }
+          if (grid[idx(x, y)] === EMPTY) continue;
+        }
+        const below = get(x, y+1);
+        if (below === EMPTY || isLiquid(below) || isGas(below)) { swap(x, y, x, y+1); continue; }
+        const d = Math.random() < 0.5 ? -1 : 1;
+        const bl = get(x-d, y+1), br = get(x+d, y+1);
+        if (bl === EMPTY || isLiquid(bl) || isGas(bl)) { swap(x, y, x-d, y+1); continue; }
+        if (br === EMPTY || isLiquid(br) || isGas(br)) { swap(x, y, x+d, y+1); continue; }
+        continue;
+      }
+
+      // LIQUIDS
+      if (isLiquid(v)) {
+        const below = get(x, y+1);
+        if (below === EMPTY || (v === WATER && below === OIL) || (v === OIL && below === ACID)) { swap(x, y, x, y+1); continue; }
+        // diagonal
+        const d = Math.random() < 0.5 ? -1 : 1;
+        if (get(x-d, y+1) === EMPTY) { swap(x, y, x-d, y+1); continue; }
+        if (get(x+d, y+1) === EMPTY) { swap(x, y, x+d, y+1); continue; }
+        // horizontal flow with dispersion
+        const disp = (v === WATER || v === SALTWATER) ? 5 : (v === OIL ? 3 : 4);
+        let moved = false;
+        for (let s = 1; s <= disp; s++) {
+          if (get(x + d*s, y) !== EMPTY) break;
+          if (s === disp || get(x + d*(s+1), y) !== EMPTY) {
+            swap(x, y, x + d*s, y); moved = true; break;
+          }
+        }
+        if (moved) continue;
+        for (let s = 1; s <= disp; s++) {
+          if (get(x - d*s, y) !== EMPTY) break;
+          if (s === disp || get(x - d*(s+1), y) !== EMPTY) {
+            swap(x, y, x - d*s, y); break;
+          }
+        }
+        continue;
+      }
+    }
+  }
+}
+
+function render() {
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const v = grid[idx(x, y)];
+      const i = (y * W + x) * 4;
+      let c = COLORS[v];
+      if (v === FIRE) {
+        const r = 255, g = 80 + (Math.random()*100)|0, b = 20 + (Math.random()*30)|0;
+        pixels[i] = r; pixels[i+1] = g; pixels[i+2] = b;
+      } else if (v === SAND) {
+        const j = (x*7+y*13) & 15;
+        pixels[i] = c[0] - j; pixels[i+1] = c[1] - j; pixels[i+2] = c[2] - (j>>1);
+      } else if (v === WATER) {
+        const j = (Math.random()*20)|0;
+        pixels[i] = c[0]; pixels[i+1] = c[1] + j; pixels[i+2] = c[2] + j;
+      } else if (v === SMOKE) {
+        const a = extra[idx(x,y)] / 100;
+        const g = (60 * a)|0;
+        pixels[i] = g; pixels[i+1] = g; pixels[i+2] = g;
+      } else {
+        pixels[i] = c[0]; pixels[i+1] = c[1]; pixels[i+2] = c[2];
+      }
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+
+let frame = 0;
+function loop() {
+  update();
+  render();
+  frame++;
+  requestAnimationFrame(loop);
+}
+
+// input
+let drawing = false, currentMat = SAND, brushSize = 5;
+let lastX = -1, lastY = -1;
+
+function paint(cx, cy) {
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.floor((cx - rect.left) / rect.width * W);
+  const y = Math.floor((cy - rect.top) / rect.height * H);
+  drawLine(lastX < 0 ? x : lastX, lastY < 0 ? y : lastY, x, y);
+  lastX = x; lastY = y;
+}
+
+function drawLine(x0, y0, x1, y1) {
+  const dx = Math.abs(x1-x0), dy = Math.abs(y1-y0);
+  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+  let err = dx - dy;
+  while (true) {
+    stamp(x0, y0);
+    if (x0 === x1 && y0 === y1) break;
+    const e2 = 2*err;
+    if (e2 > -dy) { err -= dy; x0 += sx; }
+    if (e2 < dx) { err += dx; y0 += sy; }
+  }
+}
+
+function stamp(cx, cy) {
+  const r = brushSize;
+  for (let dy = -r; dy <= r; dy++) {
+    for (let dx = -r; dx <= r; dx++) {
+      if (dx*dx + dy*dy > r*r) continue;
+      const x = cx+dx, y = cy+dy;
+      if (!inBounds(x, y)) continue;
+      if (currentMat === EMPTY) {
+        grid[idx(x, y)] = EMPTY; extra[idx(x, y)] = 0;
+      } else {
+        // for fluids/powders, only fill empty; solids overwrite
+        if (currentMat === STONE || currentMat === WOOD || grid[idx(x, y)] === EMPTY || Math.random() < 0.5) {
+          // density-based: skip if same
+          if (grid[idx(x, y)] !== currentMat) {
+            grid[idx(x, y)] = currentMat;
+            if (currentMat === FIRE) extra[idx(x, y)] = 60 + (Math.random()*40)|0;
+            else if (currentMat === STEAM) extra[idx(x, y)] = 200;
+          }
+        }
+      }
+    }
+  }
+}
+
+canvas.addEventListener('pointerdown', e => {
+  drawing = true; lastX = -1; lastY = -1;
+  paint(e.clientX, e.clientY);
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', e => { if (drawing) paint(e.clientX, e.clientY); });
+canvas.addEventListener('pointerup', () => { drawing = false; lastX = -1; lastY = -1; });
+canvas.addEventListener('pointercancel', () => { drawing = false; lastX = -1; lastY = -1; });
+
+document.querySelectorAll('.tool').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    currentMat = MAT_MAP[el.dataset.mat];
+  });
+});
+
+const brushInput = document.getElementById('brush');
+const brushVal = document.getElementById('brushVal');
+brushInput.addEventListener('input', () => { brushSize = +brushInput.value; brushVal.textContent = brushSize; });
+
+document.getElementById('clearBtn').addEventListener('click', () => {
+  grid.fill(0); extra.fill(0);
+});
+
+window.addEventListener('resize', resize);
+resize();
+loop();
+
+// continuous gravity rain at top? no - leave empty
+</script>
+</body>
+</html>
