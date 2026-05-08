@@ -354,7 +354,7 @@ body{
   try { recipient = JSON.parse(sessionStorage.getItem('recipient')); } catch(e){}
 
   // Story
-  document.getElementById('sumStory').textContent = storyNames[storyId] || storyId;
+  document.getElementById('sumStory').textContent = storyNames[storyId] || storyId.replace(/_/g, ' ');
 
   // Plan + amount
   var isAnual = plan === 'anual';
@@ -387,7 +387,7 @@ body{
   if(ref.trim()) document.getElementById('refText').textContent = '"' + ref.trim() + '"';
 
   // Page title
-  document.title = 'Plată – ' + (storyNames[storyId]||'Scrisori cu Povești');
+  document.title = 'Plată – ' + (storyNames[storyId] || storyId.replace(/_/g, ' ') || 'Scrisori cu Povești');
 
   // Discord webhook notification
   (function(){
@@ -407,7 +407,7 @@ body{
       color: 0xC0392B,
       fields: [
         { name: '👤 Destinatar',  value: numeDest || '—',                         inline: true },
-        { name: '📖 Poveste',     value: storyNames[storyId] || storyId || '—',   inline: true },
+        { name: '📖 Poveste',     value: storyNames[storyId] || (storyId ? storyId.replace(/_/g, ' ') : '—'),   inline: true },
         { name: '💳 Abonament',   value: planText,                                 inline: true },
         { name: '🏠 Adresă',      value: adresa || '—',                            inline: false }
       ],
