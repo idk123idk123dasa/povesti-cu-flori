@@ -567,7 +567,7 @@ html.gemapp{ visibility: visible !important; }
 <style>
 body.template-index{background-image:url("/assets/stories-bg-v4.webp")!important;background-size:50% auto!important;background-position:center center!important;background-repeat:repeat!important;background-attachment:fixed!important;}
 @media(max-width:749px){body.template-index{background-image:none!important;background-color:#FBF9F6!important;background-attachment:scroll!important;}}
-@media(max-width:749px){body.template-index #shopify-section-header{background:#FBF9F6!important;position:relative;z-index:5;padding-bottom:100px!important;}body.template-index #shopify-section-header::after{content:"";position:absolute;left:0;right:0;top:100%;height:30px;background:#FBF9F6;}body.template-index #custom-hero,body.template-index #m-1742317278902{position:relative;z-index:4;margin-top:0!important;}}
+@media(max-width:749px){body.template-index #shopify-section-header{background:#FBF9F6!important;position:relative;z-index:5;padding-bottom:50px!important;}body.template-index #shopify-section-header::after{content:"";position:absolute;left:0;right:0;top:100%;height:15px;background:#FBF9F6;}body.template-index #custom-hero,body.template-index #m-1742317278902{position:relative;z-index:4;margin-top:0!important;}}
 /* Hide blue+scallop section between CTA and footer */
 #r-1705600020253,#e-1705605765417,#r-1704325774296{display:none!important;}
 @media(max-width:749px){#custom-hero{background-image:url('/assets/hero-home-mobile.webp')!important;}}
@@ -576,6 +576,10 @@ body.template-index{background-image:url("/assets/stories-bg-v4.webp")!important
 body.js-drawer-open,body.js-drawer-open-right{overflow:auto!important;}
 /* Mobile menu submenu animated open */
 #MobileNav ul.m-submenu.open{max-height:500px;margin-top:8px;}
+/* Hamburger ↔ X toggle */
+.js-mobile-nav-toggle .icon-close{display:none;}
+body.menu-open .js-mobile-nav-toggle .icon-hamburger{display:none!important;}
+body.menu-open .js-mobile-nav-toggle .icon-close{display:inline-block!important;}
 /* Mobile: move logo up */
 @media(max-width:749px){body .site-header__logo,body .logo-align--left .site-header__logo,body .site-header__logo a.site-header__logo-image{margin:0!important;padding-top:2px!important;padding-bottom:2px!important;}body .site-header__mobile-nav .site-header__logo{margin:0!important;}}
 #m-1770928106358 .module.video-background,#m-1774477041624 .module.video-background{position:relative!important;height:400px!important;width:100%!important;overflow:hidden!important;}
@@ -1154,11 +1158,13 @@ body.js-drawer-open,body.js-drawer-open-right{overflow:auto!important;}
   function openMobileNav() {
     var nav = document.getElementById('MobileNav');
     if (nav){nav.classList.add('open');}
+    document.body.classList.add('menu-open');
     document.body.style.overflow = 'hidden';
   }
   function closeMobileNav() {
     var nav = document.getElementById('MobileNav');
     if (nav){nav.classList.remove('open');}
+    document.body.classList.remove('menu-open');
     document.body.style.overflow = '';
   }
   document.addEventListener('DOMContentLoaded', function() {
