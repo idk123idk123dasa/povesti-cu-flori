@@ -626,7 +626,7 @@ body{
       btn.className = 'ep-btn' + (i === 1 ? ' sel' : '');
       btn.setAttribute('data-ep', i);
       var epEnd = i + 1;
-      btn.innerHTML = i + '–' + epEnd + '<span class="ep-sub">scrisori</span>';
+      btn.innerHTML = i + '–' + epEnd;
       btn.onclick = (function(ep){ return function(){ pickEp(ep); }; })(i);
       grid.appendChild(btn);
     }
