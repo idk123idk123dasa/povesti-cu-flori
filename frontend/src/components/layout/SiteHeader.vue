@@ -2,7 +2,7 @@
   <header class="site-header">
     <div class="header-inner">
       <router-link to="/" class="site-logo">
-        <img src="https://theflowerletters.com/cdn/shop/files/The-Flower-Letters-Logo_300x300.png?v=1660586173" alt="Scrisori cu Povești" />
+        <img src="/assets/ext/9f6cd7-The-Flower-Letters-Logo_300x300.png" alt="Scrisori cu Povești" />
       </router-link>
 
       <ul class="nav-links">

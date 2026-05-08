@@ -52,7 +52,7 @@
       <!-- Video in frame -->
       <div class="video-frame">
         <video autoplay loop muted playsinline>
-          <source src="https://cdn.shopify.com/videos/c/o/v/c119bc2728134ceb9223c6155675c407.mp4" type="video/mp4" />
+          <source src="https://poze.scrisoricupovesti.ro/1778061135638-4leis6.mp4" type="video/mp4" />
         </video>
       </div>
 
