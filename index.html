@@ -61,7 +61,8 @@
 <meta content="#ac3135" name="theme-color"/>
 <link crossorigin="" href="https://cdn.shopify.com" rel="preconnect"/>
 
-<link rel="preload" as="image" href="/assets/hero-home.jpg" fetchpriority="high"/>
+<link rel="preload" as="image" href="/assets/hero-home-mobile.webp" fetchpriority="high" media="(max-width: 749px)"/>
+<link rel="preload" as="image" href="/assets/hero-home.webp" fetchpriority="high" media="(min-width: 750px)"/>
 <link as="style" href="/assets/ext/578c3a-theme.css" rel="preload"/>
 <link as="font" crossorigin="" href="" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="" rel="preload" type="font/woff2"/>
@@ -564,10 +565,12 @@ html.gemapp{ visibility: visible !important; }
   <link rel="stylesheet" href="/fonts/fonts.css">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,800;1,800&family=Playfair+Display:wght@900&display=swap" onload="this.onload=null;this.rel=&apos;stylesheet&apos;"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,800;1,800&family=Playfair+Display:wght@900&display=swap"></noscript>
 <style>
-body.template-index{background-image:url("/assets/stories-bg-v4.jpg")!important;background-size:50% auto!important;background-position:center center!important;background-repeat:repeat!important;background-attachment:fixed!important;}
+body.template-index{background-image:url("/assets/stories-bg-v4.webp")!important;background-size:50% auto!important;background-position:center center!important;background-repeat:repeat!important;background-attachment:fixed!important;}
+@media(max-width:749px){body.template-index{background-image:url("/assets/stories-bg-v4-mobile.webp")!important;background-attachment:scroll!important;}}
 @media(max-width:749px){body.template-index #shopify-section-header{background:#FBF9F6!important;position:relative;z-index:5;padding-bottom:100px!important;}body.template-index #shopify-section-header::after{content:"";position:absolute;left:0;right:0;top:100%;height:30px;background:#FBF9F6;}body.template-index #custom-hero,body.template-index #m-1742317278902{position:relative;z-index:4;margin-top:0!important;}}
 /* Hide blue+scallop section between CTA and footer */
 #r-1705600020253,#e-1705605765417,#r-1704325774296{display:none!important;}
+@media(max-width:749px){#custom-hero{background-image:url('/assets/hero-home-mobile.webp')!important;}}
 /* Disable old custom-nav drawer — keep hamburger button */
 .mobile-nav-wrapper,#custom-nav,.menu-overlay{display:none!important;visibility:hidden!important;}
 body.js-drawer-open,body.js-drawer-open-right{overflow:auto!important;}
@@ -1324,7 +1327,7 @@ body.js-drawer-open,body.js-drawer-open-right{overflow:auto!important;}
 <link class="gf_libs" data-instant-track="" href="https://assets.gemcommerce.com/v6/libs/css/owl.carousel.min.css" rel="stylesheet" type="text/css"/>
 <link class="gf_libs" data-instant-track="" href="https://assets.gemcommerce.com/v6/libs/css/gfv1animate.min.css" rel="stylesheet" type="text/css"/>
 <!--GEM_HEADER_END-->
-<div id="custom-hero" style="position:relative;min-height:520px;background-image:url('/assets/hero-home.jpg');background-size:cover;background-position:center center;background-repeat:no-repeat;display:flex;align-items:center;padding:40px 20px;">
+<div id="custom-hero" style="position:relative;min-height:520px;background-image:url('/assets/hero-home.webp');background-size:cover;background-position:center center;background-repeat:no-repeat;display:flex;align-items:center;padding:40px 20px;">
   <div style="max-width:600px;padding:40px;background:rgba(250,242,230,0.88);border-radius:4px;margin-left:5%;">
     <h1 style="font-family:inherit;font-size:2.4em;color:#1a0e05;margin:0 0 16px;line-height:1.2;"><span style="font-size:1.5em;line-height:0.8;">C</span>eva frumos <br>vine prin poștă.</h1>
     <p style="font-size:1em;color:#3a2a1a;margin:0 0 24px;line-height:1.6;">Descoperă magia poveștilor spuse prin scrisori. Livrat de două ori pe lună, tot anul.</p>
