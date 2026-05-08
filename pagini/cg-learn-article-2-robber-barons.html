@@ -1071,6 +1071,15 @@ html.gemapp{ visibility: visible !important; }
 })();
 </script>
 <style>body,body *{font-weight:800!important}</style><style>html,body{margin:0!important;padding:0!important;}footer{display:block;width:100%;}</style>
+<style id="footer-mobile-fix">
+@media(max-width:749px){
+  footer .footer-video{min-height:360px!important;height:360px!important;object-fit:cover!important;}
+  footer > div[style*="position:absolute"]{padding-left:6%!important;padding-right:6%!important;justify-content:center!important;text-align:center!important;}
+  footer > div[style*="position:absolute"] > div{padding:18px 22px!important;max-width:88%!important;text-align:center!important;}
+  footer p[style*="uppercase"]{font-size:11px!important;letter-spacing:.18em!important;margin-bottom:12px!important;}
+  footer a[href^="/pagini/"],footer a[href^="/politici/"]{font-size:14px!important;margin-bottom:8px!important;line-height:1.25!important;text-align:center!important;}
+}
+</style>
 <footer style="margin:0;padding:0;position:relative;line-height:0;overflow:hidden;">
 <video loop autoplay class="footer-video" data-src="/assets/footer-flowers.mp4" muted playsinline style="width:100%;display:block;min-height:120px;object-fit:cover;"></video>
 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
