@@ -1727,6 +1727,34 @@ body>footer,main+footer,.shopify-section+footer{margin-top:-1px!important;}
   }
 })();
 </script>
+<style>
+#r-1704325620542 [data-key="image"],
+#r-1713563109849 [data-key="image"]{position:relative;}
+#r-1704325620542 [data-key="image"] .story-name-overlay,
+#r-1713563109849 [data-key="image"] .story-name-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  z-index:5;pointer-events:none;padding:12px;text-align:center;
+}
+#r-1704325620542 [data-key="image"] .story-name-overlay h1,
+#r-1713563109849 [data-key="image"] .story-name-overlay h1{
+  color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 6px rgba(0,0,0,.6)!important;
+  margin:0!important;font-family:'EB Garamond',Georgia,serif!important;font-weight:900!important;
+  line-height:1.15!important;
+}
+</style>
+<script>
+(function(){
+  var rows = document.querySelectorAll('#r-1704325620542, #r-1713563109849');
+  rows.forEach(function(row){
+    row.querySelectorAll('[data-key="image"]').forEach(function(imgWrap){
+      var sib = imgWrap.nextElementSibling;
+      if(!sib || sib.getAttribute('data-key') !== 'heading') return;
+      sib.classList.add('story-name-overlay');
+      imgWrap.appendChild(sib);
+    });
+  });
+})();
+</script>
 </body>
 </html>
 <style>
