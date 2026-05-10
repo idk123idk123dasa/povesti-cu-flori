@@ -1112,8 +1112,22 @@ body.menu-open .js-mobile-nav-toggle .icon-close{display:inline-block!important;
     object-fit: cover !important;
     display: block !important;
   }
-  #r-1713563109849 {
+  #r-1713563109849,
+  #r-1704325620542 {
     align-items: stretch !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  #r-1713563109849 > .gf_column,
+  #r-1704325620542 > .gf_column {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #r-1713563109849 > .gf_column > .module-wrap,
+  #r-1704325620542 > .gf_column > .module-wrap,
+  #r-1713563109849 > .gf_column > .gf_row,
+  #r-1704325620542 > .gf_column > .gf_row {
+    height: 100% !important;
   }
 
   /* Hide GemPage hero — replaced by custom hero below */
