@@ -1,0 +1,53 @@
+player_limit: -1
+ip_forward: false
+permissions:
+  default:
+    - bungeecord.command.server
+    - bungeecord.command.list
+  admin:
+    - bungeecord.command.alert
+    - bungeecord.command.end
+    - bungeecord.command.ip
+    - bungeecord.command.reload
+    - bungeecord.command.send
+    - bungeecord.command.find
+timeout: 30000
+log_commands: false
+network_compression_threshold: 256
+online_mode: true
+disabled_commands:
+  - disabledcommandhere
+servers:
+  lobby:
+    motd: '&aLobby Server'
+    address: localhost:25566
+    restricted: false
+  survival:
+    motd: '&aSurvival'
+    address: localhost:25567
+    restricted: false
+listeners:
+  - host: 0.0.0.0:25565
+    query_port: 25565
+    motd: '&6Bun venit pe server!'
+    tab_list: GLOBAL_PING
+    max_players: 100
+    priorities:
+      - lobby
+    bind_local_address: true
+    tab_size: 60
+    ping_passthrough: false
+    forced_hosts:
+      survival.example.com: survival
+    force_default_server: false
+    query_enabled: false
+    proxy_protocol: false
+groups:
+  md_5:
+    - admin
+connection_throttle: 4000
+connection_throttle_limit: 3
+stats: false
+forge_support: false
+remote_ping_cache: -1
+prevent_proxy_connections: false
